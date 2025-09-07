@@ -41,8 +41,17 @@ save and exit and reload (source .bashrc)
 then try cat <some file>
 
 Link UV to PYENV
+...
+
+clone
+uv sync
+
+PYTHON GPIO
+sudo apt update && sudo apt install python3-dev -y
+uv pip install RPi.GPIO
 
 DOCKER
+...
 
 
 
