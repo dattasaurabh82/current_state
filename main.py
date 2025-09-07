@@ -1,11 +1,9 @@
-# main.py
-
 import time
 from pathlib import Path
 from colorama import Fore, Style, init
 from loguru import logger
 
-# Import our new class from the other file
+# Import our class from the other file
 from player import AudioPlayer
 
 # --- Configuration --- #
@@ -22,40 +20,42 @@ def setup_logger():
         level="INFO"
     )
 
+def play_test_audio():
+    """Creates and starts an AudioPlayer instance."""
+    try:
+        logger.info("Creating audio player...")
+        player = AudioPlayer(AUDIO_FILE)
+        player.play()
+        return player  # Return the created object
+    except FileNotFoundError as e:
+        logger.error(e)
+        return None  # Return None if there was an error
+    except Exception as e:
+        logger.exception(f"An unexpected error occurred while starting playback: {e}")
+        return None
+
 def main():
     """
-    Example of how to use the AudioPlayer class.
+    Demonstrates how to use the AudioPlayer class.
     """
     setup_logger()
     logger.info("Starting audio player demonstration...")
 
-    try:
-        # 1. Create an instance of the player.
-        # We don't specify a device, so it uses the system default.
-        player = AudioPlayer(AUDIO_FILE)
+    # 1. Capture the player object returned by the function.
+    player = play_test_audio()
 
-        # 2. Start playback (this is non-blocking).
-        player.play()
-
-        # 3. The main script can do other things while the audio plays.
-        logger.info("Player started. The main script can now doing other work...")
-        # while player.is_playing:
-        #     print(f"{Fore.CYAN}    ...main thread is alive, music is playing...{Style.RESET_ALL}")
-        #     time.sleep(2)
-
-        # 4. Optionally, wait for the track to finish naturally.
-        # If the loop above finishes, it means the song ended.
-        logger.info("Playback has finished naturally.")
-
-    except FileNotFoundError as e:
-        logger.error(e)
-    except KeyboardInterrupt:
-        logger.warning("\nInterrupted by user. Stopping player.")
-        # Ensure the player is stopped cleanly on Ctrl+C
-        if 'player' in locals() and player.is_playing:
+    # 2. Check if the player was created successfully before using it.
+    if player:
+        try:
+            logger.info("Player started. Main thread is now free to do other work...")
+            # 3. Now you can use the 'player' object here.
+            while player.is_playing:
+                # This loop just keeps the main script alive while music plays.
+                time.sleep(1)
+            logger.info("Playback finished naturally.")
+        except KeyboardInterrupt:
+            logger.warning("\nInterrupted by user. Stopping player.")
             player.stop()
-    except Exception as e:
-        logger.exception(f"An unexpected error occurred in main: {e}")
 
 if __name__ == "__main__":
     main()
