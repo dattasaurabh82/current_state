@@ -1,0 +1,16 @@
+{
+  "regions": {
+    "English_Speaking": {
+      "language": "en"
+    },
+    "German_Speaking": {
+      "language": "de"
+    },
+    "French_Speaking": {
+      "language": "fr"
+    },
+    "Spanish_Speaking": {
+      "language": "es"
+    }
+  }
+}
