@@ -1,4 +1,4 @@
-sudo apt-get update -y
+`sudo apt-get update -y
 sudo apt-get upgrade -y
 sudo apt-get install git neofetch -y
 
@@ -30,6 +30,15 @@ libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev
 libxmlsec1-dev libffi-dev liblzma-dev -y
 
 UV
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+BATCAT
+sudo apt install bat -y
+ln -s /usr/bin/batcat ~/.local/bin/bat (whihc batcat)
+sudo nano .bashrc
+alias cat="batcat"
+save and exit and reload (source .bashrc)
+then try cat <some file>
 
 Link UV to PYENV
 

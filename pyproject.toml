@@ -1,0 +1,11 @@
+[project]
+name = "daily-mood-theme-song-player"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "colorama>=0.4.6",
+    "sounddevice>=0.5.2",
+    "soundfile>=0.13.1",
+]
