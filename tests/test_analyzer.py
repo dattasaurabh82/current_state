@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 import emotion_analyzer # Import the module we want to test
 
-print("🧪 Starting analyzer test script...")
+print("Starting analyzer test script...")
 
 # --- 1. Load the Cached Data ---
 today_str = datetime.now().strftime('%Y-%m-%d')
@@ -13,9 +13,9 @@ cache_filename = f"news_data_{today_str}.json"
 try:
     with open(cache_filename, 'r', encoding='utf-8') as f:
         all_regional_data = json.load(f)
-    print(f"✅ Successfully loaded data from {cache_filename}")
+    print(f"Successfully loaded data from {cache_filename}")
 except FileNotFoundError:
-    print(f"❌ Error: Cache file not found: {cache_filename}")
+    print(f"Error: Cache file not found: {cache_filename}")
     print("Please run the main script first to create the cache.")
     exit()
 
@@ -27,7 +27,7 @@ if test_region_name in all_regional_data:
     # --- THIS IS THE ADDED LINE ---
     language = sample_data['language']
     
-    print(f"🔬 Using {len(articles)} articles from '{test_region_name}' (Language: {language}) for the test.\n")
+    print(f"Using {len(articles)} articles from '{test_region_name}' (Language: {language}) for the test.\n")
 
     # --- 3. Run the Analyzer Functions ---
     print("--- Testing: Individual Article Analysis ---")
@@ -45,4 +45,4 @@ if test_region_name in all_regional_data:
         print(f"  - {sentiment}: {count}")
 
 else:
-    print(f"❌ Error: Region '{test_region_name}' not found in the cache file.")
+    print(f"Error: Region '{test_region_name}' not found in the cache file.")

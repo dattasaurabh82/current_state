@@ -1,5 +1,3 @@
-# main.py
-
 import json
 import os
 from datetime import datetime
@@ -16,6 +14,7 @@ def load_regions_config(filename="config.json"):
     except FileNotFoundError:
         print(f"Error: {filename} not found.")
         return None
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fetch and/or analyze world news sentiment.")
@@ -66,7 +65,7 @@ if __name__ == "__main__":
             
             articles = news_fetcher.fetch_news_for_language(language_code)
             
-            # --- NEW CODE TO DISPLAY FETCHED ARTICLES ---
+            # --- TO DISPLAY FETCHED ARTICLES ---
             if args.verbose:
                 if articles:
                     print("    Fetched Titles:")
@@ -74,7 +73,6 @@ if __name__ == "__main__":
                         print(f"      {i+1}. {article.get('title')}")
                 else:
                     print("    -> No articles were returned from the API for this region.")
-            # --- END OF NEW CODE ---
 
             all_regional_data[region_name] = {"language": language_code, "articles": articles}
         

@@ -15,7 +15,7 @@ def load_regions_config(filename="config.json"):
         return None
 
 if __name__ == "__main__":
-    print("🚀 Starting the News Caching System...")
+    print("Starting the News Caching System...")
     
     # --- Caching Logic ---
     today_str = datetime.now().strftime('%Y-%m-%d')
@@ -23,11 +23,11 @@ if __name__ == "__main__":
     all_regional_data = {}
 
     if os.path.exists(cache_filename):
-        print(f"✅ Loading news from today's cache file: {cache_filename}")
+        print(f"Loading news from today's cache file: {cache_filename}")
         with open(cache_filename, 'r', encoding='utf-8') as f:
             all_regional_data = json.load(f)
     else:
-        print(f"ℹ️ No cache file found for today. Fetching live data from API...")
+        print(f"No cache file found for today. Fetching live data from API...")
         config = load_regions_config()
         if not config:
             exit()
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         # Save the freshly fetched data to the cache file
         with open(cache_filename, 'w', encoding='utf-8') as f:
             json.dump(all_regional_data, f, ensure_ascii=False, indent=4)
-        print(f"💾 Live data fetched and saved to {cache_filename}")
+        print(f"Live data fetched and saved to {cache_filename}")
 
     # --- For testing, we just print a summary of what we have ---
     print("\n--- Summary of Loaded Data ---")
