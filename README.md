@@ -85,8 +85,6 @@ sudo apt update && sudo apt install python3-dev -y
 uv pip install RPi.GPIO
 ```
 
-... WIP
-
 ### Create an API key for newsapi.org
 
 ```bash
@@ -96,12 +94,27 @@ nano .env
 
 Update `NEWS_API_KEY`
 
+### Run tests
+
+From `world_theme_music_player`, run:
+
+```bash
+uv run -m tests.test_analyzer
+uv run -m tests.test_grab_news
+```
+
+## Run
+
+```bash
+uv run main.py --fetch True --analyze True --verbose True
+```
+
+... WIP
+
 ...
 
 DOCKER
 ...
-
-
 
 ---
 
