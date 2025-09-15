@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 
-def generate_and_download_music(prompt: str, duration: int = 20) -> Optional[Path]:
+def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Path]:
     """
     Generates music using Replicate hosted meta's Audiocraft's MusicGen model and downloads the audio file.
     """

@@ -2,14 +2,14 @@
 
 ## ToDo
 
-- Fadeinfadeout post processing 
-- player plugin 
-- Business logioc of operation
+- slow down track for 30 sec to make it feel longer [post processing]
+- player plugin integration ...
+- Business logic of operation
 - HW sensor plugin ..
-- UI clean uop 
+- UI clean up ...
 - maybe web ui
-- Dockerization 
-- Docu 
+- Dockerization ...
+- Docu ...
 
 ## post pi first boot setup
 
