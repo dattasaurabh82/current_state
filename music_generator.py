@@ -57,9 +57,15 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         # Manually wait for the prediction to finish
         output_iterator = prediction.wait()
         current_prediction = None
+        
+        # Check if the API returned a valid result 
+        if output_iterator is None:
+            print("Music generation failed or was canceled. The API returned no output.")
+            return None
 
+        # Now it's safe to convert to a list
         output_list = list(output_iterator)
-
+        
         audio_data = None
 
         if not output_list:
