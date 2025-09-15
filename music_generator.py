@@ -4,17 +4,34 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+current_prediction = None
+
+
+def cancel_current_prediction():
+    """Cancels the currently running Replicate prediction if there is one."""
+    global current_prediction
+    if current_prediction:
+        print("\nAttempting to cancel the current Replicate prediction...")
+        try:
+            current_prediction.cancel()
+            print("Cancellation request sent successfully.")
+        except Exception as e:
+            print(f"Error sending cancellation request: {e}")
+        current_prediction = None
+
 
 def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Path]:
     """
     Generates music using Replicate hosted meta's Audiocraft's MusicGen model and downloads the audio file.
     """
+    global current_prediction
+    
     print("\n--- Generating Music ---")
     clean_prompt = prompt.strip().strip('"')
     print(f'Sending prompt to MusicGen: "{prompt}"')
 
     try:
-        output_iterator = replicate.run(
+        prediction = replicate.predictions.create(
             "meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043055d2dac5fc9e36a837eedcfb",
             input={
                 "top_k": 250,
@@ -28,14 +45,23 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
                 "continuation_start": 0,
                 "multi_band_diffusion": False,
                 "normalization_strategy": "loudness",
-                "classifier_free_guidance": 3
+                "classifier_free_guidance": 3,
             },
         )
         
+        current_prediction = prediction # Store the prediction object
+        
+        print(f"Music generation started with ID: {prediction.id}")
+        print("Waiting for generation to complete... (Press Ctrl+C to cancel)")
+        
+        # Manually wait for the prediction to finish
+        output_iterator = prediction.wait()
+        current_prediction = None
+
         output_list = list(output_iterator)
-        
+
         audio_data = None
-        
+
         if not output_list:
             print("Music generation failed. The API returned an empty response.")
             return None
@@ -48,18 +74,20 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
-        
+
         # Scenario 2: We received the raw audio data (bytes)
         elif isinstance(output_list[0], bytes):
             print("Music generated successfully! Received raw audio data.")
             # Join the list of bytes chunks into a single byte string
             audio_data = b"".join(output_list)
-        
+
         if not audio_data:
-            print("Music generation failed. The API returned an unexpected data format.")
+            print(
+                "Music generation failed. The API returned an unexpected data format."
+            )
             print(f"Received raw output type: {type(output_list[0])}")
             return None
-        
+
         # --- Save the Audio File ---
         music_dir = Path("music_generated")
         music_dir.mkdir(exist_ok=True)
@@ -76,4 +104,3 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
     except Exception as e:
         print(f"An error occurred during music generation or download: {e}")
         return None
-

@@ -4,6 +4,7 @@ from datetime import datetime
 import argparse
 from pathlib import Path
 from typing import Optional
+import signal
 
 # All modules ...
 import news_fetcher
@@ -11,6 +12,16 @@ import llm_analyzer
 import music_generator
 import music_post_processor
 from player import AudioPlayer
+
+# --- Signal Handler ---
+def handle_exit(sig, frame):
+    """Gracefully handle Ctrl+C."""
+    print("\n>>> EXIT SIGNAL RECEIVED <<<")
+    # Call the cancellation function from the music generator
+    music_generator.cancel_current_prediction()
+    # Any other cleanup can go here
+    # TBD ...
+    exit(0)
 
 # --- Core Action Functions ---
 def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
@@ -121,6 +132,8 @@ def load_regions_config(filename="config.json"):
 
 # --- Main Application ---
 def main():
+    signal.signal(signal.SIGINT, handle_exit)
+    
     parser = argparse.ArgumentParser(
         description="Generate and play the world's daily theme song."
     )
@@ -177,7 +190,7 @@ def main():
     if args.mode == "auto":
         if latest_audio_file_path and args.play:
             print("\n--- AUTO MODE: Starting playback ---")
-            player_instance = AudioPlayer(latest_audio_file_path)
+            player_instance = AudioPlayer(latest_audio_file_path, loop_by_default=True)
             player_instance.play()
             player_instance.wait()
             print("--- AUTO MODE: Playback finished. Exiting. ---")

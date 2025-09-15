@@ -14,7 +14,7 @@ class AudioPlayer:
     """
     A non-blocking, buffered audio player with pause/resume and looping functionality.
     """
-    def __init__(self, filepath, device=None, blocksize=2048, buffer_size=20):
+    def __init__(self, filepath, device=None, blocksize=2048, buffer_size=20, loop_by_default=True):
         # --- Store Configuration ---
         self.filepath = Path(filepath)
         self.device = device
@@ -25,7 +25,7 @@ class AudioPlayer:
         self.audio_queue = queue.Queue(maxsize=buffer_size)
         self.playback_finished = threading.Event()
         self.is_paused = False
-        self.loop = True  # <-- Looping is enabled by default
+        self.loop = loop_by_default
 
         self._reader_thread = None
         self._stream = None
