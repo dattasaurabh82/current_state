@@ -1,7 +1,6 @@
 import json
 import os
 from datetime import datetime
-import time
 import argparse
 from pathlib import Path
 from typing import Optional
@@ -242,7 +241,7 @@ def main():
                         player_instance.stop()
                     player_state = "stopped"
                     player_instance = None # Clear the instance after stopping
-            elif command == "l": # <-- NEW COMMAND
+            elif command == "l":
                 if player_instance and player_state in ["playing", "paused"]:
                     player_instance.toggle_loop()
                 else:
