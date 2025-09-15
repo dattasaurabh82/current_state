@@ -130,6 +130,23 @@ def load_regions_config(filename="config.json"):
         return None
 
 
+def find_latest_song(directory="music_generated") -> Optional[Path]:
+    """Finds the most recently created .wav file in a directory."""
+    music_dir = Path(directory)
+    if not music_dir.exists():
+        print(f"Error: Music directory '{directory}' not found.")
+        return None
+    
+    wav_files = list(music_dir.glob("*.wav"))
+    if not wav_files:
+        print(f"No .wav files found in '{directory}'.")
+        return None
+        
+    latest_file = max(wav_files, key=lambda p: p.stat().st_mtime)
+    print(f"Found latest song: {latest_file.name}")
+    return latest_file
+
+
 # --- Main Application ---
 def main():
     signal.signal(signal.SIGINT, handle_exit)
@@ -176,6 +193,13 @@ def main():
         type=lambda x: x.lower() == "true",
         help="Enable auto-playback (in auto mode).",
     )
+    
+    parser.add_argument(
+        "--play-latest",
+        action='store_true', # This makes it a flag, e.g., --play-latest
+        help="Skip generation and play the most recent song in interactive mode."
+    )
+    
     args = parser.parse_args()
 
     # State Variables
@@ -183,8 +207,16 @@ def main():
     player_instance: Optional[AudioPlayer] = None
     player_state = "stopped"
 
-    # --- Initial Song Generation ---
-    latest_audio_file_path = generate_new_song(args)
+    # --- Handle --play-latest ---
+    if args.play_latest:
+        args.mode = 'interactive' # Force interactive mode
+        latest_audio_file_path = find_latest_song()
+        if not latest_audio_file_path:
+            print("Could not find a song to play. Exiting.")
+            return
+    else:
+        # --- Initial Song Generation (the original logic) ---
+        latest_audio_file_path = generate_new_song(args)
 
     # --- Mode-Based Action ---
     if args.mode == "auto":
