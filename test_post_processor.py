@@ -10,7 +10,8 @@ def run_real_file_test():
     print("--- Starting Post-Processor Test on Real Audio File ---")
 
     # --- 1. Define the paths for the original and test files ---
-    original_file = Path("music_generated/world_theme_2025-09-15_03-00-06.wav")
+    # original_file = Path("music_generated/world_theme_2025-09-15_03-00-06.wav")
+    original_file = Path("music_generated/world_theme_2025-09-15_12-38-27.wav")
     test_file = Path("music_generated/POST_PROCESSOR_TEST_FILE.wav")
 
     # --- 2. Check if the original file exists ---
