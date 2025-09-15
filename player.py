@@ -1,16 +1,18 @@
+# player.py (Final version with looping)
+
 import queue
 import threading
 from pathlib import Path
+import time
 
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
 from loguru import logger
-import time
 
 class AudioPlayer:
     """
-    A non-blocking, buffered audio player with pause/resume functionality.
+    A non-blocking, buffered audio player with pause/resume and looping functionality.
     """
     def __init__(self, filepath, device=None, blocksize=2048, buffer_size=20):
         # --- Store Configuration ---
@@ -22,7 +24,8 @@ class AudioPlayer:
         # --- Initialize State ---
         self.audio_queue = queue.Queue(maxsize=buffer_size)
         self.playback_finished = threading.Event()
-        self.is_paused = False # state for pause/resume
+        self.is_paused = False
+        self.loop = True  # <-- Looping is enabled by default
 
         self._reader_thread = None
         self._stream = None
@@ -30,7 +33,7 @@ class AudioPlayer:
 
         if not self.filepath.exists():
             raise FileNotFoundError(f"Audio file not found: {self.filepath}")
-    
+
     def _callback(self, outdata, frames, time, status):
         """The audio callback function"""
         if status.output_underflow:
@@ -51,22 +54,31 @@ class AudioPlayer:
             outdata[:] = data
 
     def _read_chunks(self):
-        """The file reader function, now a method."""
+        """The file reader function, now with looping logic."""
         logger.info("Audio reader thread started.")
         while not self.playback_finished.is_set():
             if self.is_paused:
                 time.sleep(0.1)
                 continue
             if self._file_handle is None:
-                logger.error("File handle is not initialized.")
                 break
+            
             numpy_array: np.ndarray = self._file_handle.read(self.blocksize, dtype='float32')
-            buffer = numpy_array.tobytes()
+            
+            # --- Looping Logic ---
+            if not numpy_array.size:
+                if self.loop:
+                    logger.info("End of file reached. Looping back to the beginning.")
+                    self._file_handle.seek(0) # Rewind the file
+                    continue
+                else:
+                    logger.info("End of file reached. No looping.")
+                    break
+            # --- End Looping Logic ---
 
-            if not buffer:
-                logger.info("End of file reached.")
-                break
+            buffer = numpy_array.tobytes()
             self.audio_queue.put(buffer)
+            
         logger.info("Audio reader thread finished.")
 
     def play(self):
@@ -133,9 +145,16 @@ class AudioPlayer:
                 logger.info("Playback resumed.")
             else:
                 logger.warning("Cannot resume: audio stream is not initialized.")
+    
     def wait(self):
         """Waits for the playback to complete."""
         self.playback_finished.wait()
+
+    def toggle_loop(self):
+        """Toggles the looping state on or off."""
+        self.loop = not self.loop
+        status = "ON" if self.loop else "OFF"
+        logger.info(f"Looping is now {status}.")
 
     @property
     def is_playing(self):

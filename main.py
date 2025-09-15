@@ -89,9 +89,13 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
     return audio_file_path
 
 
-def display_menu(state: str, latest_song: Optional[Path]):
-    # ... (this function is unchanged)
+def display_menu(state: str, latest_song: Optional[Path], player: Optional[AudioPlayer]):
+    """Displays a dynamic command menu based on the player state."""
     print("\n" + "=" * 40)
+    loop_status = ""
+    if player:
+        loop_status = "ON" if player.loop else "OFF"
+
     if not latest_song:
         print("No music file available.")
         print("(N)ew Song | (Q)uit")
@@ -99,11 +103,11 @@ def display_menu(state: str, latest_song: Optional[Path]):
         print(f"Ready to play: {latest_song.name}")
         print("(P)lay | (N)ew Song | (Q)uit")
     elif state == "playing":
-        print(f"Now Playing: {latest_song.name}")
-        print("(P)ause | (S)top | (N)ew Song | (Q)uit")
+        print(f"Now Playing: {latest_song.name} [Loop: {loop_status}]")
+        print("(P)ause | (S)top | (L)oop Toggle | (N)ew Song | (Q)uit")
     elif state == "paused":
-        print(f"Paused: {latest_song.name}")
-        print("(P)resume | (S)top | (N)ew Song | (Q)uit")
+        print(f"Paused: {latest_song.name} [Loop: {loop_status}]")
+        print("(P)resume | (S)top | (L)oop Toggle | (N)ew Song | (Q)uit")
     print("=" * 40)
 
 
@@ -194,13 +198,15 @@ def main():
                 and player_instance
                 and not player_instance.is_playing
             ):
-                if latest_audio_file_path is not None:
-                    print(f"\n'{latest_audio_file_path.name}' finished playing.")
-                else:
-                    print("\nSong finished playing.")
-                player_state = "stopped"
+                # This check handles when a non-looping song finishes naturally
+                if not player_instance.loop:
+                    if latest_audio_file_path is not None:
+                        print(f"\n'{latest_audio_file_path.name}' finished playing.")
+                    else:
+                        print("\nSong finished playing.")
+                    player_state = "stopped"
 
-            display_menu(player_state, latest_audio_file_path)
+            display_menu(player_state, latest_audio_file_path, player_instance)
             command = input("Enter command > ").lower().strip()
 
             if command == "q":
@@ -212,6 +218,7 @@ def main():
                 if player_instance:
                     player_instance.stop()
                 player_state = "stopped"
+                player_instance = None
                 latest_audio_file_path = generate_new_song(args)
             elif command == "p":
                 if not latest_audio_file_path:
@@ -234,6 +241,12 @@ def main():
                     if player_instance:
                         player_instance.stop()
                     player_state = "stopped"
+                    player_instance = None # Clear the instance after stopping
+            elif command == "l": # <-- NEW COMMAND
+                if player_instance and player_state in ["playing", "paused"]:
+                    player_instance.toggle_loop()
+                else:
+                    print("Cannot toggle loop. No song is currently active.")
             else:
                 print("Invalid command.")
 
