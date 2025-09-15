@@ -9,7 +9,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
     """
     Generates music using Replicate hosted meta's Audiocraft's MusicGen model and downloads the audio file.
     """
-    print("\n--- Part 3: Generating Music ---")
+    print("\n--- Generating Music ---")
     clean_prompt = prompt.strip().strip('"')
     print(f'Sending prompt to MusicGen: "{prompt}"')
 
