@@ -1,5 +1,16 @@
 # README
 
+## ToDo
+
+- Fadeinfadeout post processing 
+- player plugin 
+- Business logioc of operation
+- HW sensor plugin ..
+- UI clean uop 
+- maybe web ui
+- Dockerization 
+- Docu 
+
 ## post pi first boot setup
 
 ```bash
