@@ -4,7 +4,8 @@
 
 - slow down track for 30 sec to make it feel longer [post processing]
 - Looping ...
-- Send cancel ...
+- Send cancel to other agent calls
+- logoru everywhere ...
 - Something to keep the audio interface active ... (So the speaker's don;t shutdown)
 - Business logic of operation
 - HW sensor plugin ..

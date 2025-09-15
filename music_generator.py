@@ -2,7 +2,7 @@ import replicate
 import requests
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union, List, Any
 
 current_prediction = None
 
@@ -22,14 +22,15 @@ def cancel_current_prediction():
 
 def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Path]:
     """
-    Generates music using Replicate hosted meta's Audiocraft's MusicGen model and downloads the audio file.
+    Generates music using Replicate's MusicGen model and downloads the audio file.
     """
     global current_prediction
-    
+
     print("\n--- Generating Music ---")
     clean_prompt = prompt.strip().strip('"')
-    print(f'Sending prompt to MusicGen: "{prompt}"')
+    print(f'Sending prompt to MusicGen: "{clean_prompt}"')
 
+    prediction = None
     try:
         prediction = replicate.predictions.create(
             "meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043055d2dac5fc9e36a837eedcfb",
@@ -48,65 +49,71 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
                 "classifier_free_guidance": 3,
             },
         )
-        
-        current_prediction = prediction # Store the prediction object
-        
+
+        current_prediction = prediction
         print(f"Music generation started with ID: {prediction.id}")
         print("Waiting for generation to complete... (Press Ctrl+C to cancel)")
-        
-        # Manually wait for the prediction to finish
-        output_iterator = prediction.wait()
-        current_prediction = None
-        
-        # Check if the API returned a valid result 
-        if output_iterator is None:
-            print("Music generation failed or was canceled. The API returned no output.")
+
+        # This is a blocking call. It waits until the prediction is done.
+        prediction.wait()
+
+        # --- Get the output from the prediction object itself ---
+        # After .wait() completes, the .output attribute is populated.
+        output = prediction.output
+        current_prediction = None  # The job is done, clear the global variable
+
+        if output is None:
+            print("Music generation failed. The API returned no output.")
+            # Optionally, print logs from the failed prediction
+            if prediction.logs:
+                print("--- Replicate Logs ---")
+                print(prediction.logs)
             return None
 
-        # Now it's safe to convert to a list
-        output_list = list(output_iterator)
-        
         audio_data = None
-
-        if not output_list:
-            print("Music generation failed. The API returned an empty response.")
-            return None
-
-        # Scenario 1: We received a URL (string)
-        if isinstance(output_list[0], str):
-            output_url = output_list[0]
+        # The output can be a single URL or a list containing a URL.
+        # We also handle the raw bytes case just in case.
+        if isinstance(output, str):
+            output_url = output
             print(f"Music generated successfully! URL: {output_url}")
             print("Downloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
-
-        # Scenario 2: We received the raw audio data (bytes)
-        elif isinstance(output_list[0], bytes):
+        elif isinstance(output, list) and output and isinstance(output[0], str):
+            output_url = output[0]
+            print(f"Music generated successfully! URL: {output_url}")
+            print("Downloading audio file...")
+            audio_response = requests.get(output_url)
+            audio_response.raise_for_status()
+            audio_data = audio_response.content
+        elif isinstance(output, bytes):
             print("Music generated successfully! Received raw audio data.")
-            # Join the list of bytes chunks into a single byte string
-            audio_data = b"".join(output_list)
+            audio_data = output
 
         if not audio_data:
             print(
                 "Music generation failed. The API returned an unexpected data format."
             )
-            print(f"Received raw output type: {type(output_list[0])}")
+            print(f"Received output type: {type(output)}")
             return None
 
         # --- Save the Audio File ---
         music_dir = Path("music_generated")
         music_dir.mkdir(exist_ok=True)
-
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         file_path = music_dir / f"world_theme_{timestamp}.wav"
-
         with open(file_path, "wb") as f:
             f.write(audio_data)
-
         print(f"Audio file saved to: {file_path}")
         return file_path
 
     except Exception as e:
-        print(f"An error occurred during music generation or download: {e}")
+        if prediction:
+            print(f"An error occurred during prediction {prediction.id}: {e}")
+            if prediction.logs:
+                print("--- Replicate Logs ---")
+                print(prediction.logs)
+        else:
+            print(f"An error occurred during music generation: {e}")
         return None
