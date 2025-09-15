@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 from typing import Optional
 
-# Import all your project modules
+# All modules ...
 import news_fetcher
 import llm_analyzer
 import music_generator
