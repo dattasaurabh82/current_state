@@ -7,6 +7,7 @@ import argparse
 import news_fetcher
 import llm_analyzer
 import music_generator
+import music_post_processor
 # from player import AudioPlayer
 
 def load_regions_config(filename="config.json"):
@@ -34,9 +35,16 @@ if __name__ == "__main__":
         type=lambda x: x.lower() == "true",
         help="Set to 'True' to generate the music after analysis.",
     )
+    # Argument to control for post-processing
+    parser.add_argument(
+        "--post-process",
+        default=True,
+        type=lambda x: x.lower() == "true",
+        help="Set to 'True' to apply fade effects to the generated music.",
+    )
     args = parser.parse_args()
 
-    # --- UPDATED DATA LOADING LOGIC ---
+    # --- DATA LOADING LOGIC ---
     all_regional_data = None
 
     # --- Priority 1: Use the local file if provided ---
@@ -123,6 +131,10 @@ if __name__ == "__main__":
                         )
 
                         if audio_file_path:
+                            # --- POST-PROCESSING STEP ---
+                            if args.post_process:
+                                music_post_processor.process_and_replace(audio_file_path)
+                            
                             print("\nProcess complete. Music file is ready.")
                         else:
                             print("\nMusic generation failed. Please check the logs.")

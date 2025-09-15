@@ -89,7 +89,7 @@ class AudioPlayer:
             self._reader_thread.daemon = True
             self._reader_thread.start()
 
-            # FIX: Replace the ellipsis with the actual stream parameters
+            # Replace the ellipsis with the actual stream parameters
             self._stream = sd.RawOutputStream(
                 samplerate=samplerate,
                 blocksize=self.blocksize,
@@ -100,7 +100,7 @@ class AudioPlayer:
                 finished_callback=self.playback_finished.set,
             )
             self._stream.start()
-            # FIX: Complete the logger message
+            # Complete the logger message
             logger.success(f"Playback started for: {self.filepath.name}")
 
         except Exception as e:
