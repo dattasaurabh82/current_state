@@ -26,6 +26,8 @@ def analyze_news_headlines(articles: list[dict]) -> Optional[str]:
 
     headlines_for_prompt = [f"- {article.get('title', 'No Title')} (Source: {article.get('source', {}).get('name', 'N/A')})" for article in articles]
 
+    headlines_str = "\n".join(headlines_for_prompt)
+
     user_prompt = f"""
     **Instructions:**
     1. Read the headlines provided below.
@@ -38,7 +40,7 @@ def analyze_news_headlines(articles: list[dict]) -> Optional[str]:
     Provide your response as a single, raw JSON object with keys: "summary", "key_themes", "overall_mood", and "influential_sources".
 
     **Headlines:**
-    {"\n".join(headlines_for_prompt)}
+    {headlines_str}
     """
     
     try:
