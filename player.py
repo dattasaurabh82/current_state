@@ -57,6 +57,9 @@ class AudioPlayer:
         logger.info("Audio reader thread started.")
         while not self.playback_finished.is_set():
             # Use the instance's file handle
+            if self._file_handle is None:
+                logger.error("File handle is not initialized.")
+                break
             numpy_array: np.ndarray = self._file_handle.read(self.blocksize, dtype='float32')
             buffer = numpy_array.tobytes()
 
