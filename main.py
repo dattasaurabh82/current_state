@@ -3,12 +3,109 @@ import os
 from datetime import datetime
 import time
 import argparse
+from pathlib import Path
+from typing import Optional
 
+# Import all your project modules
 import news_fetcher
 import llm_analyzer
 import music_generator
 import music_post_processor
-# from player import AudioPlayer
+from player import AudioPlayer
+
+# --- Core Action Functions ---
+def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
+    """Encapsulates the entire news-to-music generation pipeline."""
+    print("\n>>> STARTING NEW SONG GENERATION PIPELINE <<<")
+    # 1. Load Data
+    all_regional_data = None
+    if args.local_file:
+        print(f"Loading news from local file: {args.local_file}")
+        try:
+            with open(args.local_file, "r", encoding="utf-8") as f:
+                all_regional_data = json.load(f)
+        except FileNotFoundError:
+            print(f"Error: Local file not found at '{args.local_file}'")
+            return None
+    else:
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        cache_filename = f"news_data_{today_str}.json"
+        if os.path.exists(cache_filename) and not args.fetch:
+            print(f"Loading news from today's cache file: {cache_filename}")
+            with open(cache_filename, "r", encoding="utf-8") as f:
+                all_regional_data = json.load(f)
+        elif args.fetch:
+            print(f"Fetching live data from API...")
+            config = load_regions_config()
+            if not config:
+                return None
+            all_regional_data = {}
+            for name, data in config["regions"].items():
+                if args.verbose:
+                    print(
+                        f"  -> Fetching for Region: {name} (Language: {data['language'].upper()})"
+                    )
+                articles = news_fetcher.fetch_news_for_language(data["language"])
+                all_regional_data[name] = {
+                    "language": data["language"],
+                    "articles": articles,
+                }
+            with open(cache_filename, "w", encoding="utf-8") as f:
+                json.dump(all_regional_data, f, ensure_ascii=False, indent=4)
+        else:
+            print(
+                "No local file specified and no cache file found. Use --fetch True to get new data."
+            )
+            return None
+
+    # 2. Analyze and Generate Prompt
+    all_articles = [
+        art for reg in all_regional_data.values() for art in reg.get("articles", [])
+    ]
+    if not all_articles:
+        print("No articles found to analyze.")
+        return None
+
+    music_prompt, _ = llm_analyzer.generate_music_prompt_from_news(all_articles)
+    if not music_prompt:
+        print("Failed to generate music prompt.")
+        return None
+
+    # 3. Generate Music
+    if not args.generate:
+        print("\nMusic generation skipped by command-line argument.")
+        return None  # Return None as no file was generated
+
+    audio_file_path = music_generator.generate_and_download_music(music_prompt)
+    if not audio_file_path:
+        print("Failed to generate music file.")
+        return None
+
+    # 4. Post-Process Music
+    if args.post_process:
+        music_post_processor.process_and_replace(audio_file_path)
+
+    print("\n>>> PIPELINE COMPLETE: New song is ready. <<<")
+    return audio_file_path
+
+
+def display_menu(state: str, latest_song: Optional[Path]):
+    # ... (this function is unchanged)
+    print("\n" + "=" * 40)
+    if not latest_song:
+        print("No music file available.")
+        print("(N)ew Song | (Q)uit")
+    elif state == "stopped":
+        print(f"Ready to play: {latest_song.name}")
+        print("(P)lay | (N)ew Song | (Q)uit")
+    elif state == "playing":
+        print(f"Now Playing: {latest_song.name}")
+        print("(P)ause | (S)top | (N)ew Song | (Q)uit")
+    elif state == "paused":
+        print(f"Paused: {latest_song.name}")
+        print("(P)resume | (S)top | (N)ew Song | (Q)uit")
+    print("=" * 40)
+
 
 def load_regions_config(filename="config.json"):
     try:
@@ -19,128 +116,127 @@ def load_regions_config(filename="config.json"):
         return None
 
 
-if __name__ == "__main__":
+# --- Main Application ---
+def main():
     parser = argparse.ArgumentParser(
-        description="Fetch news, analyze sentiment, and generate a music prompt, generate music"
+        description="Generate and play the world's daily theme song."
     )
-    parser.add_argument("--fetch", default=True, type=lambda x: x.lower() == "true")
-    parser.add_argument("--analyze", default=True, type=lambda x: x.lower() == "true")
-    parser.add_argument("--verbose", default=False, type=lambda x: x.lower() == "true")
-    parser.add_argument("--local-file", type=str, default=None)
-
-    # Argument to control music generation
+    parser.add_argument(
+        "--mode",
+        choices=["auto", "interactive"],
+        default="auto",
+        help="Application mode.",
+    )
+    parser.add_argument(
+        "--fetch",
+        default=False,
+        type=lambda x: x.lower() == "true",
+        help="Force fetch new news data.",
+    )
+    parser.add_argument(
+        "--local-file", type=str, default=None, help="Use a local news JSON file."
+    )
+    parser.add_argument(
+        "--verbose",
+        default=False,
+        type=lambda x: x.lower() == "true",
+        help="Enable detailed logging.",
+    )
     parser.add_argument(
         "--generate",
         default=True,
         type=lambda x: x.lower() == "true",
-        help="Set to 'True' to generate the music after analysis.",
+        help="Enable music generation.",
     )
-    # Argument to control for post-processing
     parser.add_argument(
         "--post-process",
         default=True,
         type=lambda x: x.lower() == "true",
-        help="Set to 'True' to apply fade effects to the generated music.",
+        help="Enable post-processing.",
+    )
+    parser.add_argument(
+        "--play",
+        default=True,
+        type=lambda x: x.lower() == "true",
+        help="Enable auto-playback (in auto mode).",
     )
     args = parser.parse_args()
 
-    # --- DATA LOADING LOGIC ---
-    all_regional_data = None
+    # State Variables
+    latest_audio_file_path: Optional[Path] = None
+    player_instance: Optional[AudioPlayer] = None
+    player_state = "stopped"
 
-    # --- Priority 1: Use the local file if provided ---
-    if args.local_file:
-        print(f"Loading news from local file: {args.local_file}")
-        try:
-            with open(args.local_file, "r", encoding="utf-8") as f:
-                all_regional_data = json.load(f)
-        except FileNotFoundError:
-            print(f"Error: Local file not found at '{args.local_file}'")
-            exit()
-    else:
-        # --- Priority 2: Try to use today's cache file ---
-        today_str = datetime.now().strftime("%Y-%m-%d")
-        cache_filename = f"news_data_{today_str}.json"
-        if os.path.exists(cache_filename):
-            print(f"Loading news from today's cache file: {cache_filename}")
-            with open(cache_filename, "r", encoding="utf-8") as f:
-                all_regional_data = json.load(f)
+    # --- Initial Song Generation ---
+    latest_audio_file_path = generate_new_song(args)
 
-        # --- Priority 3: Fetch live data if allowed ---
-        elif args.fetch:
-            print(f"No cache file found. Fetching live data from API...")
-            config = load_regions_config()
-            if not config:
-                exit()
+    # --- Mode-Based Action ---
+    if args.mode == "auto":
+        if latest_audio_file_path and args.play:
+            print("\n--- AUTO MODE: Starting playback ---")
+            player_instance = AudioPlayer(latest_audio_file_path)
+            player_instance.play()
+            player_instance.wait()
+            print("--- AUTO MODE: Playback finished. Exiting. ---")
+        elif not latest_audio_file_path:
+            print("--- AUTO MODE: Song generation failed. Exiting. ---")
+        else:  # Song was generated but --play was False
+            print(
+                "--- AUTO MODE: Song generated successfully. Exiting without playback. ---"
+            )
+        return
 
-            all_regional_data = {}
-            for region_name, region_data in config["regions"].items():
-                language_code = region_data["language"]
-                if args.verbose:
-                    print(
-                        f"  -> Fetching for Region: {region_name} (Language: {language_code.upper()})"
-                    )
-                articles = news_fetcher.fetch_news_for_language(language_code)
-                all_regional_data[region_name] = {
-                    "language": language_code,
-                    "articles": articles,
-                }
-
-            with open(cache_filename, "w", encoding="utf-8") as f:
-                json.dump(all_regional_data, f, ensure_ascii=False, indent=4)
-            if args.verbose:
-                print(f"Live data fetched and saved to {cache_filename}")
-
-    # --- Analysis and Generation Logic ---
-    if args.analyze:
-        if all_regional_data:
-            print("\n--- Analyzing World News with LLM ---")
-            all_articles = []
-            for region_data in all_regional_data.values():
-                articles = region_data.get("articles", [])
-                if articles and isinstance(articles, list):
-                    all_articles.extend(articles)
-
-            if not all_articles:
-                print("No articles available to analyze.")
-            else:
-                music_prompt, sentiment_analysis = (
-                    llm_analyzer.generate_music_prompt_from_news(all_articles)
-                )
-
-                if music_prompt and sentiment_analysis:
-                    print("\n========================================")
-                    print("          TODAY'S WORLD THEME")
-                    print("========================================")
-                    try:
-                        analysis_data = json.loads(sentiment_analysis)
-                        formatted_analysis = json.dumps(analysis_data, indent=2)
-                        print("\n--- LLM Sentiment Analysis ---")
-                        print(formatted_analysis)
-                    except json.JSONDecodeError:
-                        print("\n--- LLM Sentiment Analysis (raw) ---")
-                        print(sentiment_analysis)
-
-                    print("\n--- Generated Music Prompt ---")
-                    print(music_prompt)
-                    print("\n========================================")
-
-                    # --- MUSIC GENERATION STEP ---
-                    if args.generate:
-                        audio_file_path = music_generator.generate_and_download_music(
-                            music_prompt
-                        )
-
-                        if audio_file_path:
-                            # --- POST-PROCESSING STEP ---
-                            if args.post_process:
-                                music_post_processor.process_and_replace(audio_file_path)
-                            
-                            print("\nProcess complete. Music file is ready.")
-                        else:
-                            print("\nMusic generation failed. Please check the logs.")
-                    else:
-                        print("\nMusic generation skipped by command-line argument.")
+    # --- Interactive Loop ---
+    elif args.mode == "interactive":
+        while True:
+            if (
+                player_state == "playing"
+                and player_instance
+                and not player_instance.is_playing
+            ):
+                if latest_audio_file_path is not None:
+                    print(f"\n'{latest_audio_file_path.name}' finished playing.")
                 else:
-                    print("\nCould not generate a music prompt.")
-        else:
-            print("\nAnalysis enabled, but no data could be loaded.")
+                    print("\nSong finished playing.")
+                player_state = "stopped"
+
+            display_menu(player_state, latest_audio_file_path)
+            command = input("Enter command > ").lower().strip()
+
+            if command == "q":
+                if player_instance:
+                    player_instance.stop()
+                print("Exiting.")
+                break
+            elif command == "n":
+                if player_instance:
+                    player_instance.stop()
+                player_state = "stopped"
+                latest_audio_file_path = generate_new_song(args)
+            elif command == "p":
+                if not latest_audio_file_path:
+                    print("No music file available. Generate one with (n).")
+                    continue
+                if player_state == "stopped":
+                    player_instance = AudioPlayer(latest_audio_file_path)
+                    player_instance.play()
+                    player_state = "playing"
+                elif player_state == "playing":
+                    if player_instance:
+                        player_instance.pause()
+                    player_state = "paused"
+                elif player_state == "paused":
+                    if player_instance:
+                        player_instance.resume()
+                    player_state = "playing"
+            elif command == "s":
+                if player_state in ["playing", "paused"]:
+                    if player_instance:
+                        player_instance.stop()
+                    player_state = "stopped"
+            else:
+                print("Invalid command.")
+
+
+if __name__ == "__main__":
+    main()

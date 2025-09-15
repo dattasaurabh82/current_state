@@ -4,6 +4,7 @@
 
 - slow down track for 30 sec to make it feel longer [post processing]
 - player plugin integration ...
+- Something to keep the audio interface active ... (So the speaker's don;t shutdown)
 - Business logic of operation
 - HW sensor plugin ..
 - UI clean up ...
