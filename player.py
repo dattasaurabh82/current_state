@@ -1,5 +1,3 @@
-# player.py
-
 import queue
 import threading
 from pathlib import Path
@@ -8,10 +6,11 @@ import numpy as np
 import sounddevice as sd
 import soundfile as sf
 from loguru import logger
+import time
 
 class AudioPlayer:
     """
-    A non-blocking, buffered audio player.
+    A non-blocking, buffered audio player with pause/resume functionality.
     """
     def __init__(self, filepath, device=None, blocksize=2048, buffer_size=20):
         # --- Store Configuration ---
@@ -21,11 +20,10 @@ class AudioPlayer:
         self.buffer_size = buffer_size
 
         # --- Initialize State ---
-        # The queue and event are specific to each instance of the player
         self.audio_queue = queue.Queue(maxsize=buffer_size)
         self.playback_finished = threading.Event()
+        self.is_paused = False # state for pause/resume
 
-        # We'll keep track of the reader thread
         self._reader_thread = None
         self._stream = None
         self._file_handle = None
@@ -56,7 +54,9 @@ class AudioPlayer:
         """The file reader function, now a method."""
         logger.info("Audio reader thread started.")
         while not self.playback_finished.is_set():
-            # Use the instance's file handle
+            if self.is_paused:
+                time.sleep(0.1)
+                continue
             if self._file_handle is None:
                 logger.error("File handle is not initialized.")
                 break
@@ -69,66 +69,75 @@ class AudioPlayer:
             self.audio_queue.put(buffer)
         logger.info("Audio reader thread finished.")
 
-    # ---------------------- #
-    # Public control methods #
-    # ---------------------- #
-    # player.py
-
     def play(self):
         """
         Starts audio playback in a non-blocking way.
         """
         try:
-            # Open the file and store the handle in the instance
             self._file_handle = sf.SoundFile(self.filepath)
+            self.playback_finished.clear()
+            self.is_paused = False
 
             samplerate = self._file_handle.samplerate
             channels = self._file_handle.channels
-            dtype = 'float32'
-            logger.info(f"File Info: {samplerate} Hz, {channels} channels, {dtype} format")
-
-            # The target no longer needs the file handle passed as an argument
+            
             self._reader_thread = threading.Thread(target=self._read_chunks)
             self._reader_thread.daemon = True
             self._reader_thread.start()
 
-            # Replace the ellipsis with the actual stream parameters
             self._stream = sd.RawOutputStream(
                 samplerate=samplerate,
                 blocksize=self.blocksize,
                 device=self.device,
                 channels=channels,
-                dtype=dtype,
+                dtype='float32',
                 callback=self._callback,
                 finished_callback=self.playback_finished.set,
             )
             self._stream.start()
-            # Complete the logger message
             logger.success(f"Playback started for: {self.filepath.name}")
 
         except Exception as e:
             logger.exception(f"An unexpected error occurred during playback setup: {e}")
 
     def stop(self):
-        """Stops the playback and cleans up resources."""
+        """Stops the playback and cleans up resources completely."""
         logger.warning("Stopping playback...")
         self.playback_finished.set()
-        if self._reader_thread:
+        self.is_paused = False
+        if self._reader_thread and self._reader_thread.is_alive():
             self._reader_thread.join()
         if self._stream:
             self._stream.stop()
             self._stream.close()
-
-        # ... To close the file handle
         if self._file_handle:
             self._file_handle.close()
-            self._file_handle = None
+        
+        self._stream = None
+        self._file_handle = None
 
+    def pause(self):
+        """Pauses the audio stream."""
+        if self.is_playing and not self.is_paused:
+            self.is_paused = True
+            if self._stream is not None:
+                self._stream.stop()
+            logger.info("Playback paused.")
+
+    def resume(self):
+        """Resumes a paused audio stream."""
+        if self.is_paused:
+            self.is_paused = False
+            if self._stream is not None:
+                self._stream.start()
+                logger.info("Playback resumed.")
+            else:
+                logger.warning("Cannot resume: audio stream is not initialized.")
     def wait(self):
         """Waits for the playback to complete."""
         self.playback_finished.wait()
 
     @property
     def is_playing(self):
-        """Returns True if the audio is currently playing."""
+        """Returns True if the audio is currently playing and not finished."""
         return not self.playback_finished.is_set()
