@@ -1,36 +1,33 @@
-# player.py (Final version with looping)
-
 import queue
 import threading
 from pathlib import Path
 import time
-
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
 from loguru import logger
 
+
 class AudioPlayer:
-    """
-    A non-blocking, buffered audio player with pause/resume and looping functionality.
-    """
-    def __init__(self, filepath, device=None, blocksize=2048, buffer_size=20, loop_by_default=True):
-        # --- Store Configuration ---
+    def __init__(
+        self,
+        filepath,
+        device=None,
+        blocksize=2048,
+        buffer_size=20,
+        loop_by_default=True,
+    ):
         self.filepath = Path(filepath)
         self.device = device
         self.blocksize = blocksize
         self.buffer_size = buffer_size
-
-        # --- Initialize State ---
         self.audio_queue = queue.Queue(maxsize=buffer_size)
         self.playback_finished = threading.Event()
         self.is_paused = False
         self.loop = loop_by_default
-
         self._reader_thread = None
         self._stream = None
         self._file_handle = None
-
         if not self.filepath.exists():
             raise FileNotFoundError(f"Audio file not found: {self.filepath}")
 
@@ -41,15 +38,23 @@ class AudioPlayer:
             raise sd.CallbackAbort
 
         try:
-            data = self.audio_queue.get_nowait()
+            data = self.audio_queue.get(timeout=0.5)  # Use a small timeout
         except queue.Empty:
             logger.error("Buffer is empty! Increase buffer_size.")
             raise sd.CallbackAbort
 
+        # --- Handle looping and padding correctly ---
         if len(data) < len(outdata):
-            outdata[:len(data)] = data
-            outdata[len(data):] = b'\x00' * (len(outdata) - len(data))
-            raise sd.CallbackStop
+            # This is the last chunk of the file
+            outdata[: len(data)] = data
+            outdata[len(data) :] = b"\x00" * (
+                len(outdata) - len(data)
+            )  # Pad with silence
+            if not self.loop:
+                # Only stop the stream if we are not supposed to loop
+                raise sd.CallbackStop
+            # If self.loop is True, we do nothing here. The _read_chunks thread
+            # is already rewinding the file and will refill the queue.
         else:
             outdata[:] = data
 
@@ -62,58 +67,50 @@ class AudioPlayer:
                 continue
             if self._file_handle is None:
                 break
-            
-            numpy_array: np.ndarray = self._file_handle.read(self.blocksize, dtype='float32')
-            
-            # --- Looping Logic ---
+
+            numpy_array: np.ndarray = self._file_handle.read(
+                self.blocksize, dtype="float32"
+            )
+
             if not numpy_array.size:
                 if self.loop:
                     logger.info("End of file reached. Looping back to the beginning.")
-                    self._file_handle.seek(0) # Rewind the file
+                    self._file_handle.seek(0)
                     continue
                 else:
                     logger.info("End of file reached. No looping.")
                     break
-            # --- End Looping Logic ---
 
             buffer = numpy_array.tobytes()
             self.audio_queue.put(buffer)
-            
+
         logger.info("Audio reader thread finished.")
 
     def play(self):
-        """
-        Starts audio playback in a non-blocking way.
-        """
         try:
             self._file_handle = sf.SoundFile(self.filepath)
             self.playback_finished.clear()
             self.is_paused = False
-
             samplerate = self._file_handle.samplerate
             channels = self._file_handle.channels
-            
             self._reader_thread = threading.Thread(target=self._read_chunks)
             self._reader_thread.daemon = True
             self._reader_thread.start()
-
             self._stream = sd.RawOutputStream(
                 samplerate=samplerate,
                 blocksize=self.blocksize,
                 device=self.device,
                 channels=channels,
-                dtype='float32',
+                dtype="float32",
                 callback=self._callback,
                 finished_callback=self.playback_finished.set,
             )
             self._stream.start()
             logger.success(f"Playback started for: {self.filepath.name}")
-
         except Exception as e:
             logger.exception(f"An unexpected error occurred during playback setup: {e}")
 
     def stop(self):
-        """Stops the playback and cleans up resources completely."""
         logger.warning("Stopping playback...")
         self.playback_finished.set()
         self.is_paused = False
@@ -124,12 +121,10 @@ class AudioPlayer:
             self._stream.close()
         if self._file_handle:
             self._file_handle.close()
-        
         self._stream = None
         self._file_handle = None
 
     def pause(self):
-        """Pauses the audio stream."""
         if self.is_playing and not self.is_paused:
             self.is_paused = True
             if self._stream is not None:
@@ -137,7 +132,6 @@ class AudioPlayer:
             logger.info("Playback paused.")
 
     def resume(self):
-        """Resumes a paused audio stream."""
         if self.is_paused:
             self.is_paused = False
             if self._stream is not None:
@@ -145,18 +139,15 @@ class AudioPlayer:
                 logger.info("Playback resumed.")
             else:
                 logger.warning("Cannot resume: audio stream is not initialized.")
-    
+
     def wait(self):
-        """Waits for the playback to complete."""
         self.playback_finished.wait()
 
     def toggle_loop(self):
-        """Toggles the looping state on or off."""
         self.loop = not self.loop
         status = "ON" if self.loop else "OFF"
         logger.info(f"Looping is now {status}.")
 
     @property
     def is_playing(self):
-        """Returns True if the audio is currently playing and not finished."""
         return not self.playback_finished.is_set()
