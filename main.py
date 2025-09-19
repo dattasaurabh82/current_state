@@ -30,7 +30,7 @@ def setup_logger():
 
 def handle_exit(sig, frame):
     """Gracefully handle Ctrl+C."""
-    logger.warning("\nEXIT SIGNAL RECEIVED")
+    logger.warning("EXIT SIGNAL RECEIVED")
     music_generator.cancel_current_prediction()
     global player_instance
     if player_instance and player_instance.is_playing:
@@ -106,7 +106,7 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
 def display_menu(state: str, latest_song: Optional[Path], player: Optional[AudioPlayer]):
     """Displays a dynamic command menu based on the player state."""
     # This function is UI, so we keep using print()
-    print("\n" + "=" * 40)
+    # print("\n" + "=" * 40)
     loop_status = ""
     if player:
         loop_status = "ON" if player.loop else "OFF"
