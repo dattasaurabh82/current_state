@@ -23,7 +23,7 @@ class AudioPlayer:
         # --- Threading Events ---
         self.playback_finished = threading.Event()
         self.stop_event = threading.Event()
-        self._is_paused = False
+        self._is_paused = False # Use a simple boolean for pause state
 
         self.loop = loop_by_default
         self._reader_thread = None
@@ -41,7 +41,8 @@ class AudioPlayer:
 
         # If paused, just feed silence and return immediately.
         if self._is_paused:
-            outdata.fill(0)
+            # --- FIX: Correct way to write silence to a CFFI buffer ---
+            outdata[:] = b'\x00' * len(outdata)
             return
 
         try:
@@ -54,9 +55,9 @@ class AudioPlayer:
             else:
                 outdata[:] = data
         except queue.Empty:
-            # This can happen briefly between loops or at the end of a file.
-            # Outputting silence is a safe fallback.
-            outdata.fill(0)
+            # This can happen briefly. Outputting silence is a safe fallback.
+            # --- FIX: Correct way to write silence to a CFFI buffer ---
+            outdata[:] = b'\x00' * len(outdata)
 
     def _read_chunks(self):
         """The file reader function."""
