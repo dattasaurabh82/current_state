@@ -1,8 +1,7 @@
-# news_fetcher.py
-
 import os
 import requests
 from dotenv import load_dotenv
+from loguru import logger
 
 load_dotenv()
 
@@ -39,5 +38,5 @@ def fetch_news_for_language(language_code, article_count=5):
         return data.get("articles", [])
         
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching news for language '{language_code}': {e}")
+        logger.error(f"Error fetching news for language '{language_code}': {e}")
         return []

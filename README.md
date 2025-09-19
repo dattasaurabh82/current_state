@@ -2,16 +2,20 @@
 
 ## ToDo
 
+### Low
+
 - slow down track for 30 sec to make it feel longer [post processing]
 - Send cancel to other agent calls
-- UI clean up ...
-- logoru everywhere ...
-- Something to keep the audio interface active ... (So the speaker's don't shutdown)
-- Business logic of operation
-- HW sensor plugin ..
 - maybe web ui
 - Dockerization ...
 - Docu ...
+
+### High
+
+- logoru everywhere ...
+- Something to keep the audio interface active ... (So the speaker's don't shutdown)
+- Business logic of operation ...
+- HW sensor plugin ..
 
 ## post pi first boot setup
 

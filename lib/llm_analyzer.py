@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
-
-# Import our specialized agents
+from loguru import logger
 from llm_agents import news_analyzer, musicgen_prompt_crafter 
 
 load_dotenv()
@@ -13,27 +12,27 @@ def generate_music_prompt_from_news(articles):
     """
     Orchestrates the two-agent process of analyzing news and crafting a music prompt.
     """
-    print("\n\nSTARTING LLM ANALYSIS PIPELINE...")
+    logger.info("\n\nSTARTING LLM ANALYSIS PIPELINE...")
 
     headlines_for_prompt = [f"- {article.get('title', 'No Title')} (Source: {article.get('source', {}).get('name', 'N/A')})" for article in articles]
     
     if not headlines_for_prompt:
-        print("No valid article titles found to analyze.")
+        logger.warning("No valid article titles found to analyze.")
         return None, None
 
     # --- Step 1: Call the News Analyzer Agent ---
     analysis_json = news_analyzer.analyze_news_headlines(articles)
     
     if not analysis_json:
-        print("Pipeline failed at news analysis step.")
+        logger.error("Pipeline failed at news analysis step.")
         return None, None
 
     # --- Step 2: Call the Prompt Crafter Agent ---
     music_prompt = musicgen_prompt_crafter.craft_music_prompt(analysis_json)
 
     if not music_prompt:
-        print("Pipeline failed at prompt crafting step.")
+        logger.error("Pipeline failed at prompt crafting step.")
         return None, analysis_json # Return analysis for debugging
 
-    print("LLM analysis pipeline completed successfully.")
+    logger.success("LLM analysis pipeline completed successfully.")
     return music_prompt, analysis_json
