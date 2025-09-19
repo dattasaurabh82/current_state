@@ -23,5 +23,4 @@ tmp/*
 
 uv.lock
 
-tests/*.py
 music_generated/*
