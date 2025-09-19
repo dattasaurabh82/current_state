@@ -2,7 +2,8 @@ import replicate
 import requests
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Union, List, Any
+from typing import Optional
+from loguru import logger
 
 current_prediction = None
 
@@ -11,12 +12,12 @@ def cancel_current_prediction():
     """Cancels the currently running Replicate prediction if there is one."""
     global current_prediction
     if current_prediction:
-        print("\nAttempting to cancel the current Replicate prediction...")
+        logger.warning("\nAttempting to cancel the current Replicate prediction...")
         try:
             current_prediction.cancel()
-            print("Cancellation request sent successfully.")
+            logger.info("Cancellation request sent successfully.")
         except Exception as e:
-            print(f"Error sending cancellation request: {e}")
+            logger.error(f"Error sending cancellation request: {e}")
         current_prediction = None
 
 
@@ -26,9 +27,9 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
     """
     global current_prediction
 
-    print("\nGENERATING MUSIC...")
+    logger.info("\nGENERATING MUSIC...")
     clean_prompt = prompt.strip().strip('"')
-    print(f'Sending prompt to MusicGen: "{clean_prompt}"')
+    logger.info(f'Sending prompt to MusicGen: "{clean_prompt}"')
 
     prediction = None
     try:
@@ -51,8 +52,8 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         )
 
         current_prediction = prediction
-        print(f"\nMusic generation started with ID: {prediction.id}")
-        print("Waiting for generation to complete... (Press Ctrl+C to cancel)")
+        logger.info(f"\nMusic generation started with ID: {prediction.id}")
+        logger.info("Waiting for generation to complete... (Press Ctrl+C to cancel)")
 
         # This is a blocking call. It waits until the prediction is done.
         prediction.wait()
@@ -63,41 +64,41 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         current_prediction = None  # The job is done, clear the global variable
 
         if output is None:
-            print("Music generation failed. The API returned no output.")
+            logger.error("Music generation failed. The API returned no output.")
             # Optionally, print logs from the failed prediction
             if prediction.logs:
-                print("--- Replicate Logs ---")
-                print(prediction.logs)
+                logger.info("--- Replicate Logs ---")
+                logger.info(prediction.logs)
             return None
 
         audio_data = None
         # The output can be a single URL or a list containing a URL.
         # yes that happened (so that's why ...)
         # We also handle the raw bytes case just in case.
-        print("")
+        logger.info("")
         if isinstance(output, str):
             output_url = output
-            print(f"Music generated successfully!\nURL: {output_url}")
-            print("\nDownloading audio file...")
+            logger.info(f"Music generated successfully!\nURL: {output_url}")
+            logger.warning("\nDownloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
         elif isinstance(output, list) and output and isinstance(output[0], str):
             output_url = output[0]
-            print(f"Music generated successfully!\nURL: {output_url}")
-            print("\nDownloading audio file...")
+            logger.info(f"Music generated successfully!\nURL: {output_url}")
+            logger.warning("\nDownloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
         elif isinstance(output, bytes):
-            print("\nMusic generated successfully!\nReceived raw audio data.")
+            logger.info("\nMusic generated successfully!\nReceived raw audio data.")
             audio_data = output
 
         if not audio_data:
-            print(
+            logger.error(
                 "\nMusic generation failed.\nThe API returned an unexpected data format."
             )
-            print(f"\nReceived output type: {type(output)}")
+            logger.info(f"\nReceived output type: {type(output)}")
             return None
 
         # --- Save the Audio File ---
@@ -107,15 +108,15 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         file_path = music_dir / f"world_theme_{timestamp}.wav"
         with open(file_path, "wb") as f:
             f.write(audio_data)
-        print(f"Audio file saved to: {file_path}")
+        logger.info(f"Audio file saved to: {file_path}")
         return file_path
 
     except Exception as e:
         if prediction:
-            print(f"An error occurred during prediction {prediction.id}: {e}")
+            logger.error(f"An error occurred during prediction {prediction.id}: {e}")
             if prediction.logs:
-                print("--- Replicate Logs ---")
-                print(prediction.logs)
+                logger.info("--- Replicate Logs ---")
+                logger.info(prediction.logs)
         else:
-            print(f"An error occurred during music generation: {e}")
+            logger.error(f"An error occurred during music generation: {e}")
         return None

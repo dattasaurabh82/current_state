@@ -5,9 +5,9 @@ import argparse
 from pathlib import Path
 from typing import Optional
 import signal
+import time
+from loguru import logger
 
-# All modules ...
-# All modules are now imported from the 'lib' package
 from lib import (
     news_fetcher,
     llm_analyzer,
@@ -19,50 +19,58 @@ from lib.player import AudioPlayer
 # --- Global player instance for the signal handler ---
 player_instance: Optional[AudioPlayer] = None
 
-# --- Signal Handler ---
+
+def setup_logger():
+    """Configures the logger for clean, colored output."""
+    logger.remove()  # Remove default handler
+    logger.add(
+        lambda msg: print(msg, end=""),
+        colorize=True,
+        format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>",
+        level="INFO",
+    )
+
+
 def handle_exit(sig, frame):
     """Gracefully handle Ctrl+C."""
-    print("\nEXIT SIGNAL RECEIVED")
-    # Call the cancellation function from the music generator
+    logger.warning("\nEXIT SIGNAL RECEIVED")
     music_generator.cancel_current_prediction()
-    # Stop the audio player if it's running
     global player_instance
     if player_instance and player_instance.is_playing:
-        print("Stopping audio playback...")
+        logger.info("Stopping audio playback...")
         player_instance.stop()
-    print("Exiting.")
+    logger.info("Exiting.")
     exit(0)
 
-# --- Core Action Functions ---
+
 def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
     """Encapsulates the entire news-to-music generation pipeline."""
-    print("\nSTARTING NEW SONG GENERATION PIPELINE")
-    # 1. Load Data
+    logger.info("STARTING NEW SONG GENERATION PIPELINE")
     all_regional_data = None
     if args.local_file:
-        print(f"Loading news from local file: {args.local_file}")
+        logger.info(f"Loading news from local file: {args.local_file}")
         try:
             with open(args.local_file, "r", encoding="utf-8") as f:
                 all_regional_data = json.load(f)
         except FileNotFoundError:
-            print(f"Error: Local file not found at '{args.local_file}'")
+            logger.error(f"Local file not found at '{args.local_file}'")
             return None
     else:
         today_str = datetime.now().strftime("%Y-%m-%d")
         cache_filename = f"news_data_{today_str}.json"
         if os.path.exists(cache_filename) and not args.fetch:
-            print(f"Loading news from today's cache file: {cache_filename}")
+            logger.info(f"Loading news from today's cache file: {cache_filename}")
             with open(cache_filename, "r", encoding="utf-8") as f:
                 all_regional_data = json.load(f)
         elif args.fetch:
-            print(f"\nFETCHING LIVE NEWS DATA FROM API...")
+            logger.info("FETCHING LIVE NEWS DATA FROM API...")
             config = load_regions_config()
             if not config:
                 return None
             all_regional_data = {}
             for name, data in config["regions"].items():
                 if args.verbose:
-                    print(
+                    logger.debug(
                         f"  -> Fetching for Region: {name} (Language: {data['language'].upper()})"
                     )
                 articles = news_fetcher.fetch_news_for_language(data["language"])
@@ -73,44 +81,44 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
             with open(cache_filename, "w", encoding="utf-8") as f:
                 json.dump(all_regional_data, f, ensure_ascii=False, indent=4)
         else:
-            print(
+            logger.warning(
                 "No local file specified and no cache file found. Use --fetch True to get new data."
             )
             return None
 
-    # 2. Analyze and Generate Prompt
     all_articles = [
         art for reg in all_regional_data.values() for art in reg.get("articles", [])
     ]
     if not all_articles:
-        print("No articles found to analyze.")
+        logger.warning("No articles found to analyze.")
         return None
 
     music_prompt, _ = llm_analyzer.generate_music_prompt_from_news(all_articles)
     if not music_prompt:
-        print("Failed to generate music prompt.")
+        logger.error("Failed to generate music prompt.")
         return None
 
-    # 3. Generate Music
     if not args.generate:
-        print("\nMusic generation skipped by command-line argument.")
-        return None  # Return None as no file was generated
+        logger.info("Music generation skipped by command-line argument.")
+        return None
 
     audio_file_path = music_generator.generate_and_download_music(music_prompt)
     if not audio_file_path:
-        print("Failed to generate music file.")
+        logger.error("Failed to generate music file.")
         return None
 
-    # 4. Post-Process Music
     if args.post_process:
         music_post_processor.process_and_replace(audio_file_path)
 
-    print("\nPIPELINE COMPLETE: New song is ready.")
+    logger.success("PIPELINE COMPLETE: New song is ready!")
     return audio_file_path
 
 
-def display_menu(state: str, latest_song: Optional[Path], player: Optional[AudioPlayer]):
+def display_menu(
+    state: str, latest_song: Optional[Path], player: Optional[AudioPlayer]
+):
     """Displays a dynamic command menu based on the player state."""
+    # This function is UI, so we keep using print()
     print("\n" + "=" * 40)
     loop_status = ""
     if player:
@@ -136,7 +144,7 @@ def load_regions_config(filename="config.json"):
         with open(filename, "r") as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"Error: {filename} not found.")
+        logger.error(f"Config file '{filename}' not found.")
         return None
 
 
@@ -144,23 +152,26 @@ def find_latest_song(directory="music_generated") -> Optional[Path]:
     """Finds the most recently created .wav file in a directory."""
     music_dir = Path(directory)
     if not music_dir.exists():
-        print(f"Error: Music directory '{directory}' not found.")
+        logger.error(f"Music directory '{directory}' not found.")
         return None
-    
+
     wav_files = list(music_dir.glob("*.wav"))
     if not wav_files:
-        print(f"No .wav files found in '{directory}'.")
+        logger.warning(f"No .wav files found in '{directory}'.")
         return None
-        
+
     latest_file = max(wav_files, key=lambda p: p.stat().st_mtime)
-    print(f"Found latest song: {latest_file.name}")
+    logger.info(f"Found latest song: {latest_file.name}")
     return latest_file
 
 
 # --- Main Application ---
 def main():
+    global player_instance
+    setup_logger()  # Configure the logger at the start
     signal.signal(signal.SIGINT, handle_exit)
-    
+
+    # ... (parser setup remains the same) ...
     parser = argparse.ArgumentParser(
         description="Generate and play the world's daily theme song."
     )
@@ -203,48 +214,41 @@ def main():
         type=lambda x: x.lower() == "true",
         help="Enable auto-playback (in auto mode).",
     )
-    
     parser.add_argument(
         "--play-latest",
-        action='store_true', # This makes it a flag, e.g., --play-latest
-        help="Skip generation and play the most recent song in interactive mode."
+        action="store_true",
+        help="Skip generation and play the most recent song.",
     )
-    
     args = parser.parse_args()
 
     # State Variables
     latest_audio_file_path: Optional[Path] = None
-    player_instance: Optional[AudioPlayer] = None
     player_state = "stopped"
 
-    # --- Handle --play-latest ---
     if args.play_latest:
-        args.mode = 'interactive' # Force interactive mode
+        args.mode = "interactive"
         latest_audio_file_path = find_latest_song()
         if not latest_audio_file_path:
-            print("Could not find a song to play. Exiting.")
+            logger.error("Could not find a song to play. Exiting.")
             return
     else:
-        # --- Initial Song Generation (the original logic) ---
         latest_audio_file_path = generate_new_song(args)
 
-    # --- Mode-Based Action ---
     if args.mode == "auto":
         if latest_audio_file_path and args.play:
-            print("\n--- AUTO MODE: Starting playback ---")
+            logger.info("AUTO MODE: Starting playback")
             player_instance = AudioPlayer(latest_audio_file_path, loop_by_default=True)
             player_instance.play()
             player_instance.wait()
-            print("--- AUTO MODE: Playback finished. Exiting. ---")
+            logger.info("AUTO MODE: Playback finished. Exiting.")
         elif not latest_audio_file_path:
-            print("--- AUTO MODE: Song generation failed. Exiting. ---")
-        else:  # Song was generated but --play was False
-            print(
-                "--- AUTO MODE: Song generated successfully. Exiting without playback. ---"
+            logger.error("AUTO MODE: Song generation failed. Exiting.")
+        else:
+            logger.info(
+                "AUTO MODE: Song generated successfully. Exiting without playback."
             )
         return
 
-    # --- Interactive Loop ---
     elif args.mode == "interactive":
         while True:
             if (
@@ -252,12 +256,8 @@ def main():
                 and player_instance
                 and not player_instance.is_playing
             ):
-                # This check handles when a non-looping song finishes naturally
                 if not player_instance.loop:
-                    if latest_audio_file_path is not None:
-                        print(f"\n'{latest_audio_file_path.name}' finished playing.")
-                    else:
-                        print("\nSong finished playing.")
+                    logger.info(f"'{latest_audio_file_path.name}' finished playing.")
                     player_state = "stopped"
 
             display_menu(player_state, latest_audio_file_path, player_instance)
@@ -266,7 +266,7 @@ def main():
             if command == "q":
                 if player_instance:
                     player_instance.stop()
-                print("Exiting.")
+                logger.info("Exiting.")
                 break
             elif command == "n":
                 if player_instance:
@@ -276,7 +276,7 @@ def main():
                 latest_audio_file_path = generate_new_song(args)
             elif command == "p":
                 if not latest_audio_file_path:
-                    print("No music file available. Generate one with (n).")
+                    logger.warning("No music file available. Generate one with (n).")
                     continue
                 if player_state == "stopped":
                     player_instance = AudioPlayer(latest_audio_file_path)
@@ -295,14 +295,14 @@ def main():
                     if player_instance:
                         player_instance.stop()
                     player_state = "stopped"
-                    player_instance = None # Clear the instance after stopping
+                    player_instance = None
             elif command == "l":
                 if player_instance and player_state in ["playing", "paused"]:
                     player_instance.toggle_loop()
                 else:
-                    print("Cannot toggle loop. No song is currently active.")
+                    logger.warning("Cannot toggle loop. No song is currently active.")
             else:
-                print("Invalid command.")
+                logger.warning("Invalid command.")
 
 
 if __name__ == "__main__":
