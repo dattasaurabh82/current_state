@@ -39,9 +39,7 @@ class AudioPlayer:
             logger.error("Output underflow! Increase buffer_size.")
             raise sd.CallbackAbort
 
-        # If paused, just feed silence and return immediately.
         if self._is_paused:
-            # --- FIX: Correct way to write silence to a CFFI buffer ---
             outdata[:] = b'\x00' * len(outdata)
             return
 
@@ -55,8 +53,6 @@ class AudioPlayer:
             else:
                 outdata[:] = data
         except queue.Empty:
-            # This can happen briefly. Outputting silence is a safe fallback.
-            # --- FIX: Correct way to write silence to a CFFI buffer ---
             outdata[:] = b'\x00' * len(outdata)
 
     def _read_chunks(self):
@@ -65,8 +61,6 @@ class AudioPlayer:
         while not self.stop_event.is_set():
             try:
                 if self._is_paused:
-                    # When paused, sleep briefly to prevent this loop from
-                    # consuming CPU unnecessarily.
                     threading.Event().wait(0.1)
                     continue
 
@@ -80,13 +74,11 @@ class AudioPlayer:
                         self._file_handle.seek(0)
                         continue
                     else:
-                        break # End of file
+                        break
                 
-                # This will block until there is space in the queue.
                 self.audio_queue.put(numpy_array.tobytes(), timeout=0.5)
 
             except queue.Full:
-                # If the queue is full, just wait and try again.
                 continue
             except Exception as e:
                 logger.error(f"Error in reader thread: {e}")
@@ -148,6 +140,11 @@ class AudioPlayer:
         if self._is_paused:
             self._is_paused = False
             logger.info("Playback resumed.")
+            
+    # --- METHOD RESTORED HERE ---
+    def wait(self):
+        """Waits for the playback to complete."""
+        self.playback_finished.wait()
 
     def toggle_loop(self):
         """Toggles the looping state."""
