@@ -22,7 +22,7 @@ PROMPT_TEMPLATE = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|
 """
 
 def craft_music_prompt(analysis_json: str) -> Optional[str]:
-    logger.info("  -> (Agent 2) Crafting music prompt from analysis...")
+    logger.info("[Agent 2] Crafting music prompt from analysis...")
     
     try:
         analysis = json.loads(analysis_json)
@@ -30,7 +30,7 @@ def craft_music_prompt(analysis_json: str) -> Optional[str]:
         mood_context = f"The overall mood is '{analysis.get('overall_mood', 'neutral')}' with key themes of '{', '.join(analysis.get('key_themes', []))}'."
 
     except json.JSONDecodeError:
-        logger.error("  -> (Agent 2) Error: Invalid JSON received from analysis step.")
+        logger.error("[Agent 2] Error: Invalid JSON received from analysis step.")
         return None
 
     user_prompt = f"""
@@ -59,12 +59,12 @@ def craft_music_prompt(analysis_json: str) -> Optional[str]:
         logger.debug(f"[Agent 2] Raw output from LLM:")
         logger.debug(f"{final_prompt}")
         if not final_prompt:
-            logger.error("  -> (Agent 2) Error: Received empty response from the API.")
+            logger.error("[Agent 2] Error: Received empty response from the API.")
             return None
 
-        logger.info("  -> (Agent 2) Prompt crafting complete.")
+        logger.info("[Agent 2] Prompt crafting complete.")
         return final_prompt
 
     except Exception as e:
-        logger.error(f"  -> (Agent 2) An unexpected error occurred during prompt crafting: {e}")
+        logger.error(f"[Agent 2] An unexpected error occurred during prompt crafting: {e}")
         return None
