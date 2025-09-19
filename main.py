@@ -5,7 +5,6 @@ import argparse
 from pathlib import Path
 from typing import Optional
 import signal
-import time
 from loguru import logger
 
 from lib import (
@@ -16,9 +15,8 @@ from lib import (
 )
 from lib.player import AudioPlayer
 
-# --- Global player instance for the signal handler ---
+# Global player instance for the signal handler
 player_instance: Optional[AudioPlayer] = None
-
 
 def setup_logger():
     """Configures the logger for clean, colored output."""
@@ -27,9 +25,8 @@ def setup_logger():
         lambda msg: print(msg, end=""),
         colorize=True,
         format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>",
-        level="INFO",
+        level="INFO"
     )
-
 
 def handle_exit(sig, frame):
     """Gracefully handle Ctrl+C."""
@@ -41,7 +38,6 @@ def handle_exit(sig, frame):
         player_instance.stop()
     logger.info("Exiting.")
     exit(0)
-
 
 def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
     """Encapsulates the entire news-to-music generation pipeline."""
@@ -70,9 +66,7 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
             all_regional_data = {}
             for name, data in config["regions"].items():
                 if args.verbose:
-                    logger.debug(
-                        f"  -> Fetching for Region: {name} (Language: {data['language'].upper()})"
-                    )
+                    logger.debug(f"  -> Fetching for Region: {name} (Language: {data['language'].upper()})")
                 articles = news_fetcher.fetch_news_for_language(data["language"])
                 all_regional_data[name] = {
                     "language": data["language"],
@@ -81,14 +75,10 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
             with open(cache_filename, "w", encoding="utf-8") as f:
                 json.dump(all_regional_data, f, ensure_ascii=False, indent=4)
         else:
-            logger.warning(
-                "No local file specified and no cache file found. Use --fetch True to get new data."
-            )
+            logger.warning("No local file specified and no cache file found. Use --fetch True to get new data.")
             return None
 
-    all_articles = [
-        art for reg in all_regional_data.values() for art in reg.get("articles", [])
-    ]
+    all_articles = [art for reg in all_regional_data.values() for art in reg.get("articles", [])]
     if not all_articles:
         logger.warning("No articles found to analyze.")
         return None
@@ -110,13 +100,10 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
     if args.post_process:
         music_post_processor.process_and_replace(audio_file_path)
 
-    logger.success("PIPELINE COMPLETE: New song is ready!")
+    logger.success("PIPELINE COMPLETE: New song is ready.")
     return audio_file_path
 
-
-def display_menu(
-    state: str, latest_song: Optional[Path], player: Optional[AudioPlayer]
-):
+def display_menu(state: str, latest_song: Optional[Path], player: Optional[AudioPlayer]):
     """Displays a dynamic command menu based on the player state."""
     # This function is UI, so we keep using print()
     print("\n" + "=" * 40)
@@ -154,71 +141,32 @@ def find_latest_song(directory="music_generated") -> Optional[Path]:
     if not music_dir.exists():
         logger.error(f"Music directory '{directory}' not found.")
         return None
-
+    
     wav_files = list(music_dir.glob("*.wav"))
     if not wav_files:
         logger.warning(f"No .wav files found in '{directory}'.")
         return None
-
+        
     latest_file = max(wav_files, key=lambda p: p.stat().st_mtime)
     logger.info(f"Found latest song: {latest_file.name}")
     return latest_file
 
 
-# --- Main Application ---
+# Main Application
 def main():
     global player_instance
-    setup_logger()  # Configure the logger at the start
+    setup_logger() # Configure the logger at the start
     signal.signal(signal.SIGINT, handle_exit)
-
-    # ... (parser setup remains the same) ...
-    parser = argparse.ArgumentParser(
-        description="Generate and play the world's daily theme song."
-    )
-    parser.add_argument(
-        "--mode",
-        choices=["auto", "interactive"],
-        default="auto",
-        help="Application mode.",
-    )
-    parser.add_argument(
-        "--fetch",
-        default=False,
-        type=lambda x: x.lower() == "true",
-        help="Force fetch new news data.",
-    )
-    parser.add_argument(
-        "--local-file", type=str, default=None, help="Use a local news JSON file."
-    )
-    parser.add_argument(
-        "--verbose",
-        default=False,
-        type=lambda x: x.lower() == "true",
-        help="Enable detailed logging.",
-    )
-    parser.add_argument(
-        "--generate",
-        default=True,
-        type=lambda x: x.lower() == "true",
-        help="Enable music generation.",
-    )
-    parser.add_argument(
-        "--post-process",
-        default=True,
-        type=lambda x: x.lower() == "true",
-        help="Enable post-processing.",
-    )
-    parser.add_argument(
-        "--play",
-        default=True,
-        type=lambda x: x.lower() == "true",
-        help="Enable auto-playback (in auto mode).",
-    )
-    parser.add_argument(
-        "--play-latest",
-        action="store_true",
-        help="Skip generation and play the most recent song.",
-    )
+    
+    parser = argparse.ArgumentParser(description="Generate and play the world's daily theme song.")
+    parser.add_argument("--mode", choices=["auto", "interactive"], default="auto", help="Application mode.")
+    parser.add_argument("--fetch", default=False, type=lambda x: x.lower() == "true", help="Force fetch new news data.")
+    parser.add_argument("--local-file", type=str, default=None, help="Use a local news JSON file.")
+    parser.add_argument("--verbose", default=False, type=lambda x: x.lower() == "true", help="Enable detailed logging.")
+    parser.add_argument("--generate", default=True, type=lambda x: x.lower() == "true", help="Enable music generation.")
+    parser.add_argument("--post-process", default=True, type=lambda x: x.lower() == "true", help="Enable post-processing.")
+    parser.add_argument("--play", default=True, type=lambda x: x.lower() == "true", help="Enable auto-playback (in auto mode).")
+    parser.add_argument("--play-latest", action='store_true', help="Skip generation and play the most recent song.")
     args = parser.parse_args()
 
     # State Variables
@@ -226,7 +174,7 @@ def main():
     player_state = "stopped"
 
     if args.play_latest:
-        args.mode = "interactive"
+        args.mode = 'interactive'
         latest_audio_file_path = find_latest_song()
         if not latest_audio_file_path:
             logger.error("Could not find a song to play. Exiting.")
@@ -244,22 +192,16 @@ def main():
         elif not latest_audio_file_path:
             logger.error("AUTO MODE: Song generation failed. Exiting.")
         else:
-            logger.info(
-                "AUTO MODE: Song generated successfully. Exiting without playback."
-            )
+            logger.info("AUTO MODE: Song generated successfully. Exiting without playback.")
         return
 
     elif args.mode == "interactive":
         while True:
-            if (
-                player_state == "playing"
-                and player_instance
-                and not player_instance.is_playing
-            ):
+            if player_state == "playing" and player_instance and not player_instance.is_playing:
                 if not player_instance.loop:
                     logger.info(f"'{latest_audio_file_path.name}' finished playing.")
                     player_state = "stopped"
-
+            
             display_menu(player_state, latest_audio_file_path, player_instance)
             command = input("Enter command > ").lower().strip()
 
@@ -303,7 +245,6 @@ def main():
                     logger.warning("Cannot toggle loop. No song is currently active.")
             else:
                 logger.warning("Invalid command.")
-
 
 if __name__ == "__main__":
     main()

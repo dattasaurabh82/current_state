@@ -1,6 +1,7 @@
 import replicate
 import json
 from typing import Optional
+from loguru import logger
 
 # --- NEW: Function to load the system prompt ---
 def load_system_prompt() -> str:
@@ -8,7 +9,7 @@ def load_system_prompt() -> str:
         with open("prompts/musicgen_prompt_crafter_system.md", "r") as f:
             return f.read()
     except FileNotFoundError:
-        print("Error: prompts/musicgen_prompt_crafter_system.md not found.")
+        logger.error("Error: prompts/musicgen_prompt_crafter_system.md not found.")
         # Fallback to a default prompt
         return "You are a creative film score composer."
 
@@ -21,7 +22,7 @@ PROMPT_TEMPLATE = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|
 """
 
 def craft_music_prompt(analysis_json: str) -> Optional[str]:
-    print("  -> (Agent 2) Crafting music prompt from analysis...")
+    logger.info("  -> (Agent 2) Crafting music prompt from analysis...")
     
     try:
         analysis = json.loads(analysis_json)
@@ -29,7 +30,7 @@ def craft_music_prompt(analysis_json: str) -> Optional[str]:
         mood_context = f"The overall mood is '{analysis.get('overall_mood', 'neutral')}' with key themes of '{', '.join(analysis.get('key_themes', []))}'."
 
     except json.JSONDecodeError:
-        print("  -> (Agent 2) Error: Invalid JSON received from analysis step.")
+        logger.error("  -> (Agent 2) Error: Invalid JSON received from analysis step.")
         return None
 
     user_prompt = f"""
@@ -55,14 +56,14 @@ def craft_music_prompt(analysis_json: str) -> Optional[str]:
 
         final_prompt = "".join(output_chunks).strip()
 
-        print(f"  -> (Agent 2) Raw output from LLM:\n---\n{final_prompt}\n---")
+        logger.debug(f"  -> (Agent 2) Raw output from LLM:\n---\n{final_prompt}\n---")
         if not final_prompt:
-            print("  -> (Agent 2) Error: Received empty response from the API.")
+            logger.error("  -> (Agent 2) Error: Received empty response from the API.")
             return None
 
-        print("  -> (Agent 2) Prompt crafting complete.")
+        logger.info("  -> (Agent 2) Prompt crafting complete.")
         return final_prompt
 
     except Exception as e:
-        print(f"  -> (Agent 2) An unexpected error occurred during prompt crafting: {e}")
+        logger.error(f"  -> (Agent 2) An unexpected error occurred during prompt crafting: {e}")
         return None

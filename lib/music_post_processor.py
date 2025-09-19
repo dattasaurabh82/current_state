@@ -1,6 +1,7 @@
 import numpy as np
 import soundfile as sf
 from pathlib import Path
+from loguru import logger
 
 def apply_fade(
     audio_array: np.ndarray,
@@ -43,15 +44,15 @@ def process_and_replace(file_path: Path) -> bool:
     """
     Loads an audio file, applies fade effects, and overwrites the original file.
     """
-    print(f"\nPOST-PROCESSING AUDIO ...")
-    print(f"Applying fade effects to: {file_path.name}")
+    logger.info(f"\nPOST-PROCESSING AUDIO ...")
+    logger.info(f"Applying fade effects to: {file_path.name}")
     try:
         original_audio, sample_rate = sf.read(file_path, dtype='float32')
         processed_audio = apply_fade(original_audio, sample_rate)
         sf.write(file_path, processed_audio, sample_rate)
         
-        print("Post-processing complete. File has been updated.")
+        logger.success("Post-processing complete. File has been updated.")
         return True
     except Exception as e:
-        print(f"An error occurred during post-processing: {e}")
+        logger.error(f"An error occurred during post-processing: {e}")
         return False
