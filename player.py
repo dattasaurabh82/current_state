@@ -23,11 +23,12 @@ class AudioPlayer:
         self.buffer_size = buffer_size
         self.audio_queue = queue.Queue(maxsize=buffer_size)
         self.playback_finished = threading.Event()
-        self.is_paused = False
+        self.is_paused = threading.Event()  # Use an Event for pausing
         self.loop = loop_by_default
         self._reader_thread = None
         self._stream = None
         self._file_handle = None
+
         if not self.filepath.exists():
             raise FileNotFoundError(f"Audio file not found: {self.filepath}")
 
@@ -38,23 +39,16 @@ class AudioPlayer:
             raise sd.CallbackAbort
 
         try:
-            data = self.audio_queue.get(timeout=0.5)  # Use a small timeout
+            data = self.audio_queue.get_nowait()
         except queue.Empty:
             logger.error("Buffer is empty! Increase buffer_size.")
             raise sd.CallbackAbort
 
-        # --- Handle looping and padding correctly ---
         if len(data) < len(outdata):
-            # This is the last chunk of the file
             outdata[: len(data)] = data
-            outdata[len(data) :] = b"\x00" * (
-                len(outdata) - len(data)
-            )  # Pad with silence
+            outdata[len(data) :] = b"\x00" * (len(outdata) - len(data))
             if not self.loop:
-                # Only stop the stream if we are not supposed to loop
                 raise sd.CallbackStop
-            # If self.loop is True, we do nothing here. The _read_chunks thread
-            # is already rewinding the file and will refill the queue.
         else:
             outdata[:] = data
 
@@ -62,9 +56,8 @@ class AudioPlayer:
         """The file reader function, now with looping logic."""
         logger.info("Audio reader thread started.")
         while not self.playback_finished.is_set():
-            if self.is_paused:
-                time.sleep(0.1)
-                continue
+            self.is_paused.wait()  # This will block if pause() is called
+
             if self._file_handle is None:
                 break
 
@@ -90,7 +83,7 @@ class AudioPlayer:
         try:
             self._file_handle = sf.SoundFile(self.filepath)
             self.playback_finished.clear()
-            self.is_paused = False
+            self.is_paused.set()  # Set to "not paused" state initially
             samplerate = self._file_handle.samplerate
             channels = self._file_handle.channels
             self._reader_thread = threading.Thread(target=self._read_chunks)
@@ -113,7 +106,7 @@ class AudioPlayer:
     def stop(self):
         logger.warning("Stopping playback...")
         self.playback_finished.set()
-        self.is_paused = False
+        self.is_paused.set()  # Ensure the reader thread is not blocked
         if self._reader_thread and self._reader_thread.is_alive():
             self._reader_thread.join()
         if self._stream:
@@ -125,15 +118,15 @@ class AudioPlayer:
         self._file_handle = None
 
     def pause(self):
-        if self.is_playing and not self.is_paused:
-            self.is_paused = True
+        if self.is_playing and self.is_paused.is_set():
+            self.is_paused.clear()  # This will cause the reader thread to block
             if self._stream is not None:
                 self._stream.stop()
             logger.info("Playback paused.")
 
     def resume(self):
-        if self.is_paused:
-            self.is_paused = False
+        if self.is_playing and not self.is_paused.is_set():
+            self.is_paused.set()  # Unblock the reader thread
             if self._stream is not None:
                 self._stream.start()
                 logger.info("Playback resumed.")
