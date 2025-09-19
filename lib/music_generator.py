@@ -51,7 +51,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         )
 
         current_prediction = prediction
-        print(f"Music generation started with ID: {prediction.id}")
+        print(f"\nMusic generation started with ID: {prediction.id}")
         print("Waiting for generation to complete... (Press Ctrl+C to cancel)")
 
         # This is a blocking call. It waits until the prediction is done.
@@ -74,29 +74,30 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         # The output can be a single URL or a list containing a URL.
         # yes that happened (so that's why ...)
         # We also handle the raw bytes case just in case.
+        print("")
         if isinstance(output, str):
             output_url = output
-            print(f"Music generated successfully! URL: {output_url}")
-            print("Downloading audio file...")
+            print(f"Music generated successfully!\nURL: {output_url}")
+            print("\nDownloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
         elif isinstance(output, list) and output and isinstance(output[0], str):
             output_url = output[0]
-            print(f"Music generated successfully! URL: {output_url}")
-            print("Downloading audio file...")
+            print(f"Music generated successfully!\nURL: {output_url}")
+            print("\nDownloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
         elif isinstance(output, bytes):
-            print("Music generated successfully! Received raw audio data.")
+            print("\nMusic generated successfully!\nReceived raw audio data.")
             audio_data = output
 
         if not audio_data:
             print(
-                "Music generation failed. The API returned an unexpected data format."
+                "\nMusic generation failed.\nThe API returned an unexpected data format."
             )
-            print(f"Received output type: {type(output)}")
+            print(f"\nReceived output type: {type(output)}")
             return None
 
         # --- Save the Audio File ---

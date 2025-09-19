@@ -56,20 +56,33 @@ def analyze_news_headlines(articles: list[dict]) -> Optional[str]:
         )
         
         full_output = "".join(output_chunks)
-        print(f"  -> (Agent 1) Raw output from LLM:\n---\n{full_output}\n---")
-
+        
         if not full_output or not full_output.strip():
             print("  -> (Agent 1) Error: Received empty response from the API.")
             return None
 
+        # Find the JSON object within the raw output
         match = re.search(r'\{.*\}', full_output, re.DOTALL)
         
         if not match:
             print("  -> (Agent 1) Error: Could not find a JSON object in the LLM's response.")
+            # Print the raw output for debugging if JSON is not found
+            print(f"  -> (Agent 1) Raw output from LLM:\n---\n{full_output}\n---")
             return None
 
         json_str = match.group(0)
-        json.loads(json_str) 
+        
+        # --- THIS IS THE NEW PART ---
+        # Try to parse and pretty-print the JSON
+        try:
+            parsed_json = json.loads(json_str)
+            pretty_json = json.dumps(parsed_json, indent=2)
+            print(f"  -> (Agent 1) Formatted JSON output from LLM:\n---\n{pretty_json}\n---")
+        except json.JSONDecodeError:
+            print("  -> (Agent 1) Error: Failed to parse JSON, showing raw output.")
+            print(f"  -> (Agent 1) Raw output from LLM:\n---\n{json_str}\n---")
+            return None
+        # --- END OF NEW PART ---
         
         print("  -> (Agent 1) Successfully extracted and validated JSON.")
         return json_str
