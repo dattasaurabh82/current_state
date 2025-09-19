@@ -7,11 +7,17 @@ from typing import Optional
 import signal
 
 # All modules ...
-import news_fetcher
-import llm_analyzer
-import music_generator
-import music_post_processor
-from player import AudioPlayer
+# All modules are now imported from the 'lib' package
+from lib import (
+    news_fetcher,
+    llm_analyzer,
+    music_generator,
+    music_post_processor,
+)
+from lib.player import AudioPlayer
+
+# --- Global player instance for the signal handler ---
+player_instance: Optional[AudioPlayer] = None
 
 # --- Signal Handler ---
 def handle_exit(sig, frame):
@@ -19,8 +25,12 @@ def handle_exit(sig, frame):
     print("\n>>> EXIT SIGNAL RECEIVED <<<")
     # Call the cancellation function from the music generator
     music_generator.cancel_current_prediction()
-    # Any other cleanup can go here
-    # TBD ...
+    # Stop the audio player if it's running
+    global player_instance
+    if player_instance and player_instance.is_playing:
+        print("Stopping audio playback...")
+        player_instance.stop()
+    print("Exiting.")
     exit(0)
 
 # --- Core Action Functions ---
