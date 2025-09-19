@@ -22,7 +22,7 @@ player_instance: Optional[AudioPlayer] = None
 # --- Signal Handler ---
 def handle_exit(sig, frame):
     """Gracefully handle Ctrl+C."""
-    print("\n>>> EXIT SIGNAL RECEIVED <<<")
+    print("\nEXIT SIGNAL RECEIVED")
     # Call the cancellation function from the music generator
     music_generator.cancel_current_prediction()
     # Stop the audio player if it's running
@@ -36,7 +36,7 @@ def handle_exit(sig, frame):
 # --- Core Action Functions ---
 def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
     """Encapsulates the entire news-to-music generation pipeline."""
-    print("\n>>> STARTING NEW SONG GENERATION PIPELINE <<<")
+    print("\nSTARTING NEW SONG GENERATION PIPELINE")
     # 1. Load Data
     all_regional_data = None
     if args.local_file:
@@ -105,7 +105,7 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
     if args.post_process:
         music_post_processor.process_and_replace(audio_file_path)
 
-    print("\n>>> PIPELINE COMPLETE: New song is ready. <<<")
+    print("\nPIPELINE COMPLETE: New song is ready.")
     return audio_file_path
 
 
