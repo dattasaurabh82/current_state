@@ -2,6 +2,7 @@ import replicate
 import json
 import re
 from typing import Optional
+from loguru import logger
 
 # --- Function to load the system prompt ---
 def load_system_prompt() -> str:
@@ -9,7 +10,7 @@ def load_system_prompt() -> str:
         with open("prompts/news_analyzer_system.md", "r") as f:
             return f.read()
     except FileNotFoundError:
-        print("Error: prompts/news_analyzer_system.md not found.")
+        logger.error("Error: prompts/news_analyzer_system.md not found.")
         # Fallback to a default prompt
         return "You are a world-mood analyst. You MUST output ONLY a valid JSON object."
 
@@ -22,7 +23,7 @@ PROMPT_TEMPLATE = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|
 """
 
 def analyze_news_headlines(articles: list[dict]) -> Optional[str]:
-    print("  -> (Agent 1) Analyzing headlines for themes and mood...")
+    logger.info("  -> (Agent 1) Analyzing headlines for themes and mood...")
 
     headlines_for_prompt = [f"- {article.get('title', 'No Title')} (Source: {article.get('source', {}).get('name', 'N/A')})" for article in articles]
 
@@ -58,35 +59,32 @@ def analyze_news_headlines(articles: list[dict]) -> Optional[str]:
         full_output = "".join(output_chunks)
         
         if not full_output or not full_output.strip():
-            print("  -> (Agent 1) Error: Received empty response from the API.")
+            logger.error("  -> (Agent 1) Error: Received empty response from the API.")
             return None
 
         # Find the JSON object within the raw output
         match = re.search(r'\{.*\}', full_output, re.DOTALL)
         
         if not match:
-            print("  -> (Agent 1) Error: Could not find a JSON object in the LLM's response.")
-            # Print the raw output for debugging if JSON is not found
-            print(f"  -> (Agent 1) Raw output from LLM:\n---\n{full_output}\n---")
+            logger.error("  -> (Agent 1) Error: Could not find a JSON object in the LLM's response.")
+            logger.debug(f"  -> (Agent 1) Raw output from LLM:\n---\n{full_output}\n---")
             return None
 
         json_str = match.group(0)
         
-        # --- THIS IS THE NEW PART ---
         # Try to parse and pretty-print the JSON
         try:
             parsed_json = json.loads(json_str)
             pretty_json = json.dumps(parsed_json, indent=2)
-            print(f"  -> (Agent 1) Formatted JSON output from LLM:\n---\n{pretty_json}\n---")
+            logger.info(f"  -> (Agent 1) Formatted JSON output from LLM:\n---\n{pretty_json}\n---")
         except json.JSONDecodeError:
-            print("  -> (Agent 1) Error: Failed to parse JSON, showing raw output.")
-            print(f"  -> (Agent 1) Raw output from LLM:\n---\n{json_str}\n---")
+            logger.error("  -> (Agent 1) Error: Failed to parse JSON, showing raw output.")
+            logger.debug(f"  -> (Agent 1) Raw output from LLM:\n---\n{json_str}\n---")
             return None
-        # --- END OF NEW PART ---
         
-        print("  -> (Agent 1) Successfully extracted and validated JSON.")
+        logger.success("  -> (Agent 1) Successfully extracted and validated JSON.")
         return json_str
 
     except Exception as e:
-        print(f"  -> (Agent 1) An unexpected error occurred: {e}")
+        logger.error(f"  -> (Agent 1) An unexpected error occurred: {e}")
         return None
