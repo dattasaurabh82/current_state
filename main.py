@@ -41,10 +41,10 @@ def handle_exit(sig, frame):
 
 def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
     """Encapsulates the entire news-to-music generation pipeline."""
-    logger.info("STARTING NEW SONG GENERATION PIPELINE")
+    logger.warning("STARTING NEW SONG GENERATION PIPELINE")
     all_regional_data = None
     if args.local_file:
-        logger.info(f"Loading news from local file: {args.local_file}")
+        logger.warning(f"Loading news from local file: {args.local_file}")
         try:
             with open(args.local_file, "r", encoding="utf-8") as f:
                 all_regional_data = json.load(f)
@@ -55,11 +55,11 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
         today_str = datetime.now().strftime("%Y-%m-%d")
         cache_filename = f"news_data_{today_str}.json"
         if os.path.exists(cache_filename) and not args.fetch:
-            logger.info(f"Loading news from today's cache file: {cache_filename}")
+            logger.warning(f"Loading news from today's cache file: {cache_filename}")
             with open(cache_filename, "r", encoding="utf-8") as f:
                 all_regional_data = json.load(f)
         elif args.fetch:
-            logger.info("FETCHING LIVE NEWS DATA FROM API...")
+            logger.warning("FETCHING LIVE NEWS DATA FROM API...")
             config = load_regions_config()
             if not config:
                 return None
@@ -106,7 +106,7 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
 def display_menu(state: str, latest_song: Optional[Path], player: Optional[AudioPlayer]):
     """Displays a dynamic command menu based on the player state."""
     # This function is UI, so we keep using print()
-    # print("\n" + "=" * 40)
+    print("\n" + "=" * 40)
     loop_status = ""
     if player:
         loop_status = "ON" if player.loop else "OFF"
