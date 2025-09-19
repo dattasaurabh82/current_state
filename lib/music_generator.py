@@ -29,7 +29,8 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
 
     logger.warning("GENERATING MUSIC...")
     clean_prompt = prompt.strip().strip('"')
-    logger.info(f'Sending prompt to MusicGen: "{clean_prompt}"')
+    logger.warning('Sending prompt to MusicGen:')
+    logger.debug(f'"{clean_prompt}"')
 
     prediction = None
     try:
@@ -53,7 +54,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
 
         current_prediction = prediction
         logger.warning(f"Music generation started with ID: {prediction.id}")
-        logger.info("Waiting for generation to complete... (Press Ctrl+C to cancel)")
+        logger.debug("Waiting for generation to complete... (Press Ctrl+C to cancel)")
 
         # This is a blocking call. It waits until the prediction is done.
         prediction.wait()
@@ -78,7 +79,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         logger.info("")
         if isinstance(output, str):
             output_url = output
-            logger.info(f"Music generated successfully!")
+            logger.success(f"Music generated successfully!")
             logger.info(f"URL: {output_url}")
             logger.warning("Downloading audio file...")
             audio_response = requests.get(output_url)
@@ -86,14 +87,14 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
             audio_data = audio_response.content
         elif isinstance(output, list) and output and isinstance(output[0], str):
             output_url = output[0]
-            logger.info(f"Music generated successfully!")
+            logger.success(f"Music generated successfully!")
             logger.info(f"URL: {output_url}")
             logger.warning("Downloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
         elif isinstance(output, bytes):
-            logger.info("Music generated successfully!")
+            logger.success("Music generated successfully!")
             logger.info("Received raw audio data.")
             audio_data = output
 
@@ -111,7 +112,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         file_path = music_dir / f"world_theme_{timestamp}.wav"
         with open(file_path, "wb") as f:
             f.write(audio_data)
-        logger.info(f"Audio file saved to: {file_path}")
+        logger.success(f"Audio file saved to: {file_path}")
         return file_path
 
     except Exception as e:

@@ -56,10 +56,8 @@ def craft_music_prompt(analysis_json: str) -> Optional[str]:
 
         final_prompt = "".join(output_chunks).strip()
 
-        logger.debug(f"  -> (Agent 2) Raw output from LLM:")
-        logger.debug(f"  ---")
-        logger.debug(f"  {final_prompt}")
-        logger.debug(f"  ---")
+        logger.debug(f"[Agent 2] Raw output from LLM:")
+        logger.debug(f"{final_prompt}")
         if not final_prompt:
             logger.error("  -> (Agent 2) Error: Received empty response from the API.")
             return None
