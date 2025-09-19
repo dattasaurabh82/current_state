@@ -72,6 +72,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
 
         audio_data = None
         # The output can be a single URL or a list containing a URL.
+        # yes that happened (so that's why ...)
         # We also handle the raw bytes case just in case.
         if isinstance(output, str):
             output_url = output
