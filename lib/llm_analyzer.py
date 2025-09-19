@@ -13,7 +13,7 @@ def generate_music_prompt_from_news(articles):
     """
     Orchestrates the two-agent process of analyzing news and crafting a music prompt.
     """
-    print("Starting LLM analysis pipeline...")
+    print("\n\nSTARTING LLM ANALYSIS PIPELINE...")
 
     headlines_for_prompt = [f"- {article.get('title', 'No Title')} (Source: {article.get('source', {}).get('name', 'N/A')})" for article in articles]
     
