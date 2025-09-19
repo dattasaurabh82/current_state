@@ -55,7 +55,7 @@ def generate_new_song(args: argparse.Namespace) -> Optional[Path]:
             with open(cache_filename, "r", encoding="utf-8") as f:
                 all_regional_data = json.load(f)
         elif args.fetch:
-            print(f"Fetching live data from API...")
+            print(f"\nFETCHING LIVE NEWS DATA FROM API...")
             config = load_regions_config()
             if not config:
                 return None

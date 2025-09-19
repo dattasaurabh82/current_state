@@ -26,7 +26,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
     """
     global current_prediction
 
-    print("\n--- Generating Music ---")
+    print("\nGENERATING MUSIC...")
     clean_prompt = prompt.strip().strip('"')
     print(f'Sending prompt to MusicGen: "{clean_prompt}"')
 

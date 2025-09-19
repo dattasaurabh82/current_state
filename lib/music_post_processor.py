@@ -43,7 +43,7 @@ def process_and_replace(file_path: Path) -> bool:
     """
     Loads an audio file, applies fade effects, and overwrites the original file.
     """
-    print(f"\n--- Post-Processing Audio ---")
+    print(f"\nPOST-PROCESSING AUDIO ...")
     print(f"Applying fade effects to: {file_path.name}")
     try:
         original_audio, sample_rate = sf.read(file_path, dtype='float32')
