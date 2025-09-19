@@ -12,7 +12,7 @@ def cancel_current_prediction():
     """Cancels the currently running Replicate prediction if there is one."""
     global current_prediction
     if current_prediction:
-        logger.warning("\nAttempting to cancel the current Replicate prediction...")
+        logger.warning("Attempting to cancel the current Replicate prediction...")
         try:
             current_prediction.cancel()
             logger.info("Cancellation request sent successfully.")
@@ -27,7 +27,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
     """
     global current_prediction
 
-    logger.info("\nGENERATING MUSIC...")
+    logger.warning("GENERATING MUSIC...")
     clean_prompt = prompt.strip().strip('"')
     logger.info(f'Sending prompt to MusicGen: "{clean_prompt}"')
 
@@ -52,7 +52,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         )
 
         current_prediction = prediction
-        logger.info(f"\nMusic generation started with ID: {prediction.id}")
+        logger.warning(f"Music generation started with ID: {prediction.id}")
         logger.info("Waiting for generation to complete... (Press Ctrl+C to cancel)")
 
         # This is a blocking call. It waits until the prediction is done.
@@ -78,27 +78,30 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         logger.info("")
         if isinstance(output, str):
             output_url = output
-            logger.info(f"Music generated successfully!\nURL: {output_url}")
-            logger.warning("\nDownloading audio file...")
+            logger.info(f"Music generated successfully!")
+            logger.info(f"URL: {output_url}")
+            logger.warning("Downloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
         elif isinstance(output, list) and output and isinstance(output[0], str):
             output_url = output[0]
-            logger.info(f"Music generated successfully!\nURL: {output_url}")
-            logger.warning("\nDownloading audio file...")
+            logger.info(f"Music generated successfully!")
+            logger.info(f"URL: {output_url}")
+            logger.warning("Downloading audio file...")
             audio_response = requests.get(output_url)
             audio_response.raise_for_status()
             audio_data = audio_response.content
         elif isinstance(output, bytes):
-            logger.info("\nMusic generated successfully!\nReceived raw audio data.")
+            logger.info("Music generated successfully!")
+            logger.info("Received raw audio data.")
             audio_data = output
 
         if not audio_data:
             logger.error(
-                "\nMusic generation failed.\nThe API returned an unexpected data format."
+                "Music generation failed.The API returned an unexpected data format."
             )
-            logger.info(f"\nReceived output type: {type(output)}")
+            logger.info(f"Received output type: {type(output)}")
             return None
 
         # --- Save the Audio File ---

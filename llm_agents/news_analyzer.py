@@ -67,7 +67,10 @@ def analyze_news_headlines(articles: list[dict]) -> Optional[str]:
         
         if not match:
             logger.error("  -> (Agent 1) Error: Could not find a JSON object in the LLM's response.")
-            logger.debug(f"  -> (Agent 1) Raw output from LLM:\n---\n{full_output}\n---")
+            logger.debug(f"  -> (Agent 1) Raw output from LLM:")
+            logger.debug(f"  -> ---")
+            logger.debug(f"  -> {full_output}")
+            logger.debug(f"  -> ---")
             return None
 
         json_str = match.group(0)
@@ -76,10 +79,16 @@ def analyze_news_headlines(articles: list[dict]) -> Optional[str]:
         try:
             parsed_json = json.loads(json_str)
             pretty_json = json.dumps(parsed_json, indent=2)
-            logger.info(f"  -> (Agent 1) Formatted JSON output from LLM:\n---\n{pretty_json}\n---")
+            logger.info(f"  -> (Agent 1) Formatted JSON output from LLM:")
+            logger.info(f"  -> ---")
+            logger.info(f"  -> {pretty_json}")
+            logger.info(f"  -> ---")
         except json.JSONDecodeError:
             logger.error("  -> (Agent 1) Error: Failed to parse JSON, showing raw output.")
-            logger.debug(f"  -> (Agent 1) Raw output from LLM:\n---\n{json_str}\n---")
+            logger.debug(f"  -> (Agent 1) Raw output from LLM:")
+            logger.debug(f"  -> ---")
+            logger.debug(f"  -> {json_str}")
+            logger.debug(f"  -> ---")
             return None
         
         logger.success("  -> (Agent 1) Successfully extracted and validated JSON.")
