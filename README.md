@@ -17,6 +17,33 @@
 - HW button integration ...
 - Business logic of operation ...
 
+## Project structure
+
+```txt
+.
+├── README.md
+├── pyproject.toml
+├── config.json
+├── main.py
+├── lib
+│   ├── __init__.py
+│   ├── llm_analyzer.py
+│   ├── music_generator.py
+│   ├── music_post_processor.py
+│   ├── news_fetcher.py
+│   └── player.py
+├── llm_agents
+│   ├── __init__.py
+│   ├── musicgen_prompt_crafter.py
+│   └── news_analyzer.py
+├── prompts
+│   ├── musicgen_prompt_crafter_system.md
+│   └── news_analyzer_system.md
+├── music_generated/*
+├── LICENSE
+└── uv.lock
+```
+
 ## post pi first boot setup
 
 ```bash
@@ -43,7 +70,7 @@ eval "$(pyenv init - bash)"
 eval "$(pyenv virtualenv-init -)"
 ```
 
-Save the file and exit 
+Save the file and exit
 
 Apply the Changes
 
