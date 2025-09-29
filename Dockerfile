@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv using pip, which is simpler and more reliable in this environment
+# Install uv using pip, which is simpler and more reliable
 RUN pip install uv
 
 # Copy the dependency files first
