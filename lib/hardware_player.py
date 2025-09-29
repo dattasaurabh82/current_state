@@ -66,10 +66,10 @@ class HardwarePlayer:
         elif self.state == "STOPPED":
             logger.info("[LED] OFF")
 
-    def handle_press(self):
-        """The core state machine for a single button press."""
+    def handle_toggle_play_pause(self):
+        """Handles the Play/Pause logic."""
         with self.lock:
-            logger.info(f"Button pressed. Current state: {self.state}")
+            logger.info(f"'Play/Pause' pressed. Current state: {self.state}")
             
             if self.state == "STOPPED":
                 self.latest_song = find_latest_song()
@@ -89,13 +89,27 @@ class HardwarePlayer:
 
             elif self.state == "PAUSED":
                 if self.player:
-                    logger.info("Stopping playback.")
-                    self.player.stop()
-                    self.player = None
-                    self.state = "STOPPED"
+                    logger.info("Resuming playback.")
+                    self.player.resume()
+                    self.state = "PLAYING"
         
         self._update_led()
         self._print_status()
+
+    def handle_stop(self):
+        """Handles the Stop logic."""
+        with self.lock:
+            logger.info(f"'Stop' pressed. Current state: {self.state}")
+            if self.state in ["PLAYING", "PAUSED"]:
+                if self.player:
+                    logger.info("Stopping playback.")
+                    self.player.stop()
+                    self.player = None
+                self.state = "STOPPED"
+        
+        self._update_led()
+        self._print_status()
+
 
     def listen_for_input(self):
         """Starts the keyboard listener and waits for events."""
@@ -104,23 +118,19 @@ class HardwarePlayer:
             return
 
         logger.info("Starting keyboard listener...")
-        logger.info("Press [SPACE] to toggle play/pause/stop.")
-        logger.info("Press [Q] to quit.")
-        
         self._print_status()
 
         try:
-            # Grab the device to prevent other applications from receiving events
             self.keyboard_device.grab()
             for event in self.keyboard_device.read_loop():
-                if event.type == ecodes.EV_KEY:
-                    # Check for key down events only
-                    if event.value == 1:  
-                        if event.code == ecodes.KEY_SPACE:
-                            self.handle_press()
-                        elif event.code == ecodes.KEY_Q:
-                            logger.warning("'Q' pressed. Exiting listener.")
-                            break # Exit the loop
+                if event.type == ecodes.EV_KEY and event.value == 1: # Key down events
+                    if event.code == ecodes.KEY_P:
+                        self.handle_toggle_play_pause()
+                    elif event.code == ecodes.KEY_S:
+                        self.handle_stop()
+                    elif event.code == ecodes.KEY_Q:
+                        logger.warning("'Q' pressed. Exiting listener.")
+                        break
         except Exception as e:
             logger.error(f"Error with keyboard listener: {e}")
         finally:
@@ -134,7 +144,7 @@ class HardwarePlayer:
         print(f"  State: {self.state}")
         print(f"  Song:  {song_name}")
         print("="*55)
-        print("Controls: [SPACE] to toggle, [Q] to quit.")
+        print("Controls: [P] Play/Pause | [S] Stop | [Q] Quit")
 
 
     def cleanup(self):
