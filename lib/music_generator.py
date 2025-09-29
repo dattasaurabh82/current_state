@@ -59,7 +59,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
         # This is a blocking call. It waits until the prediction is done.
         prediction.wait()
 
-        # --- Get the output from the prediction object itself ---
+        # Get the output from the prediction object itself
         # After .wait() completes, the .output attribute is populated.
         output = prediction.output
         current_prediction = None  # The job is done, clear the global variable
@@ -105,7 +105,7 @@ def generate_and_download_music(prompt: str, duration: int = 30) -> Optional[Pat
             logger.info(f"Received output type: {type(output)}")
             return None
 
-        # --- Save the Audio File ---
+        # Save the Audio File
         music_dir = Path("music_generated")
         music_dir.mkdir(exist_ok=True)
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

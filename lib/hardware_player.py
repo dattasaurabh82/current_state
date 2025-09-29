@@ -14,7 +14,7 @@ except (RuntimeError, ModuleNotFoundError):
     IS_PI = False
     logger.warning("RPi.GPIO library not found. GPIO functionality will be disabled.")
 
-# --- Pin Definitions ---
+# Pin Definitions
 LED_PIN = 27
 PLAY_PAUSE_BTN_PIN = 22
 STOP_BTN_PIN = 10
