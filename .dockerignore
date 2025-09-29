@@ -1,3 +1,9 @@
+# Ignore all .wav files...
+*.wav
+# ...but DO NOT ignore silent.wav
+!silent.wav
+
+# Other things to ignore
 .venv/
 __pycache__/
 *.pyc
@@ -7,4 +13,3 @@ __pycache__/
 .env
 music_generated/
 news_data_cache/
-*.wav
