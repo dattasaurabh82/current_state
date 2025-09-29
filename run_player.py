@@ -62,23 +62,33 @@ def main():
     setup_logger()
     logger.info("--- Starting World Theme Music Player Service ---")
     
-    # --- Start the Keep-Alive Thread ---
     stop_keep_alive = threading.Event()
-    keep_alive_thread = threading.Thread(
-        target=keep_audio_alive, args=(stop_keep_alive,), daemon=True
-    )
-    keep_alive_thread.start()
-
-    # --- Start the Main Hardware Player ---
     player = HardwarePlayer()
-    player.listen_for_input() # This blocks until 'q' is pressed
+
+    try:
+        # --- Start the Keep-Alive Thread ---
+        keep_alive_thread = threading.Thread(
+            target=keep_audio_alive, args=(stop_keep_alive,), daemon=True
+        )
+        keep_alive_thread.start()
+
+        # --- Start the Main Hardware Player ---
+        player.listen_for_input() # This blocks until 'q' is pressed
     
-    # --- Cleanup ---
-    logger.info("Main listener stopped. Shutting down keep-alive thread...")
-    stop_keep_alive.set()
-    keep_alive_thread.join() # Wait for the thread to finish cleanly
-    
-    logger.info("--- Player Service Shutting Down ---")
+    finally:
+        # --- This code is GUARANTEED to run on exit ---
+        logger.info("Main listener stopped. Shutting down all processes...")
+        
+        # 1. Stop the keep-alive thread
+        stop_keep_alive.set()
+        if 'keep_alive_thread' in locals() and keep_alive_thread.is_alive():
+            keep_alive_thread.join()
+        
+        # 2. Clean up the player and GPIO
+        player.cleanup()
+        
+        logger.info("--- Player Service Shut Down ---")
+
 
 if __name__ == "__main__":
     main()
