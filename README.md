@@ -138,7 +138,7 @@ docker run --rm -it \
   -v ./news_data_cache:/app/news_data_cache \
   --env-file .env \
   world-theme-music \
-  python main.py --fetch true --play false
+  uv run python main.py --fetch true --play false
 ```
 
 - `docker run`: The command to start a new container.
@@ -158,8 +158,7 @@ docker run --rm -it \
   --device /dev/snd \
   --device /dev/gpiomem \
   -v ./music_generated:/app/music_generated \
-  world-theme-music \
-  python run_player.py
+  world-theme-music
 ```
 
 - --device /dev/snd: This gives the container direct access to your Raspberry Pi's sound card.
