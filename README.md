@@ -161,8 +161,8 @@ docker run --rm -it \
 ```bash
 docker run --rm -it \
   --dns=8.8.8.8 \
-  --device /dev/snd \
-  --device /dev/gpiomem \
+  --privileged \
+  -v /dev/snd:/dev/snd \
   -v ./music_generated:/app/music_generated \
   world-theme-music
 ```
