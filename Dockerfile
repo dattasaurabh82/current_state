@@ -14,14 +14,11 @@ RUN apt-get update && apt-get install -y \
 # Install uv, the Python package manager
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Add uv's directory to the PATH for subsequent commands
-ENV PATH="/root/.cargo/bin:${PATH}"
-
 # Copy the dependency files first to leverage Docker's build cache
 COPY pyproject.toml uv.lock ./
 
-# Install Python packages using a single uv sync command
-RUN uv sync --system
+# Install Python packages using the FULL PATH to uv to avoid PATH issues
+RUN /root/.cargo/bin/uv sync --system
 
 # Copy the rest of the application code into the container
 COPY . .
