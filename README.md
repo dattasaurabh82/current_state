@@ -47,7 +47,9 @@
 ```bash
 sudo apt update && sudo apt install -y python3-dev build-essential libssl-dev zlib1g-dev libbz2-dev \
 libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev \
-libxmlsec1-dev libffi-dev liblzma-dev
+libxmlsec1-dev libffi-dev liblzma-dev -y
+
+sudo apt install python3-dev -y
 ```
 
 ### Install Audio deps
@@ -67,10 +69,19 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 https://docs.docker.com/engine/install/raspberry-pi-os/
 
 
+### Some permissions
+
+```bash
+sudo usermod -a -G gpio $USER
+sudo reboot
+```
+
+
 ## Project setup
 
 1. git clone
 2. uv sync
+3. sometimes may need: `uv pip install RPi.GPIO` from project dir...
 
 ### Create an API key for newsapi.org
 
