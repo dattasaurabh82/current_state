@@ -96,7 +96,6 @@
 
 
 # run_player.py
-
 import threading
 import time
 from pathlib import Path
@@ -134,11 +133,19 @@ def keep_audio_alive(stop_event: threading.Event):
         logger.error("'silent.wav' not found! Cannot run keep-alive thread.")
         return
 
+    # Add a small delay to de-conflict with main player initialization
+    time.sleep(0.5)
+
     silent_player = None
     try:
         logger.info("Starting audio keep-alive player.")
-        # Create one player instance, set to loop forever.
-        silent_player = AudioPlayer(silent_file, loop_by_default=True)
+        # --- FIX: Increase buffer and block sizes for stability ---
+        silent_player = AudioPlayer(
+            silent_file,
+            loop_by_default=True,
+            buffer_size=40,  # Increased from default 20
+            blocksize=4096   # Increased from default 2048
+        )
         silent_player.play()
         
         # This thread will now simply wait until the main app signals it to stop.
