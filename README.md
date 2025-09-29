@@ -135,6 +135,7 @@ This process will take a few minutes as it downloads the base image and installs
 
 ```bash
 docker run --rm -it \
+  --dns=8.8.8.8 \
   -v ./music_generated:/app/music_generated \
   -v ./news_data_cache:/app/news_data_cache \
   --env-file .env \
@@ -156,6 +157,7 @@ docker run --rm -it \
 
 ```bash
 docker run --rm -it \
+  --dns=8.8.8.8 \
   --device /dev/snd \
   --device /dev/gpiomem \
   -v ./music_generated:/app/music_generated \
