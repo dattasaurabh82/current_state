@@ -19,14 +19,27 @@ from lib.player import AudioPlayer
 player_instance: Optional[AudioPlayer] = None
 
 def setup_logger():
-    """Configures the logger for clean, colored output."""
+    """Configures the logger for clean, colored output and file logging."""
+    log_file_path = "world_theme_music_player.log"
     logger.remove()  # Remove default handler
+    # Console logger for interactive use
     logger.add(
         lambda msg: print(msg, end=""),
         colorize=True,
         format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>",
         level="INFO"
     )
+    # File logger for automation and debugging
+    logger.add(
+        log_file_path,
+        rotation="10 MB",  # Rotates the log file when it reaches 10 MB
+        retention="7 days", # Keeps logs for 7 days
+        format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
+        level="DEBUG", # Log everything to the file
+        encoding="utf-8"
+    )
+    logger.info(f"Logger initialized. Logging to console and '{log_file_path}'")
+
 
 def handle_exit(sig, frame):
     """Gracefully handle Ctrl+C."""
