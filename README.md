@@ -99,6 +99,57 @@ WIP Pinouts ...
 DOCKER
 ...
 
+Build 
+
+```bash
+docker build -t world-theme-music .
+```
+
+docker build: The command to build an image from a Dockerfile.
+
+-t world-theme-music: This "tags" (or names) our new image world-theme-music, which is how we'll refer to it later.
+
+.: This tells Docker to look for the Dockerfile in the current directory.
+
+This process will take a few minutes as it downloads the base image and installs all the dependencies. Once it finishes successfully, you will have a self-contained, ready-to-use image of your application. We can then proceed to the next step: testing it.
+
+### Test the Song Generator
+
+```bash
+docker run --rm -it \
+  -v ./music_generated:/app/music_generated \
+  -v ./news_data_cache:/app/news_data_cache \
+  --env-file .env \
+  world-theme-music \
+  python main.py --fetch true --play false
+```
+
+- `docker run`: The command to start a new container.
+- `--rm`: This is a cleanup flag. It automatically removes the container after it exits, which is perfect for our temporary generation task.
+- `-it`: This runs the container in "interactive mode," which allows you to see the script's output (the logs) in your terminal.
+- `-v ./music_generated:/app/music_generated`: This is very important. It creates a "volume," which syncs the music_generated folder on your Pi with the /app/music_generated folder inside the container. This allows the container to save the newly created song directly onto your Pi's filesystem.
+- `-v ./news_data_cache:/app/news_data_cache`: This does the same for a new cache directory, so your news data isn't re-downloaded every time if you don't use --fetch true.
+- `--env-file .env`: This securely passes your API keys from your local .env file into the container so the script can access them.
+- `world-theme-music`: This is the name of the image we're using.
+- `python main.py --fetch true --play false`: This is the command that will be executed inside the container.
+
+
+### Test the Hardware Player
+
+```bash
+docker run --rm -it \
+  --device /dev/snd \
+  --device /dev/gpiomem \
+  -v ./music_generated:/app/music_generated \
+  world-theme-music \
+  python run_player.py
+```
+
+- --device /dev/snd: This gives the container direct access to your Raspberry Pi's sound card.
+- --device /dev/gpiomem: This gives the container direct access to the GPIO pins.
+
+
+
 ---
 
 ## LICENSE
