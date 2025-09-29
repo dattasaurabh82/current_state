@@ -56,6 +56,10 @@ libxmlsec1-dev libffi-dev liblzma-dev
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
+### Install docker 
+
+https://docs.docker.com/engine/install/raspberry-pi-os/
+
 
 ## Project setup
 
