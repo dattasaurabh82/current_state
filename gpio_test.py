@@ -15,9 +15,9 @@ def button_pressed_callback(channel):
 print("--- GPIO Test Script ---")
 print("Press Ctrl+C to exit.")
 
-# GPIO.cleanup()
-
-# time.sleep(1) # Give some time before starting
+# Clean up any previous GPIO settings
+GPIO.cleanup()
+time.sleep(0.5)  # Small delay after cleanup
 
 # Use BCM pin numbering
 GPIO.setmode(GPIO.BCM)
@@ -32,27 +32,3 @@ GPIO.setup(STOP_BTN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 # Add event detection for buttons
 GPIO.add_event_detect(PLAY_PAUSE_BTN_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
 GPIO.add_event_detect(STOP_BTN_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
-
-try:
-    # 1. Test the LED: Blink 5 times
-    print("\n1. Testing LED on GPIO 27. It should blink 5 times.")
-    for i in range(5):
-        GPIO.output(LED_PIN, GPIO.HIGH) # Turn LED ON
-        time.sleep(0.2)
-        GPIO.output(LED_PIN, GPIO.LOW)  # Turn LED OFF
-        time.sleep(0.2)
-    print("-> LED test complete.")
-
-    # 2. Test the buttons
-    print("\n2. Testing Buttons. Press the buttons connected to GPIO 22 and GPIO 10.")
-    print("   Waiting for button presses...")
-    while True:
-        time.sleep(1) # Just keep the script alive
-
-except KeyboardInterrupt:
-    print("\nExiting test.")
-
-finally:
-    # This is crucial! Always clean up the GPIO pins
-    GPIO.cleanup()
-    print("GPIO cleanup complete.")
