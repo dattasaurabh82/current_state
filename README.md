@@ -12,9 +12,7 @@
 
 ### High
 
-- Something to keep the audio interface active ... (So the speaker's don't shutdown)
 - HW sensor plugin ...
-- HW button integration ...
 - Business logic of operation ...
 
 ## Project structure
@@ -89,6 +87,8 @@ uv run main.py --fetch True --analyze True --verbose True
 ```
 
 ... WIP
+
+WIP Pinouts ... 
 
 ...
 

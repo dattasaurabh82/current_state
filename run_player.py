@@ -30,29 +30,30 @@ def setup_logger():
 
 def keep_audio_alive(stop_event: threading.Event):
     """
-    Plays a silent WAV file every 10 seconds to prevent speakers from sleeping.
+    Plays a silent WAV file on a continuous loop to prevent speakers from sleeping.
     """
     silent_file = Path("silent.wav")
     if not silent_file.exists():
         logger.error("'silent.wav' not found! Cannot run keep-alive thread.")
         return
 
-    logger.info("Starting audio keep-alive thread.")
-    while not stop_event.is_set():
-        try:
-            player = AudioPlayer(silent_file, loop_by_default=False)
-            player.play()
-            player.wait() # Wait for the 1-second silent file to finish
-        except Exception as e:
-            logger.error(f"Error in keep-alive thread: {e}")
+    silent_player = None
+    try:
+        logger.info("Starting audio keep-alive player.")
+        # Create one player instance, set to loop forever.
+        silent_player = AudioPlayer(silent_file, loop_by_default=True)
+        silent_player.play()
         
-        # Wait for 10 seconds before playing again, but check the stop event frequently
-        for _ in range(100): # Check every 0.1 seconds
-            if stop_event.is_set():
-                break
-            time.sleep(0.1)
-    
-    logger.warning("Audio keep-alive thread stopped.")
+        # This thread will now simply wait until the main app signals it to stop.
+        # The 'wait' method will return True when the event is set.
+        stop_event.wait()
+
+    except Exception as e:
+        logger.error(f"Error in keep-alive thread: {e}")
+    finally:
+        if silent_player:
+            silent_player.stop()
+        logger.warning("Audio keep-alive thread stopped.")
 
 
 def main():
@@ -82,9 +83,9 @@ def main():
         # 1. Stop the keep-alive thread
         stop_keep_alive.set()
         if 'keep_alive_thread' in locals() and keep_alive_thread.is_alive():
-            keep_alive_thread.join()
+            keep_alive_thread.join(timeout=2.0) # Wait up to 2 seconds for it to stop
         
-        # 2. Clean up the player and GPIO
+        # 2. Clean up the main player and GPIO
         player.cleanup()
         
         logger.info("--- Player Service Shut Down ---")
