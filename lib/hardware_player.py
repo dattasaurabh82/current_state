@@ -7,22 +7,24 @@ import os
 import time
 
 from loguru import logger
+
 # Use evdev for headless keyboard input
 import evdev
 from evdev import ecodes, InputDevice
 
 from lib.player import AudioPlayer
 
+
 def find_latest_song(directory="music_generated") -> Optional[Path]:
     """Finds the most recently created .wav file in a directory."""
     music_dir = Path(directory)
     if not music_dir.exists() or not music_dir.is_dir():
         return None
-    
+
     wav_files = list(music_dir.glob("*.wav"))
     if not wav_files:
         return None
-        
+
     return max(wav_files, key=lambda p: p.stat().st_mtime)
 
 
@@ -56,7 +58,6 @@ class HardwarePlayer:
                 return
         logger.error("No keyboard device found. Please ensure a keyboard is connected.")
 
-
     def _update_led(self):
         """Placeholder for LED control logic."""
         if self.state == "PLAYING":
@@ -70,7 +71,7 @@ class HardwarePlayer:
         """Handles the Play/Pause logic."""
         with self.lock:
             logger.info(f"'Play/Pause' pressed. Current state: {self.state}")
-            
+
             if self.state == "STOPPED":
                 self.latest_song = find_latest_song()
                 if self.latest_song:
@@ -80,7 +81,7 @@ class HardwarePlayer:
                     self.state = "PLAYING"
                 else:
                     logger.error("No song file found to play.")
-            
+
             elif self.state == "PLAYING":
                 if self.player:
                     logger.info("Pausing playback.")
@@ -92,7 +93,7 @@ class HardwarePlayer:
                     logger.info("Resuming playback.")
                     self.player.resume()
                     self.state = "PLAYING"
-        
+
         self._update_led()
         self._print_status()
 
@@ -106,10 +107,9 @@ class HardwarePlayer:
                     self.player.stop()
                     self.player = None
                 self.state = "STOPPED"
-        
+
         self._update_led()
         self._print_status()
-
 
     def listen_for_input(self):
         """Starts the keyboard listener and waits for events."""
@@ -123,7 +123,7 @@ class HardwarePlayer:
         try:
             self.keyboard_device.grab()
             for event in self.keyboard_device.read_loop():
-                if event.type == ecodes.EV_KEY and event.value == 1: # Key down events
+                if event.type == ecodes.EV_KEY and event.value == 1:  # Key down events
                     if event.code == ecodes.KEY_P:
                         self.handle_toggle_play_pause()
                     elif event.code == ecodes.KEY_S:
@@ -136,16 +136,14 @@ class HardwarePlayer:
         finally:
             self.cleanup()
 
-
     def _print_status(self):
         """Prints the current status to the console."""
         song_name = self.latest_song.name if self.latest_song else "None"
-        print("\n" + "="*20 + " PLAYER STATUS " + "="*20)
+        print("\n" + "=" * 20 + " PLAYER STATUS " + "=" * 20)
         print(f"  State: {self.state}")
         print(f"  Song:  {song_name}")
-        print("="*55)
+        print("=" * 55)
         print("Controls: [P] Play/Pause | [S] Stop | [Q] Quit")
-
 
     def cleanup(self):
         """Stops all processes gracefully."""
