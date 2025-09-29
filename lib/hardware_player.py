@@ -3,9 +3,13 @@
 import threading
 from pathlib import Path
 from typing import Optional
+import os
+import time
 
 from loguru import logger
-from pynput import keyboard
+# Use evdev for headless keyboard input
+import evdev
+from evdev import ecodes, InputDevice
 
 from lib.player import AudioPlayer
 
@@ -31,8 +35,7 @@ class HardwarePlayer:
         self.state = "STOPPED"  # Can be STOPPED, PLAYING, PAUSED
         self.player: Optional[AudioPlayer] = None
         self.latest_song: Optional[Path] = find_latest_song()
-        
-        # A lock to prevent race conditions from multiple key presses
+        self.keyboard_device: Optional[InputDevice] = None
         self.lock = threading.Lock()
 
         logger.info("Hardware Player initialized. State: STOPPED")
@@ -41,9 +44,21 @@ class HardwarePlayer:
         else:
             logger.warning("No song found in 'music_generated' directory.")
 
+        self._find_keyboard_device()
+
+    def _find_keyboard_device(self):
+        """Finds the first available keyboard device."""
+        devices = [InputDevice(path) for path in evdev.list_devices()]
+        for device in devices:
+            if "keyboard" in device.name.lower():
+                self.keyboard_device = device
+                logger.info(f"Found keyboard: {self.keyboard_device.name}")
+                return
+        logger.error("No keyboard device found. Please ensure a keyboard is connected.")
+
+
     def _update_led(self):
         """Placeholder for LED control logic."""
-        # We will implement this in the next step
         if self.state == "PLAYING":
             logger.info("[LED] ON (Solid)")
         elif self.state == "PAUSED":
@@ -82,32 +97,35 @@ class HardwarePlayer:
         self._update_led()
         self._print_status()
 
-    def _on_key_press(self, key):
-        """Callback for pynput keyboard listener."""
-        try:
-            # Check for spacebar press
-            if key == keyboard.Key.space:
-                self.handle_press()
-            # Check for 'q' key to quit
-            elif key.char == 'q':
-                logger.warning("'q' pressed. Exiting listener.")
-                self.cleanup()
-                return False  # Stop the listener
-        except AttributeError:
-            pass # Ignore other key presses
-
     def listen_for_input(self):
-        """Starts the keyboard listener and waits for it to exit."""
+        """Starts the keyboard listener and waits for events."""
+        if not self.keyboard_device:
+            logger.error("Cannot listen for input: No keyboard device.")
+            return
+
         logger.info("Starting keyboard listener...")
         logger.info("Press [SPACE] to toggle play/pause/stop.")
         logger.info("Press [Q] to quit.")
         
         self._print_status()
 
-        # The listener runs in its own thread
-        listener = keyboard.Listener(on_press=self._on_key_press)
-        listener.start()
-        listener.join() # Wait for the listener to stop (on 'q' press)
+        try:
+            # Grab the device to prevent other applications from receiving events
+            self.keyboard_device.grab()
+            for event in self.keyboard_device.read_loop():
+                if event.type == ecodes.EV_KEY:
+                    # Check for key down events only
+                    if event.value == 1:  
+                        if event.code == ecodes.KEY_SPACE:
+                            self.handle_press()
+                        elif event.code == ecodes.KEY_Q:
+                            logger.warning("'Q' pressed. Exiting listener.")
+                            break # Exit the loop
+        except Exception as e:
+            logger.error(f"Error with keyboard listener: {e}")
+        finally:
+            self.cleanup()
+
 
     def _print_status(self):
         """Prints the current status to the console."""
@@ -124,5 +142,6 @@ class HardwarePlayer:
         logger.warning("Cleaning up player...")
         if self.player:
             self.player.stop()
-        # GPIO cleanup will go here in the next step
+        if self.keyboard_device:
+            self.keyboard_device.ungrab()
         logger.info("Cleanup complete. Exiting.")
