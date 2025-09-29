@@ -12,6 +12,9 @@
 
 ### High
 
+- blink factor
+- Pin and other configs as ext vars ...
+- how often and how long silent audio player plays
 - All code base cleanup 
 - HW sensor plugin ...
 - Business logic of operation ...
