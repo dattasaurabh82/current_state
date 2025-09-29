@@ -12,6 +12,7 @@
 
 ### High
 
+- All code base cleanup 
 - HW sensor plugin ...
 - Business logic of operation ...
 
