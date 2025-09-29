@@ -49,14 +49,34 @@ class HardwarePlayer:
         self._find_keyboard_device()
 
     def _find_keyboard_device(self):
-        """Finds the first available keyboard device."""
-        devices = [InputDevice(path) for path in evdev.list_devices()]
-        for device in devices:
-            if "keyboard" in device.name.lower():
-                self.keyboard_device = device
-                logger.info(f"Found keyboard: {self.keyboard_device.name}")
+        """Finds the first available keyboard device and adds debugging."""
+        logger.info("Searching for input devices...")
+        try:
+            devices = [InputDevice(path) for path in evdev.list_devices()]
+            if not devices:
+                logger.error("No input devices found! Check /dev/input/")
                 return
-        logger.error("No keyboard device found. Please ensure a keyboard is connected.")
+
+            logger.info("--- Available Devices ---")
+            for device in devices:
+                logger.info(f"Path: {device.path}, Name: {device.name}")
+            logger.info("-------------------------")
+
+            for device in devices:
+                if "keyboard" in device.name.lower():
+                    self.keyboard_device = device
+                    logger.success(
+                        f"SUCCESS: Found keyboard: {self.keyboard_device.name} at {self.keyboard_device.path}"
+                    )
+                    return
+
+            logger.error("No device with 'keyboard' in its name was found.")
+
+        except Exception as e:
+            logger.error(f"An error occurred while searching for devices: {e}")
+            logger.error(
+                "This is likely a permissions issue. Did you run 'sudo usermod -a -G input $USER' and reboot?"
+            )
 
     def _update_led(self):
         """Placeholder for LED control logic."""
@@ -133,6 +153,9 @@ class HardwarePlayer:
                         break
         except Exception as e:
             logger.error(f"Error with keyboard listener: {e}")
+            logger.error(
+                "This is likely a permissions issue if the script was able to find the device."
+            )
         finally:
             self.cleanup()
 
