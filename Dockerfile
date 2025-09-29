@@ -1,30 +1,31 @@
-# Use an official Raspberry Pi OS (Debian) base image
-FROM debian:bookworm-slim
+# Use an official ARM-compatible Python image, which is better for our use case
+FROM python:3.11-slim-bookworm
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Install system dependencies required for audio and GPIO
 RUN apt-get update && apt-get install -y \
-    curl \
     libportaudio2 \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv, the Python package manager
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+# Install uv using pip, which is simpler and more reliable in this environment
+RUN pip install uv
 
-# --- FIX: Create a symbolic link to make uv available system-wide ---
-RUN ln -s /root/.cargo/bin/uv /usr/local/bin/uv
-
-# Copy the dependency files first to leverage Docker's build cache
+# Copy the dependency files first
 COPY pyproject.toml uv.lock ./
 
-# Install Python packages using the now-available uv command
-RUN uv sync --system
+# Create a virtual environment and install dependencies into it
+# This is a best practice inside Docker
+RUN uv venv && uv sync
 
 # Copy the rest of the application code into the container
 COPY . .
 
 # This environment variable is necessary for loguru to display colors
 ENV PYTHONUNBUFFERED=1
+
+# Set the default command to run the player using `uv run`
+# `uv run` will automatically find and use the virtual environment we just created
+CMD ["uv", "run", "python", "run_player.py"]
