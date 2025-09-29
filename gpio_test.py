@@ -15,9 +15,9 @@ def button_pressed_callback(channel):
 print("--- GPIO Test Script ---")
 print("Press Ctrl+C to exit.")
 
-GPIO.cleanup()
+# GPIO.cleanup()
 
-time.sleep(1) # Give some time before starting
+# time.sleep(1) # Give some time before starting
 
 # Use BCM pin numbering
 GPIO.setmode(GPIO.BCM)
