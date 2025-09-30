@@ -7,7 +7,7 @@ After=docker.service
 Restart=always
 User=pi
 Group=docker
-EExecStart=/usr/bin/docker run --rm --name world-theme-player --privileged -v /dev/snd:/dev/snd -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated world-theme-music uv run python run_player.py --daemon
+ExecStart=/usr/bin/docker run --rm --name world-theme-player --privileged -v /dev/snd:/dev/snd -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated world-theme-music uv run python run_player.py --daemon
 
 [Install]
 WantedBy=multi-user.target
