@@ -5,6 +5,7 @@ import sounddevice as sd
 import soundfile as sf
 from loguru import logger
 import numpy as np
+import time
 
 class AudioPlayer:
     def __init__(
@@ -57,7 +58,7 @@ class AudioPlayer:
             data = self.audio_queue.get_nowait()
             chunk_size = len(data)
 
-            # --- FIX: Handle Mono-to-Stereo mismatch ---
+            # Handle Mono-to-Stereo mismatch
             if outdata.ndim > 1 and data.ndim == 1:
                 # Reshape mono data to a column vector for stereo output
                 data = data.reshape(-1, 1)
@@ -68,10 +69,37 @@ class AudioPlayer:
         except queue.Empty:
             outdata.fill(0) # Send silence if the queue is empty
 
+    # def _read_chunks_from_disk(self):
+    #     logger.info(f"Audio reader thread started for {self.filepath.name} (Disk Mode).")
+    #     while not self.stop_event.is_set():
+    #         try:
+    #             if self._is_paused:
+    #                 time.sleep(0.1)
+    #                 continue
+
+    #             numpy_array = self._file_handle.read(self.blocksize, dtype='float32')
+    #             if len(numpy_array) == 0:
+    #                 if self.loop:
+    #                     self._file_handle.seek(0)
+    #                     continue
+    #                 else:
+    #                     break
+    #             self.audio_queue.put(numpy_array)
+    #         except Exception as e:
+    #             logger.error(f"Error in disk reader thread: {e}")
+    #             break
+    #     logger.info(f"Audio reader thread finished for {self.filepath.name}.")
+    
     def _read_chunks_from_disk(self):
+        """The original file reader function."""
         logger.info(f"Audio reader thread started for {self.filepath.name} (Disk Mode).")
         while not self.stop_event.is_set():
             try:
+                # --- FIX: Add a check to ensure the file handle exists ---
+                if self._file_handle is None:
+                    logger.warning("File handle is not available. Stopping reader thread.")
+                    break
+                
                 if self._is_paused:
                     time.sleep(0.1)
                     continue
@@ -89,8 +117,40 @@ class AudioPlayer:
                 break
         logger.info(f"Audio reader thread finished for {self.filepath.name}.")
 
+    # def _read_chunks_from_ram(self):
+    #     logger.info(f"Audio reader thread started for {self.filepath.name} (RAM Mode).")
+    #     position = 0
+    #     while not self.stop_event.is_set():
+    #         try:
+    #             if self._is_paused:
+    #                 time.sleep(0.1)
+    #                 continue
+                
+    #             chunk = self.preload_data[position : position + self.blocksize]
+    #             position += self.blocksize
+                
+    #             if len(chunk) == 0:
+    #                 if self.loop:
+    #                     position = 0
+    #                     continue
+    #                 else:
+    #                     break
+
+    #             self.audio_queue.put(chunk)
+    #         except Exception as e:
+    #             logger.error(f"Error in RAM reader thread: {e}")
+    #             break
+    #     logger.info(f"Audio reader thread finished for {self.filepath.name}.")
+    
     def _read_chunks_from_ram(self):
+        """New reader that serves data from the preloaded numpy array."""
         logger.info(f"Audio reader thread started for {self.filepath.name} (RAM Mode).")
+        
+        # --- FIX: Add a check to ensure the preload_data exists ---
+        if self.preload_data is None:
+            logger.error("Preloaded data is not available. Stopping RAM reader thread.")
+            return
+
         position = 0
         while not self.stop_event.is_set():
             try:
@@ -98,17 +158,20 @@ class AudioPlayer:
                     time.sleep(0.1)
                     continue
                 
+                # Get the next chunk from the preloaded data
                 chunk = self.preload_data[position : position + self.blocksize]
                 position += self.blocksize
                 
+                # If we've reached the end of the data
                 if len(chunk) == 0:
                     if self.loop:
-                        position = 0
+                        position = 0 # Reset to the beginning
                         continue
                     else:
-                        break
+                        break # End of data and not looping
 
                 self.audio_queue.put(chunk)
+
             except Exception as e:
                 logger.error(f"Error in RAM reader thread: {e}")
                 break
