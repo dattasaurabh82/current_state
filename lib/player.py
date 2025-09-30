@@ -14,7 +14,7 @@ class AudioPlayer:
         blocksize=2048,
         buffer_size=20,
         loop_by_default=True,
-        preload=False # New option to preload the file
+        preload=False
     ):
         self.filepath = Path(filepath)
         self.device = device
@@ -35,7 +35,6 @@ class AudioPlayer:
         if not self.filepath.exists():
             raise FileNotFoundError(f"Audio file not found: {self.filepath}")
 
-        # *** Preload audio data if requested (For small silent audio file used to keep the audio out active...)
         if preload:
             try:
                 self.preload_data, samplerate = sf.read(self.filepath, dtype='float32')
@@ -51,20 +50,25 @@ class AudioPlayer:
             raise sd.CallbackAbort
 
         if self._is_paused:
-            outdata[:] = 0 # Send silence when paused
+            outdata.fill(0)
             return
 
         try:
             data = self.audio_queue.get_nowait()
             chunk_size = len(data)
+
+            # --- FIX: Handle Mono-to-Stereo mismatch ---
+            if outdata.ndim > 1 and data.ndim == 1:
+                # Reshape mono data to a column vector for stereo output
+                data = data.reshape(-1, 1)
+
             outdata[:chunk_size] = data
             if chunk_size < len(outdata):
-                outdata[chunk_size:] = 0 # Pad with silence if chunk is too small
+                outdata[chunk_size:].fill(0) # Pad with silence if chunk is too small
         except queue.Empty:
-            outdata[:] = 0 # Send silence if the queue is empty
+            outdata.fill(0) # Send silence if the queue is empty
 
     def _read_chunks_from_disk(self):
-        """The original file reader function."""
         logger.info(f"Audio reader thread started for {self.filepath.name} (Disk Mode).")
         while not self.stop_event.is_set():
             try:
@@ -72,13 +76,13 @@ class AudioPlayer:
                     time.sleep(0.1)
                     continue
 
-                numpy_array = self._file_handle.read(self.blocksize)
-                if not numpy_array.any(): # Check if the array is all zeros (end of file)
+                numpy_array = self._file_handle.read(self.blocksize, dtype='float32')
+                if len(numpy_array) == 0:
                     if self.loop:
                         self._file_handle.seek(0)
                         continue
                     else:
-                        break # End of file and not looping
+                        break
                 self.audio_queue.put(numpy_array)
             except Exception as e:
                 logger.error(f"Error in disk reader thread: {e}")
@@ -86,7 +90,6 @@ class AudioPlayer:
         logger.info(f"Audio reader thread finished for {self.filepath.name}.")
 
     def _read_chunks_from_ram(self):
-        """New reader that serves data from the preloaded numpy array."""
         logger.info(f"Audio reader thread started for {self.filepath.name} (RAM Mode).")
         position = 0
         while not self.stop_event.is_set():
@@ -95,36 +98,31 @@ class AudioPlayer:
                     time.sleep(0.1)
                     continue
                 
-                # Get the next chunk from the preloaded data
                 chunk = self.preload_data[position : position + self.blocksize]
                 position += self.blocksize
                 
-                # If we've reached the end of the data
                 if len(chunk) == 0:
                     if self.loop:
-                        position = 0 # Reset to the beginning
+                        position = 0
                         continue
                     else:
-                        break # End of data and not looping
+                        break
 
                 self.audio_queue.put(chunk)
-
             except Exception as e:
                 logger.error(f"Error in RAM reader thread: {e}")
                 break
         logger.info(f"Audio reader thread finished for {self.filepath.name}.")
 
-
     def play(self):
         try:
+            target_thread = None
             if self.preload_data is not None:
-                # Get info from the preloaded data
                 info = sf.info(str(self.filepath))
                 samplerate = info.samplerate
                 channels = info.channels
                 target_thread = self._read_chunks_from_ram
             else:
-                # Get info by opening the file
                 self._file_handle = sf.SoundFile(self.filepath)
                 samplerate = self._file_handle.samplerate
                 channels = self._file_handle.channels
@@ -158,8 +156,11 @@ class AudioPlayer:
         if self._reader_thread and self._reader_thread.is_alive():
             self._reader_thread.join(timeout=1)
         if self._stream:
-            self._stream.stop()
-            self._stream.close()
+            try:
+                self._stream.stop()
+                self._stream.close()
+            except sd.PortAudioError as e:
+                logger.warning(f"Error closing stream (ignorable on shutdown): {e}")
         if self._file_handle:
             self._file_handle.close()
         self.playback_finished.set()
