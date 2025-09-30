@@ -179,6 +179,8 @@ docker run --rm -it \
   world-theme-music
 ```
 
+- `--device /dev/snd`: This gives the container direct access to your Raspberry Pi's sound card.
+
 or in daemon mode (no keyboard interaction....  )
 
 ```bash
@@ -189,11 +191,6 @@ docker run --rm --name world-theme-player \
   world-theme-music \
   uv run python run_player.py --daemon
 ```
-
-
-- --device /dev/snd: This gives the container direct access to your Raspberry Pi's sound card.
-- --device /dev/gpiomem: This gives the container direct access to the GPIO pins.
-
 
 
 ---
