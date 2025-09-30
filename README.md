@@ -5,23 +5,31 @@
 ### Low
 
 - slow down track for 30 sec to make it feel longer [post processing]
+- Other region of news 
 - Send cancel to other agent calls
-- maybe web ui
-- WIP: Dockerization ...
 - WIP: Docu ...
 
 ### High
 
+- Autostart docker & cron 
 - Blink factor
 - Pin and other configs as ext vars ...
 - WIP: All code base cleanup 
 - HW sensor plugin
 - Business logic of operation ...
 
-# Backlog
+### Backlog
 
 - How often and how long silent audio player plays
   - Currently happy with the implementation
+- maybe web ui
+
+### Bug
+
+- silent audio to keep the channel active did not work ....
+
+
+---
 
 ## Project structure
 
