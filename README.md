@@ -4,17 +4,16 @@
 
 ### Low
 
-- slow down track for 30 sec to make it feel longer [post processing]
+- MQTT / radar trigger 
 - Other region of news 
-- Send cancel to other agent calls
 - WIP: Docu ...
+- WIP: All code base cleanup 
 
 ### High
 
 - Autostart docker & cron 
 - Blink factor
 - Pin and other configs as ext vars ...
-- WIP: All code base cleanup 
 - HW sensor plugin
 - Business logic of operation ...
 
@@ -23,6 +22,8 @@
 - How often and how long silent audio player plays
   - Currently happy with the implementation
 - maybe web ui
+- Send cancel to other agent calls
+- slow down track for 30 sec to make it feel longer [post processing]
 
 ### Bug
 
@@ -57,6 +58,10 @@
 ├── LICENSE
 └── uv.lock
 ```
+
+### Setup your pi time correct to region
+
+...
 
 ### Install Python Build Dependencies:
 
