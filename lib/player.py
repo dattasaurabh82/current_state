@@ -4,6 +4,7 @@ from pathlib import Path
 import sounddevice as sd
 import soundfile as sf
 from loguru import logger
+import numpy as np
 
 class AudioPlayer:
     def __init__(
@@ -13,19 +14,20 @@ class AudioPlayer:
         blocksize=2048,
         buffer_size=20,
         loop_by_default=True,
+        preload=False # New option to preload the file
     ):
         self.filepath = Path(filepath)
         self.device = device
         self.blocksize = blocksize
         self.buffer_size = buffer_size
         self.audio_queue = queue.Queue(maxsize=buffer_size)
+        self.loop = loop_by_default
+        self.preload_data = None
 
-        # --- Threading Events ---
         self.playback_finished = threading.Event()
         self.stop_event = threading.Event()
-        self._is_paused = False # Use a simple boolean for pause state
+        self._is_paused = False
 
-        self.loop = loop_by_default
         self._reader_thread = None
         self._stream = None
         self._file_handle = None
@@ -33,72 +35,111 @@ class AudioPlayer:
         if not self.filepath.exists():
             raise FileNotFoundError(f"Audio file not found: {self.filepath}")
 
+        # *** Preload audio data if requested (For small silent audio file used to keep the audio out active...)
+        if preload:
+            try:
+                self.preload_data, samplerate = sf.read(self.filepath, dtype='float32')
+                logger.info(f"Preloaded '{self.filepath.name}' into memory.")
+            except Exception as e:
+                logger.error(f"Failed to preload audio file: {e}")
+                self.preload_data = None
+
+
     def _callback(self, outdata, frames, time, status):
-        """The audio callback function that feeds the stream."""
         if status.output_underflow:
             logger.error("Output underflow! Increase buffer_size.")
             raise sd.CallbackAbort
 
         if self._is_paused:
-            outdata[:] = b'\x00' * len(outdata)
+            outdata[:] = 0 # Send silence when paused
             return
 
         try:
             data = self.audio_queue.get_nowait()
-            if len(data) < len(outdata):
-                outdata[:len(data)] = data
-                outdata[len(data):] = b'\x00' * (len(outdata) - len(data))
-                if not self.loop:
-                    raise sd.CallbackStop
-            else:
-                outdata[:] = data
+            chunk_size = len(data)
+            outdata[:chunk_size] = data
+            if chunk_size < len(outdata):
+                outdata[chunk_size:] = 0 # Pad with silence if chunk is too small
         except queue.Empty:
-            outdata[:] = b'\x00' * len(outdata)
+            outdata[:] = 0 # Send silence if the queue is empty
 
-    def _read_chunks(self):
-        """The file reader function."""
-        logger.info("Audio reader thread started.")
+    def _read_chunks_from_disk(self):
+        """The original file reader function."""
+        logger.info(f"Audio reader thread started for {self.filepath.name} (Disk Mode).")
         while not self.stop_event.is_set():
             try:
                 if self._is_paused:
-                    threading.Event().wait(0.1)
+                    time.sleep(0.1)
                     continue
 
-                if self._file_handle is None:
-                    break
-
-                numpy_array = self._file_handle.read(self.blocksize, dtype="float32")
-
-                if not numpy_array.size:
+                numpy_array = self._file_handle.read(self.blocksize)
+                if not numpy_array.any(): # Check if the array is all zeros (end of file)
                     if self.loop:
                         self._file_handle.seek(0)
                         continue
                     else:
-                        break
-                
-                self.audio_queue.put(numpy_array.tobytes(), timeout=0.5)
-
-            except queue.Full:
-                continue
+                        break # End of file and not looping
+                self.audio_queue.put(numpy_array)
             except Exception as e:
-                logger.error(f"Error in reader thread: {e}")
+                logger.error(f"Error in disk reader thread: {e}")
                 break
-        logger.info("Audio reader thread finished.")
+        logger.info(f"Audio reader thread finished for {self.filepath.name}.")
+
+    def _read_chunks_from_ram(self):
+        """New reader that serves data from the preloaded numpy array."""
+        logger.info(f"Audio reader thread started for {self.filepath.name} (RAM Mode).")
+        position = 0
+        while not self.stop_event.is_set():
+            try:
+                if self._is_paused:
+                    time.sleep(0.1)
+                    continue
+                
+                # Get the next chunk from the preloaded data
+                chunk = self.preload_data[position : position + self.blocksize]
+                position += self.blocksize
+                
+                # If we've reached the end of the data
+                if len(chunk) == 0:
+                    if self.loop:
+                        position = 0 # Reset to the beginning
+                        continue
+                    else:
+                        break # End of data and not looping
+
+                self.audio_queue.put(chunk)
+
+            except Exception as e:
+                logger.error(f"Error in RAM reader thread: {e}")
+                break
+        logger.info(f"Audio reader thread finished for {self.filepath.name}.")
+
 
     def play(self):
-        """Starts audio playback."""
         try:
-            self._file_handle = sf.SoundFile(self.filepath)
+            if self.preload_data is not None:
+                # Get info from the preloaded data
+                info = sf.info(str(self.filepath))
+                samplerate = info.samplerate
+                channels = info.channels
+                target_thread = self._read_chunks_from_ram
+            else:
+                # Get info by opening the file
+                self._file_handle = sf.SoundFile(self.filepath)
+                samplerate = self._file_handle.samplerate
+                channels = self._file_handle.channels
+                target_thread = self._read_chunks_from_disk
+            
             self.stop_event.clear()
             self._is_paused = False
 
-            self._reader_thread = threading.Thread(target=self._read_chunks)
+            self._reader_thread = threading.Thread(target=target_thread)
             self._reader_thread.daemon = True
             self._reader_thread.start()
 
-            self._stream = sd.RawOutputStream(
-                samplerate=self._file_handle.samplerate,
-                channels=self._file_handle.channels,
+            self._stream = sd.OutputStream(
+                samplerate=samplerate,
+                channels=channels,
                 blocksize=self.blocksize,
                 device=self.device,
                 dtype="float32",
@@ -112,12 +153,8 @@ class AudioPlayer:
             logger.exception(f"An unexpected error occurred: {e}")
 
     def stop(self):
-        """Stops playback and cleans up all resources."""
-        if self.stop_event.is_set():
-            return
         logger.warning("Stopping playback...")
         self.stop_event.set()
-
         if self._reader_thread and self._reader_thread.is_alive():
             self._reader_thread.join(timeout=1)
         if self._stream:
@@ -125,34 +162,22 @@ class AudioPlayer:
             self._stream.close()
         if self._file_handle:
             self._file_handle.close()
-
         self.playback_finished.set()
         logger.info("Playback stopped.")
 
     def pause(self):
-        """Pauses playback."""
         if not self._is_paused:
             self._is_paused = True
             logger.info("Playback paused.")
 
     def resume(self):
-        """Resumes playback."""
         if self._is_paused:
             self._is_paused = False
             logger.info("Playback resumed.")
-            
-    # --- METHOD RESTORED HERE ---
-    def wait(self):
-        """Waits for the playback to complete."""
-        self.playback_finished.wait()
 
-    def toggle_loop(self):
-        """Toggles the looping state."""
-        self.loop = not self.loop
-        status = "ON" if self.loop else "OFF"
-        logger.info(f"Looping is now {status}.")
+    def wait(self):
+        self.playback_finished.wait()
 
     @property
     def is_playing(self):
-        """Returns True if the audio is currently playing."""
         return not self.playback_finished.is_set() and not self.stop_event.is_set()
