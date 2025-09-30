@@ -193,6 +193,16 @@ docker run --rm --name world-theme-player \
 ```
 
 
+### Run as a service 
+
+....
+
+check logs:
+
+```bash
+docker logs -f world-theme-player
+```
+
 ---
 
 ## LICENSE
