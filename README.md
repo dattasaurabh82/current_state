@@ -7,17 +7,21 @@
 - slow down track for 30 sec to make it feel longer [post processing]
 - Send cancel to other agent calls
 - maybe web ui
-- Dockerization ...
-- Docu ...
+- WIP: Dockerization ...
+- WIP: Docu ...
 
 ### High
 
-- blink factor
+- Blink factor
 - Pin and other configs as ext vars ...
-- how often and how long silent audio player plays
-- All code base cleanup 
-- HW sensor plugin ...
+- WIP: All code base cleanup 
+- HW sensor plugin
 - Business logic of operation ...
+
+# Backlog
+
+- How often and how long silent audio player plays
+  - Currently happy with the implementation
 
 ## Project structure
 
