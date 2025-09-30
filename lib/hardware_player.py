@@ -163,20 +163,50 @@ class HardwarePlayer:
         self._update_led()
         self._print_status()
 
-    def listen_for_input(self):
-        logger.info("Starting text command listener...")
-        while True:
-            self._print_status()
-            command = input("Enter command > ").lower().strip()
-            if command == 'p':
-                self.handle_toggle_play_pause()
-            elif command == 's':
-                self.handle_stop()
-            elif command == 'q':
-                logger.warning("'q' entered. Exiting.")
-                break
-            else:
-                logger.warning(f"Unknown command: '{command}'")
+    # def listen_for_input(self):
+    #     logger.info("Starting text command listener...")
+    #     while True:
+    #         self._print_status()
+    #         command = input("Enter command > ").lower().strip()
+    #         if command == 'p':
+    #             self.handle_toggle_play_pause()
+    #         elif command == 's':
+    #             self.handle_stop()
+    #         elif command == 'q':
+    #             logger.warning("'q' entered. Exiting.")
+    #             break
+    #         else:
+    #             logger.warning(f"Unknown command: '{command}'")
+    
+    def listen_for_input(self, daemon_mode=False):
+        """
+        Listens for keyboard input if not in daemon mode, otherwise just waits.
+        """
+        if daemon_mode:
+            logger.info("Running in daemon mode. Listening for GPIO button presses...")
+            # In daemon mode, the GPIO polling is running in the background.
+            # This loop just keeps the main script alive indefinitely.
+            while True:
+                time.sleep(1)
+        else:
+            logger.info("Running in interactive mode. Listening for keyboard commands and GPIO.")
+            # This loop listens for keyboard commands in the foreground.
+            while True:
+                self._print_status()
+                command = input("Enter command > ").lower().strip()
+
+                if command == 'p':
+                    self.handle_toggle_play_pause()
+                elif command == 's':
+                    self.handle_stop()
+                elif command == 'q':
+                    logger.warning("'q' entered. Exiting.")
+                    break
+                else:
+                    logger.warning(f"Unknown command: '{command}'")
+        
+        # This cleanup will be called when the loop is broken (e.g., by 'q' or Ctrl+C)
+        self.cleanup()
 
     def _print_status(self):
         song_name = self.latest_song.name if self.latest_song else "None"
