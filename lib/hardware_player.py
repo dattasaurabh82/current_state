@@ -116,6 +116,9 @@ class HardwarePlayer:
             self.breathing_thread.start()
 
     def _breathe_led(self):
+        """Runs in a thread to create a breathing effect for the LED."""
+        if not self.led_pwm:
+            return
         pause_time = 0.02
         while not self.stop_breathing.is_set():
             for duty_cycle in range(0, 101, 5):
