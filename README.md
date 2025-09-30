@@ -8,10 +8,10 @@
 - Other region of news 
 - WIP: Docu ...
 - WIP: All code base cleanup 
+- System provisioning docu and tooling .... 
 
 ### High
 
-- Autostart docker & cron 
 - Blink factor
 - Pin and other configs as ext vars ...
 - HW sensor plugin
@@ -61,7 +61,16 @@
 
 ### Setup your pi time correct to region
 
-...
+check 
+
+```bash
+date
+```
+
+set 
+
+... TBD
+
 
 ### Install Python Build Dependencies:
 
@@ -200,12 +209,24 @@ docker run --rm --name world-theme-player \
 
 ### Run as a service 
 
-....
+music player 
+
+[music-player.service](music-player.service)
 
 check logs:
 
 ```bash
 docker logs -f world-theme-player
+```
+
+### Run cron for fetcher and generator ...
+
+```bash
+crontab -e
+
+# Select nano as the editor
+# Then at the bottom, add:
+0 3 * * * /usr/bin/docker run --rm --name world-theme-generator --dns=8.8.8.8 -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated -v /home/pi/daily_mood_theme_song_player/news_data_cache:/app/news_data_cache --env-file /home/pi/daily_mood_theme_song_player/.env world-theme-music uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/cron.log 2>&1
 ```
 
 ---
