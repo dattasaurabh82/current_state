@@ -67,17 +67,17 @@
 #     player = HardwarePlayer()
 
 #     try:
-#         # --- Start the Keep-Alive Thread ---
+#         #Start the Keep-Alive Thread ---
 #         keep_alive_thread = threading.Thread(
 #             target=keep_audio_alive, args=(stop_keep_alive,), daemon=True
 #         )
 #         keep_alive_thread.start()
 
-#         # --- Start the Main Hardware Player ---
+#         #Start the Main Hardware Player ---
 #         player.listen_for_input() # This blocks until 'q' is pressed
     
 #     finally:
-#         # --- This code is GUARANTEED to run on exit ---
+#         #This code is GUARANTEED to run on exit ---
 #         logger.info("Main listener stopped. Shutting down all processes...")
         
 #         # 1. Stop the keep-alive thread
@@ -139,12 +139,13 @@ def keep_audio_alive(stop_event: threading.Event):
     silent_player = None
     try:
         logger.info("Starting audio keep-alive player.")
-        # --- FIX: Increase buffer and block sizes for stability ---
+        #FIX: Increase buffer and block sizes for stability ---
         silent_player = AudioPlayer(
             silent_file,
             loop_by_default=True,
-            buffer_size=40,  # Increased from default 20
-            blocksize=4096   # Increased from default 2048
+            preload=True
+            # buffer_size=40,  # Increased from default 20
+            # blocksize=4096   # Increased from default 2048
         )
         silent_player.play()
         
@@ -170,17 +171,17 @@ def main():
     player = HardwarePlayer()
 
     try:
-        # --- Start the Keep-Alive Thread ---
+        #Start the Keep-Alive Thread ---
         keep_alive_thread = threading.Thread(
             target=keep_audio_alive, args=(stop_keep_alive,), daemon=True
         )
         keep_alive_thread.start()
 
-        # --- Start the Main Hardware Player ---
+        #Start the Main Hardware Player ---
         player.listen_for_input() # This blocks until 'q' is pressed
     
     finally:
-        # --- This code is GUARANTEED to run on exit ---
+        #This code is GUARANTEED to run on exit ---
         logger.info("Main listener stopped. Shutting down all processes...")
         
         # 1. Stop the keep-alive thread
