@@ -1,44 +1,63 @@
-from RdLib.Rd import Rd 
+from RdLib.Rd import Rd
 from RdLib.config import config
 import numpy as np
 import time
 
-# Smooth settings for presence detection
+# --- CONFIGURATION ---
+# Now that data is valid, we can trust the Kalman filter again!
 config.set(Kalman=True)
 config.set(distance_units="m")
-config.set(Kalman_Q=np.diag([0.2, 0.2, 0.2, 0.2]))     # Higher = responsive
-config.set(Kalman_R=np.diag([30, 30]))                 # Lower = trust sensor
 
-'''
-For presence detection (is someone there?):
-Q_VALUE = 0.05
-R_VALUE = 100
-Smooth, stable — good for triggering events.
-
-For position tracking (where exactly?):
-Q_VALUE = 0.2
-R_VALUE = 30
-Responsive — good for following movement.
-
-For gesture/speed detection:
-Q_VALUE = 0.5
-R_VALUE = 10
-Very reactive — captures quick movements.
-'''
-
+# Tweak these for "Human Typing" (Small movements)
+# Q = Process Noise (Higher = follows fast movements, Lower = smoother)
+config.set(Kalman_Q=np.diag([0.05, 0.05, 0.05, 0.05])) 
+# R = Measurement Noise (Higher = ignore spikes, Lower = trust sensor)
+config.set(Kalman_R=np.diag([50, 50])) 
 
 rd = Rd()
 
-ROOM_DEPTH = 3.0  # meters - adjust to your room size
+# IGNORE everything further than this distance (e.g., walls)
+MAX_RANGE_METERS = 2.5 
+
+print("--- Radar Active: Filtering Enabled ---")
 
 while True:
-    distance = rd.get_distance()
-    x, y = rd.get_coordinate()
-    angle = rd.get_angle()
+    try:
+        # 1. Get Synchronized Data
+        data = rd.OutputDump()
+        
+        # OutputDump returns: (x, y, dist, angle, mode, raw_dist)
+        # Note: When Kalman is True, 'x' and 'y' in OutputDump might NOT be filtered 
+        # depending on library version. 
+        # Let's use the library's specific getters which usually apply the filter logic.
+        
+        # HOWEVER, to be safe and avoid the desync bug again, 
+        # we will manually apply a simple logic or trust OutputDump if it uses the internal state.
+        
+        raw_x = data[0]
+        raw_y = data[1]
+        dist = data[2]
+        angle = data[3]
+        
+        # 2. Simple Range Gating (Ignore walls)
+        if dist > MAX_RANGE_METERS:
+            # Skip this reading, it's probably the back wall
+            continue
+            
+        # 3. Visualize
+        # A simple visual bar to see where the target is (Left vs Right)
+        # Scale: -3m to +3m
+        pos_marker = int((raw_x + 3) * 10) 
+        pos_marker = max(0, min(pos_marker, 60))
+        visual_bar = [" "] * 61
+        visual_bar[pos_marker] = "O" # 'O' is the target
+        visual_bar[30] = "|"         # '|' is the radar center
+        
+        bar_str = "".join(visual_bar)
+        
+        print(f"[{bar_str}] X: {raw_x:5.2f}m  Dist: {dist:5.2f}m")
 
-    # present = distance < ROOM_DEPTH
-
-    print(f"X: {x:6.2f}m  Y: {y:6.2f}m  Dist: {distance:5.2f}m  Angle: {angle:6.1f}°")
-    # print(f"{'PRESENT' if present else 'EMPTY':8} | Dist: {distance:.2f}m | Angle: {angle:6.1f}°")
-
-    time.sleep(0.3)
+    except Exception as e:
+        print(f"Error: {e}")
+        
+    time.sleep(0.1)
