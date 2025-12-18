@@ -229,6 +229,58 @@ crontab -e
 0 3 * * * /usr/bin/docker run --rm --name world-theme-generator --dns=8.8.8.8 -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated -v /home/pi/daily_mood_theme_song_player/news_data_cache:/app/news_data_cache --env-file /home/pi/daily_mood_theme_song_player/.env world-theme-music uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/cron.log 2>&1
 ```
 
+### Setup Button based shutdown and wake-up
+
+#### Disable I2C
+
+>[!Warning]
+> For this step we need to disable `I2C` as we will be using `GPIO3` (based on Kernel) which is the I2C's `SCL` line using `sudo raspi-config`
+
+| Steps | View |
+| --- | --- |
+| 1. Open raspi-config & Select *Interface Options* | ![alt text](assets/disableI2c_step1.png) |
+| 2. Select I2C Option | ![alt text](assets/disableI2c_step2.png) |
+| 3. Disable it (Select *No*) | ![alt text](assets/disableI2c_step3.png) |
+| 4. Then hit *Finish* and Reboot | ![alt text](assets/disableI2c_step4.png) |
+
+### Update dtoverlay to allow button ctrl for boot management
+
+Add the following in the `/boot/firmware/config.txt`
+
+```bash
+sudo nano /boot/firmware/config.txt
+```
+
+Then, after these two lines ...
+
+```bash
+# ...
+# Additional overlays and parameters are documented
+# /boot/firmware/overlays/README
+# ...
+```
+
+Add ...
+
+```bash
+dtoverlay=gpio-shutdown
+```
+
+So it now looks like this:
+
+```bash
+# ...
+# Additional overlays and parameters are documented
+# /boot/firmware/overlays/README
+dtoverlay=gpio-shutdown
+# ...
+```
+
+Reboot & Test. 
+
+Now after pi boots, if you press the GPIO3 button, it will go to sleep and if you press again GPIO 3, it will boot back up.  
+
+
 ---
 
 ## LICENSE
