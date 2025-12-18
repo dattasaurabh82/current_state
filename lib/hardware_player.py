@@ -15,9 +15,9 @@ except (RuntimeError, ModuleNotFoundError):
     logger.warning("RPi.GPIO library not found. GPIO functionality will be disabled.")
 
 # Pin Definitions
-LED_PIN = 27
+LED_PIN = 25
 PLAY_PAUSE_BTN_PIN = 22
-STOP_BTN_PIN = 10
+STOP_BTN_PIN = 27
 
 
 def find_latest_song(directory="music_generated") -> Optional[Path]:
