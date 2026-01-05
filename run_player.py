@@ -8,6 +8,9 @@ from loguru import logger
 from lib.hardware_player import HardwarePlayer
 from lib.player import AudioPlayer # We need this for the keep-alive player (Silent audio file occasional playback)
 
+# Keep-alive interval in seconds (plays silent.wav when main audio is not playing)
+KEEP_ALIVE_DELAY = 5
+
 def setup_logger():
     """Configures a simple logger for the player service."""
     log_file_path = "player_service.log"
@@ -63,9 +66,10 @@ def setup_logger():
 #         logger.warning("Audio keep-alive thread stopped.")
 
 
-def keep_audio_alive(stop_event: threading.Event):
+def keep_audio_alive(stop_event: threading.Event, hardware_player: HardwarePlayer):
     """
-    Plays a silent WAV file on a continuous loop to prevent speakers from sleeping.
+    Plays a silent WAV file at intervals to prevent speakers from sleeping.
+    Only plays when main audio is not playing.
     """
     silent_file = Path("silent.wav")
     if not silent_file.exists():
@@ -74,27 +78,29 @@ def keep_audio_alive(stop_event: threading.Event):
 
     # Add a small delay to de-conflict with main player initialization
     time.sleep(0.5)
+    logger.info(f"Starting audio keep-alive (interval: {KEEP_ALIVE_DELAY}s).")
 
-    silent_player = None
-    try:
-        logger.info("Starting audio keep-alive player.")
-        # --- FIX: Preload the entire silent file into RAM for stability ---
-        silent_player = AudioPlayer(
-            silent_file,
-            loop_by_default=True,
-            preload=True  # Use the new feature
-        )
-        silent_player.play()
-        
-        # This thread will now simply wait until the main app signals it to stop.
-        stop_event.wait()
+    while not stop_event.is_set():
+        try:
+            # Only play if main audio is NOT playing
+            if hardware_player.state != "PLAYING":
+                silent_player = AudioPlayer(
+                    silent_file,
+                    loop_by_default=False,
+                    preload=True
+                )
+                silent_player.play()
+                silent_player.wait()
+                silent_player.stop()
 
-    except Exception as e:
-        logger.error(f"Error in keep-alive thread: {e}")
-    finally:
-        if silent_player:
-            silent_player.stop()
-        logger.warning("Audio keep-alive thread stopped.")
+            # Wait for delay (interruptable by stop_event)
+            stop_event.wait(timeout=KEEP_ALIVE_DELAY)
+
+        except Exception as e:
+            logger.error(f"Error in keep-alive thread: {e}")
+            break
+
+    logger.warning("Audio keep-alive thread stopped.")
 
 
 def main():
@@ -118,7 +124,7 @@ def main():
     try:
         # Start the Keep-Alive Thread
         keep_alive_thread = threading.Thread(
-            target=keep_audio_alive, args=(stop_keep_alive,), daemon=True
+            target=keep_audio_alive, args=(stop_keep_alive, player), daemon=True
         )
         keep_alive_thread.start()
 
