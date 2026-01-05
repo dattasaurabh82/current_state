@@ -8,7 +8,7 @@ from loguru import logger
 from lib.hardware_player import HardwarePlayer
 from lib.player import AudioPlayer # We need this for the keep-alive player (Silent audio file occasional playback)
 
-# Keep-alive interval in seconds (plays silent.wav when main audio is not playing)
+# Keep-alive interval in seconds (plays keep_audio_ch_active.wav when main audio is not playing)
 KEEP_ALIVE_DELAY = 90
 
 def setup_logger():
@@ -35,9 +35,9 @@ def setup_logger():
 #     """
 #     Plays a silent WAV file on a continuous loop to prevent speakers from sleeping.
 #     """
-#     silent_file = Path("silent.wav")
+#     silent_file = Path("keep_audio_ch_active.wav")
 #     if not silent_file.exists():
-#         logger.error("'silent.wav' not found! Cannot run keep-alive thread.")
+#         logger.error("'keep_audio_ch_active.wav' not found! Cannot run keep-alive thread.")
 #         return
 
 #     # Add a small delay to de-conflict with main player initialization
@@ -71,9 +71,9 @@ def keep_audio_alive(stop_event: threading.Event, hardware_player: HardwarePlaye
     Plays a silent WAV file at intervals to prevent speakers from sleeping.
     Only plays when main audio is not playing.
     """
-    silent_file = Path("silent.wav")
+    silent_file = Path("keep_audio_ch_active.wav")
     if not silent_file.exists():
-        logger.error("'silent.wav' not found! Cannot run keep-alive thread.")
+        logger.error("'keep_audio_ch_active.wav' not found! Cannot run keep-alive thread.")
         return
 
     # Add a small delay to de-conflict with main player initialization
