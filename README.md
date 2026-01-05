@@ -229,6 +229,34 @@ crontab -e
 0 3 * * * /usr/bin/docker run --rm --name world-theme-generator --dns=8.8.8.8 -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated -v /home/pi/daily_mood_theme_song_player/news_data_cache:/app/news_data_cache --env-file /home/pi/daily_mood_theme_song_player/.env world-theme-music uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/cron.log 2>&1
 ```
 
+### gen music file size management
+
+TBD 
+
+```bash
+crontab -e
+
+# Select nano as the editor
+# Then at the bottom, add:
+50 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/backup.log 2>&1
+```
+
+Why this order?
+
+- `2:40 AM` — Backup runs: syncs existing files to Dropbox, cleans up if > `100MB`
+- `3:00 AM` — Generator runs: creates new song in clean folder
+
+This ensures all old songs are backed up before cleanup, and the new song has space.
+
+...
+
+TBD 
+
+...
+
+---
+
+
 ### Setup Button based shutdown and wake-up
 
 #### Disable I2C

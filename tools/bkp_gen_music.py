@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 DROPBOX_FOLDER = "/currentStateMusicFilesBKP"
 
 # Local music folder size limit in MB (for cleanup step)
-MUSIC_DIR_SIZE_LIMIT_MB = 50
+MUSIC_DIR_SIZE_LIMIT_MB = 100
 
 # Resolve paths relative to script location
 SCRIPT_DIR = Path(__file__).parent
