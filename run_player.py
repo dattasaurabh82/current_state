@@ -31,40 +31,6 @@ def setup_logger():
     )
     logger.info(f"Player service logger initialized. Logging to console and '{log_file_path}'")
 
-# def keep_audio_alive(stop_event: threading.Event):
-#     """
-#     Plays a silent WAV file on a continuous loop to prevent speakers from sleeping.
-#     """
-#     silent_file = Path("keep_audio_ch_active.wav")
-#     if not silent_file.exists():
-#         logger.error("'keep_audio_ch_active.wav' not found! Cannot run keep-alive thread.")
-#         return
-
-#     # Add a small delay to de-conflict with main player initialization
-#     time.sleep(0.5)
-
-#     silent_player = None
-#     try:
-#         logger.info("Starting audio keep-alive player.")
-#         #FIX: Increase buffer and block sizes for stability ---
-#         silent_player = AudioPlayer(
-#             silent_file,
-#             loop_by_default=True,
-#             buffer_size=40,  # Increased from default 20
-#             blocksize=4096   # Increased from default 2048
-#         )
-#         silent_player.play()
-        
-#         # This thread will now simply wait until the main app signals it to stop.
-#         stop_event.wait()
-
-#     except Exception as e:
-#         logger.error(f"Error in keep-alive thread: {e}")
-#     finally:
-#         if silent_player:
-#             silent_player.stop()
-#         logger.warning("Audio keep-alive thread stopped.")
-
 
 def keep_audio_alive(stop_event: threading.Event, hardware_player: HardwarePlayer):
     """
