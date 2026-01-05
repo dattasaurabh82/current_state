@@ -85,6 +85,7 @@ def keep_audio_alive(stop_event: threading.Event):
             preload=True  # Use the new feature
         )
         silent_player.play()
+        silent_player.stop()
         time.sleep(5)
         
         # This thread will now simply wait until the main app signals it to stop.
