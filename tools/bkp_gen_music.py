@@ -105,19 +105,18 @@ def main():
 
     if not to_upload:
         print("Nothing to upload. All files already backed up.")
-        return
+    else:
+        # Upload each file
+        for i, filename in enumerate(sorted(to_upload), 1):
+            filepath = MUSIC_DIR / filename
+            print(f"\n[{i}/{len(to_upload)}] Uploading: {filename}")
+            try:
+                result = upload_file(token, filepath)
+                print(f"  Done. Size: {result['size']} bytes")
+            except requests.HTTPError as e:
+                print(f"  FAILED: {e}")
 
-    # Upload each file
-    for i, filename in enumerate(sorted(to_upload), 1):
-        filepath = MUSIC_DIR / filename
-        print(f"\n[{i}/{len(to_upload)}] Uploading: {filename}")
-        try:
-            result = upload_file(token, filepath)
-            print(f"  Done. Size: {result['size']} bytes")
-        except requests.HTTPError as e:
-            print(f"  FAILED: {e}")
-
-    print("\n=== Backup Complete ===")
+        print("\n=== Backup Complete ===")
 
     # Cleanup check
     print("\n=== Cleanup Check ===")
