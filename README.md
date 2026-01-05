@@ -73,7 +73,15 @@ If it is off, you can fix it via `raspi-config`
 sudo raspi-config
 ```
 
-... screenshots TBD
+| Steps | View |
+| --- | --- |
+| Select "Localisation Options" and hit ENTER | ![alt text](assets/rpi-config-date-1.png) |
+| Select "Timezone" and hit ENTER | ![alt text](assets/rpi-config-date-2.png) |
+| Select your region and follow the prompts | ![alt text](assets/rpi-config-date-3.png) |
+
+Once happy, 'tab' to `<Finish>` and restart (`sudo reboot`)
+
+---
 
 
 ### Install Python Build Dependencies:
