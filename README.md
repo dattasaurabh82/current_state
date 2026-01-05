@@ -238,7 +238,7 @@ crontab -e
 
 # Select nano as the editor
 # Then at the bottom, add:
-50 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/backup.log 2>&1
+40 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/backup.log 2>&1
 ```
 
 Why this order?
