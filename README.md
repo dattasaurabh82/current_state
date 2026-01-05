@@ -61,15 +61,19 @@
 
 ### Setup your pi time correct to region
 
-check 
+First check your pi's current date and time 
 
 ```bash
 date
 ```
 
-set 
+If it is off, you can fix it via `raspi-config`
 
-... TBD
+```bash
+sudo raspi-config
+```
+
+... screenshots TBD
 
 
 ### Install Python Build Dependencies:
@@ -88,13 +92,13 @@ sudo apt install python3-dev -y
 sudo apt-get install libportaudio2 -y
 ```
 
-### Install UV;
+### Install UV
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### Install docker 
+### Install docker
 
 https://docs.docker.com/engine/install/raspberry-pi-os/
 
@@ -113,14 +117,36 @@ sudo reboot
 2. uv sync
 3. sometimes may need: `uv pip install RPi.GPIO` from project dir...
 
-### Create an API key for newsapi.org
+### Create necessary API keys and Access Tokens
 
 ```bash
-touch .env
-nano .env
+cp .env.template .env
 ```
 
-Update `NEWS_API_KEY`
+1. Update `NEWS_API_KEY`:
+   1. It is used to fetch news from various regions of the world
+   2. Create and account here: https://newsapi.org/account
+   3. Then generate an API KEY
+   4. Replace `"REPLACE_WITH_YOUR_NEWS_API_KEY_HERE_FROM"` with your NEW KEY. 
+2. Update `REPLICATE_API_TOKEN`:
+   1. We are using https://replicate.com/ to use a Open Source LLM (meta/meta-llama-3-70b-instruct) and an Open Source music gen model (meta/musicgen)
+   2. Create and account here: https://replicate.com/account
+   3. Setup billing here: https://replicate.com/account/billing (_Yes you would need a credit card but the cost is in pennies and the models only run once per day, once the system is setup and is up and running_)
+   4. And generate an API KEY here: https://replicate.com/account/api-tokens
+   5. Replace `"REPLACE_WITH_YOUR_REPLICATE_API_TOKEN_HERE"` with your NEW KEY. 
+   6. (Optional) If you are curious, you can check out and test the models (for fun), from here (https://replicate.com/meta/meta-llama-3-70b-instruct) and here (https://replicate.com/meta/musicgen) 
+3. Update `DROPBOX_ACCESS_TOKEN`:
+   1. We use it to back up old gen music audio files. Of-course you would need a drop box account. Periodically old files are removed from disk to save space in the RPI. _If you want to manually do it and opt out from this dropbox matter, you can do so by following the instructions from [here](#gen-music-file-size-management)_
+   2. Assuming you have a dropbox account, create a new empty folder in your dropbox's home directory and rename it to `currentStateMusicFilesBKP` (NAME MUST BE EXACT)
+   3. Go to the [dev app console](https://www.dropbox.com/developers/apps?_tk=pilot_lp&_ad=topbar4&_camp=myapps) and create a new app called `currentStateMusicFilesBKP` (NAME MUST BE EXACT)
+   4. Enable all permissions.
+    ![alt text](assets/dropbox_permisions.png) 
+   5. And settings should look like below. Under `OAuth 2`, hit the "Generate" button and copy the KEY. 
+    ![alt text](assets/dropbox_settings.png)
+   6. Replace the `"REPLACE_WITH_YOUR_DROPBOX_ACCESS_TOKEN_HERE"`, in the .env file, with your KEY. 
+
+
+---
 
 ### Run tests
 
@@ -247,6 +273,12 @@ Why this order?
 - `3:00 AM` — Generator runs: creates new song in clean folder
 
 This ensures all old songs are backed up before cleanup, and the new song has space.
+
+List all cron jobs:
+
+```bash
+crontab -l
+```
 
 ...
 
