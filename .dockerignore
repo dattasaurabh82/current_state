@@ -1,7 +1,7 @@
 # Ignore all .wav files...
 *.wav
-# ...but DO NOT ignore silent.wav
-!silent.wav
+# ...but DO NOT ignore keep_audio_ch_active.wav
+!keep_audio_ch_active.wav
 
 # Other things to ignore
 .venv/
