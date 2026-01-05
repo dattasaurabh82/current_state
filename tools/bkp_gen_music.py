@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 DROPBOX_FOLDER = "/currentStateMusicFilesBKP"
 
 # Local music folder size limit in MB (for cleanup step)
-MUSIC_DIR_SIZE_LIMIT_MB = 100
+MUSIC_DIR_SIZE_LIMIT_MB = 50
 
 # Resolve paths relative to script location
 SCRIPT_DIR = Path(__file__).parent
@@ -78,6 +78,18 @@ def upload_file(token, filepath):
     return response.json()
 
 
+def cleanup_old_files(file_to_keep):
+    """Delete all .wav files except the provided one."""
+    wav_files = list(MUSIC_DIR.glob("*.wav"))
+    files_to_delete = [f for f in wav_files if f.name != file_to_keep.name]
+
+    for f in sorted(files_to_delete, key=lambda x: x.name):
+        print(f"  [TBD] Deleting: {f.name}")
+        # f.unlink()
+
+    print(f"  Kept: {file_to_keep.name}")
+
+
 def main():
     print("=== Dropbox Music Backup ===\n")
 
@@ -126,7 +138,8 @@ def main():
 
     if total_mb > MUSIC_DIR_SIZE_LIMIT_MB:
         latest_file = max(MUSIC_DIR.glob("*.wav"), key=lambda f: f.stat().st_mtime)
-        print(f"Folder size exceeds limit. Would delete all .wav files except: {latest_file.name}")
+        print(f"Folder size exceeds limit. Deleting all except: {latest_file.name}")
+        cleanup_old_files(latest_file)
     else:
         print("Folder size within limit. No deletions needed.")
 
