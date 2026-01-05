@@ -90,7 +90,9 @@ def keep_audio_alive(stop_event: threading.Event, hardware_player: HardwarePlaye
                     preload=True
                 )
                 silent_player.play()
-                silent_player.wait()
+                # Wait for reader thread to finish (file ended), then stop
+                if silent_player._reader_thread:
+                    silent_player._reader_thread.join()
                 silent_player.stop()
 
             # Wait for delay (interruptable by stop_event)
