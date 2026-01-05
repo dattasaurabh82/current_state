@@ -13,7 +13,7 @@ tmp/*
 *.bin
 *.onnx
 *.wav
-!silent.wav
+!keep_audio_ch_active.wav
 *.mp3
 *.mp4
 .DS_Store
