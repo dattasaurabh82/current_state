@@ -73,7 +73,7 @@ def keep_audio_alive(stop_event: threading.Event):
         return
 
     # Add a small delay to de-conflict with main player initialization
-    time.sleep(5)
+    time.sleep(0.5)
 
     silent_player = None
     try:
@@ -85,6 +85,7 @@ def keep_audio_alive(stop_event: threading.Event):
             preload=True  # Use the new feature
         )
         silent_player.play()
+        time.sleep(5)
         
         # This thread will now simply wait until the main app signals it to stop.
         stop_event.wait()
