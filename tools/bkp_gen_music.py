@@ -85,12 +85,16 @@ def main():
     # List Dropbox files
     print(f"\nListing Dropbox folder: {DROPBOX_FOLDER}")
     dropbox_files = list_dropbox_files(token)
-    print(f"  Found {len(dropbox_files)} file(s) in Dropbox")
+    print(f"  Found {len(dropbox_files)} file(s) in Dropbox:")
+    for f in sorted(dropbox_files):
+        print(f"    - {f}")
 
     # List local files
     print(f"\nListing local folder: {MUSIC_DIR}")
     local_files = list_local_files()
-    print(f"  Found {len(local_files)} .wav file(s) locally")
+    print(f"  Found {len(local_files)} .wav file(s) locally:")
+    for f in sorted(local_files):
+        print(f"    - {f}")
 
     # Determine files to upload
     to_upload = local_files - dropbox_files
