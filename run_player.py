@@ -9,7 +9,7 @@ from lib.hardware_player import HardwarePlayer
 from lib.player import AudioPlayer # We need this for the keep-alive player (Silent audio file occasional playback)
 
 # Keep-alive interval in seconds (plays keep_audio_ch_active.wav when main audio is not playing)
-KEEP_ALIVE_DELAY = 90
+KEEP_ALIVE_DELAY = 60
 
 def setup_logger():
     """Configures a simple logger for the player service."""
