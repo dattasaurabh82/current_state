@@ -84,8 +84,8 @@ def cleanup_old_files(file_to_keep):
     files_to_delete = [f for f in wav_files if f.name != file_to_keep.name]
 
     for f in sorted(files_to_delete, key=lambda x: x.name):
-        print(f"  [TBD] Deleting: {f.name}")
-        # f.unlink()
+        print(f"  Deleting: {f.name}")
+        f.unlink()
 
     print(f"  Kept: {file_to_keep.name}")
 
