@@ -20,7 +20,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv venv && uv sync
 
 # Copy the silent audio file into the image, relying on .dockerignore
-COPY silent.wav .
+COPY keep_audio_ch_active.wav .
 
 # Copy the rest of the application code
 COPY . .
