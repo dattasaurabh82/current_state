@@ -25,21 +25,28 @@ def on_motion_stopped(channel):
     print(f"[{timestamp()}] ✅ Motion stopped.")
 
 def main():
+    # Clean up any previous state first
+    GPIO.setwarnings(False)
+    GPIO.cleanup()
+    
     try:
         # Setup
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(RADAR_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         
-        # Register event callbacks
+        # Remove any existing event detection before adding new one
+        try:
+            GPIO.remove_event_detect(RADAR_PIN)
+        except:
+            pass  # Ignore if no event was registered
+        
+        # Register event callback for rising edge
         GPIO.add_event_detect(
             RADAR_PIN, 
             GPIO.RISING, 
             callback=on_motion_detected, 
             bouncetime=DEBOUNCE_MS
         )
-        
-        # For falling edge, we need a separate detection
-        # Using a polling check in the main loop for falling edge
         
         print(f"RCWL-0516 Radar Test")
         print(f"====================")
