@@ -29,9 +29,9 @@ def refresh_token():
 
     client_id = os.getenv("DROPBOX_CLIENT_ID")
     client_secret = os.getenv("DROPBOX_CLIENT_SECRET")
-    refresh_token = os.getenv("DROPBOX_REFRESH_TOKEN")
+    stored_refresh_token = os.getenv("DROPBOX_REFRESH_TOKEN")
 
-    if not all([client_id, client_secret, refresh_token]):
+    if not all([client_id, client_secret, stored_refresh_token]):
         raise RuntimeError(
             f"Missing Dropbox credentials in {ENV_FILE}. "
             "Required: DROPBOX_CLIENT_ID, DROPBOX_CLIENT_SECRET, DROPBOX_REFRESH_TOKEN"
@@ -42,7 +42,7 @@ def refresh_token():
         "https://api.dropboxapi.com/oauth2/token",
         data={
             "grant_type": "refresh_token",
-            "refresh_token": refresh_token,
+            "refresh_token": stored_refresh_token,
             "client_id": client_id,
             "client_secret": client_secret,
         },
@@ -117,9 +117,9 @@ def cleanup_old_files(file_to_keep):
 def main():
     print("=== Dropbox Music Backup ===\n")
 
-    # Load token
+    # Get fresh access token
     token = refresh_token()
-    print(f"Loaded token from: {ENV_FILE}")
+    print(f"Refreshed access token using credentials from: {ENV_FILE}")
 
     # List Dropbox files
     print(f"\nListing Dropbox folder: {DROPBOX_FOLDER}")
