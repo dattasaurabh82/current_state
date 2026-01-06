@@ -139,7 +139,7 @@ def display_menu(state: str, latest_song: Optional[Path], player: Optional[Audio
     print("=" * 40)
 
 
-def load_regions_config(filename="config.json"):
+def load_regions_config(filename="news_config.json"):
     try:
         with open(filename, "r") as f:
             return json.load(f)
