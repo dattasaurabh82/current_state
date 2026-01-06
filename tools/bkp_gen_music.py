@@ -23,9 +23,18 @@ ENV_FILE = PROJECT_ROOT / ".env"
 MUSIC_DIR = PROJECT_ROOT / "music_generated"
 
 
+def truncate(s, prefix=4, suffix=4):
+    """Truncate string showing first and last chars."""
+    if len(s) <= prefix + suffix + 3:
+        return s
+    return f"{s[:prefix]}...{s[-suffix:]}"
+
+
 def refresh_token():
     """Get fresh Dropbox access token using refresh token."""
     load_dotenv(ENV_FILE)
+
+    print(f"Loading credentials from: {ENV_FILE}")
 
     client_id = os.getenv("DROPBOX_CLIENT_ID")
     client_secret = os.getenv("DROPBOX_CLIENT_SECRET")
@@ -36,6 +45,11 @@ def refresh_token():
             f"Missing Dropbox credentials in {ENV_FILE}. "
             "Required: DROPBOX_CLIENT_ID, DROPBOX_CLIENT_SECRET, DROPBOX_REFRESH_TOKEN"
         )
+
+    print(f"  DROPBOX_CLIENT_ID: {truncate(client_id)}")
+    print(f"  DROPBOX_REFRESH_TOKEN: {truncate(stored_refresh_token)}")
+
+    print("Requesting fresh access token...")
 
     # Request fresh access token
     response = requests.post(
@@ -53,7 +67,13 @@ def refresh_token():
             f"Failed to refresh Dropbox token: {response.status_code} - {response.text}"
         )
 
-    return response.json()["access_token"]
+    data = response.json()
+    access_token = data["access_token"]
+    expires_in = data.get("expires_in", "unknown")
+
+    print(f"✓ Access token obtained: {truncate(access_token)} (expires in {expires_in}s)")
+
+    return access_token
 
 
 def list_dropbox_files(token):
@@ -119,7 +139,6 @@ def main():
 
     # Get fresh access token
     token = refresh_token()
-    print(f"Refreshed access token using credentials from: {ENV_FILE}")
 
     # List Dropbox files
     print(f"\nListing Dropbox folder: {DROPBOX_FOLDER}")
