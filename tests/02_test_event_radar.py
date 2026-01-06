@@ -1,78 +1,59 @@
 #!/usr/bin/env python3
 """
-Test RCWL-0516 Doppler Radar Sensor with RPi.GPIO
+Test RCWL-0516 Doppler Radar Sensor with lgpio
 Sensor OUT pin connected to GPIO16
 """
 
-import RPi.GPIO as GPIO
+import lgpio
 import time
 from datetime import datetime
 
 # Configuration
 RADAR_PIN = 16  # BCM pin number
-DEBOUNCE_MS = 200  # Debounce time in milliseconds
+CHIP = 0        # GPIO chip number (usually 0 for Pi 3)
 
 def timestamp():
     """Return current time as formatted string."""
     return datetime.now().strftime("%H:%M:%S")
 
-def on_motion_detected(channel):
-    """Callback when motion is detected (rising edge)."""
-    print(f"[{timestamp()}] 🚨 Motion DETECTED!")
-
-def on_motion_stopped(channel):
-    """Callback when motion stops (falling edge)."""
-    print(f"[{timestamp()}] ✅ Motion stopped.")
-
 def main():
-    # Clean up any previous state first
-    GPIO.setwarnings(False)
-    GPIO.cleanup()
-    
+    h = None
     try:
-        # Setup
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(RADAR_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        # Open GPIO chip
+        h = lgpio.gpiochip_open(CHIP)
         
-        # Remove any existing event detection before adding new one
-        try:
-            GPIO.remove_event_detect(RADAR_PIN)
-        except:
-            pass  # Ignore if no event was registered
+        # Claim pin as input
+        lgpio.gpio_claim_input(h, RADAR_PIN)
         
-        # Register event callback for rising edge
-        GPIO.add_event_detect(
-            RADAR_PIN, 
-            GPIO.RISING, 
-            callback=on_motion_detected, 
-            bouncetime=DEBOUNCE_MS
-        )
-        
-        print(f"RCWL-0516 Radar Test")
-        print(f"====================")
+        print(f"RCWL-0516 Radar Test (lgpio)")
+        print(f"============================")
         print(f"Listening on GPIO{RADAR_PIN}")
-        print(f"Debounce: {DEBOUNCE_MS}ms")
         print(f"Press Ctrl+C to exit\n")
         print(f"[{timestamp()}] Waiting for motion...")
         
-        last_state = GPIO.input(RADAR_PIN)
+        last_state = lgpio.gpio_read(h, RADAR_PIN)
         
         while True:
-            current_state = GPIO.input(RADAR_PIN)
+            current_state = lgpio.gpio_read(h, RADAR_PIN)
             
-            # Detect falling edge manually (HIGH -> LOW)
+            # Detect rising edge (LOW -> HIGH)
+            if last_state == 0 and current_state == 1:
+                print(f"[{timestamp()}] 🚨 Motion DETECTED!")
+            
+            # Detect falling edge (HIGH -> LOW)
             if last_state == 1 and current_state == 0:
-                on_motion_stopped(RADAR_PIN)
+                print(f"[{timestamp()}] ✅ Motion stopped.")
             
             last_state = current_state
-            time.sleep(0.1)  # Small sleep to reduce CPU usage
+            time.sleep(0.05)  # 50ms polling
             
     except KeyboardInterrupt:
         print(f"\n[{timestamp()}] Exiting...")
     
     finally:
-        GPIO.cleanup()
-        print("GPIO cleaned up.")
+        if h is not None:
+            lgpio.gpiochip_close(h)
+            print("GPIO closed.")
 
 if __name__ == "__main__":
     main()
