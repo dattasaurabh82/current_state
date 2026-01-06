@@ -107,7 +107,7 @@ class HardwarePlayer:
             self.breathing_thread.join()
 
         if self.state == "PLAYING":
-            self.led_pwm.ChangeDutyCycle(50)
+            self.led_pwm.ChangeDutyCycle(25)
         elif self.state == "STOPPED":
             self.led_pwm.ChangeDutyCycle(0)
         elif self.state == "PAUSED":
@@ -121,11 +121,11 @@ class HardwarePlayer:
             return
         pause_time = 0.02
         while not self.stop_breathing.is_set():
-            for duty_cycle in range(0, 51, 5):
+            for duty_cycle in range(0, 26, 5):
                 if self.stop_breathing.is_set(): break
                 self.led_pwm.ChangeDutyCycle(duty_cycle)
                 time.sleep(pause_time)
-            for duty_cycle in range(50, -1, -5):
+            for duty_cycle in range(25, -1, -5):
                 if self.stop_breathing.is_set(): break
                 self.led_pwm.ChangeDutyCycle(duty_cycle)
                 time.sleep(pause_time)
