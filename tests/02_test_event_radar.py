@@ -1,48 +1,48 @@
 #!/usr/bin/env python3
 """
-Test RCWL-0516 Doppler Radar Sensor with lgpio
+Test RCWL-0516 Doppler Radar Sensor with RPi.GPIO (polling)
 Sensor OUT pin connected to GPIO16
 """
 
-import lgpio
+import RPi.GPIO as GPIO
 import time
 from datetime import datetime
 
 # Configuration
 RADAR_PIN = 16  # BCM pin number
-CHIP = 0        # GPIO chip number (usually 0 for Pi 3)
 
 def timestamp():
     """Return current time as formatted string."""
     return datetime.now().strftime("%H:%M:%S")
 
 def main():
-    h = None
+    # Clean up any previous state
+    GPIO.setwarnings(False)
+    GPIO.cleanup()
+    
     try:
-        # Open GPIO chip
-        h = lgpio.gpiochip_open(CHIP)
+        # Setup
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(RADAR_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         
-        # Claim pin as input
-        lgpio.gpio_claim_input(h, RADAR_PIN)
-        
-        print(f"RCWL-0516 Radar Test (lgpio)")
-        print(f"============================")
+        print(f"RCWL-0516 Radar Test (RPi.GPIO polling)")
+        print(f"========================================")
         print(f"Listening on GPIO{RADAR_PIN}")
         print(f"Press Ctrl+C to exit\n")
         print(f"[{timestamp()}] Waiting for motion...")
         
-        last_state = lgpio.gpio_read(h, RADAR_PIN)
+        last_state = GPIO.input(RADAR_PIN)
         
         while True:
-            current_state = lgpio.gpio_read(h, RADAR_PIN)
+            current_state = GPIO.input(RADAR_PIN)
             
-            # Detect rising edge (LOW -> HIGH)
-            if last_state == 0 and current_state == 1:
-                print(f"[{timestamp()}] 🚨 Motion DETECTED!")
+            # Detect rising edge (LOW -> HIGH) = motion detected
+            if current_state == GPIO.HIGH and last_state == GPIO.LOW:
+                print(f"[{timestamp()}] 🏃🏻 Motion DETECTED!")
             
-            # Detect falling edge (HIGH -> LOW)
-            if last_state == 1 and current_state == 0:
-                print(f"[{timestamp()}] ✅ Motion stopped.")
+            # Detect falling edge (HIGH -> LOW) = motion stopped
+            if current_state == GPIO.LOW and last_state == GPIO.HIGH:
+                print(f"[{timestamp()}] Motion stopped.")
             
             last_state = current_state
             time.sleep(0.05)  # 50ms polling
@@ -51,9 +51,8 @@ def main():
         print(f"\n[{timestamp()}] Exiting...")
     
     finally:
-        if h is not None:
-            lgpio.gpiochip_close(h)
-            print("GPIO closed.")
+        GPIO.cleanup()
+        print("GPIO cleaned up.")
 
 if __name__ == "__main__":
     main()
