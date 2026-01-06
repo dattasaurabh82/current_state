@@ -107,7 +107,7 @@ class HardwarePlayer:
             self.breathing_thread.join()
 
         if self.state == "PLAYING":
-            self.led_pwm.ChangeDutyCycle(100)
+            self.led_pwm.ChangeDutyCycle(50)
         elif self.state == "STOPPED":
             self.led_pwm.ChangeDutyCycle(0)
         elif self.state == "PAUSED":
@@ -121,11 +121,11 @@ class HardwarePlayer:
             return
         pause_time = 0.02
         while not self.stop_breathing.is_set():
-            for duty_cycle in range(0, 101, 5):
+            for duty_cycle in range(0, 51, 5):
                 if self.stop_breathing.is_set(): break
                 self.led_pwm.ChangeDutyCycle(duty_cycle)
                 time.sleep(pause_time)
-            for duty_cycle in range(100, -1, -5):
+            for duty_cycle in range(50, -1, -5):
                 if self.stop_breathing.is_set(): break
                 self.led_pwm.ChangeDutyCycle(duty_cycle)
                 time.sleep(pause_time)
@@ -162,21 +162,6 @@ class HardwarePlayer:
                 self.state = "STOPPED"
         self._update_led()
         self._print_status()
-
-    # def listen_for_input(self):
-    #     logger.info("Starting text command listener...")
-    #     while True:
-    #         self._print_status()
-    #         command = input("Enter command > ").lower().strip()
-    #         if command == 'p':
-    #             self.handle_toggle_play_pause()
-    #         elif command == 's':
-    #             self.handle_stop()
-    #         elif command == 'q':
-    #             logger.warning("'q' entered. Exiting.")
-    #             break
-    #         else:
-    #             logger.warning(f"Unknown command: '{command}'")
     
     def listen_for_input(self, daemon_mode=False):
         """
