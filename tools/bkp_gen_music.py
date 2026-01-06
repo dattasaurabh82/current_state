@@ -23,7 +23,7 @@ ENV_FILE = PROJECT_ROOT / ".env"
 MUSIC_DIR = PROJECT_ROOT / "music_generated"
 
 
-def refresh_token():
+def load_token():
     """Get fresh Dropbox access token using refresh token."""
     
     load_dotenv(ENV_FILE)
@@ -119,7 +119,7 @@ def main():
     print("=== Dropbox Music Backup ===\n")
 
     # Load token
-    token = refresh_token()
+    token = load_token()
     print(f"Loaded token from: {ENV_FILE}")
 
     # List Dropbox files
