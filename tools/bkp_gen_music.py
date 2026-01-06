@@ -23,13 +23,37 @@ ENV_FILE = PROJECT_ROOT / ".env"
 MUSIC_DIR = PROJECT_ROOT / "music_generated"
 
 
-def load_token():
-    """Load Dropbox access token from .env file."""
+def refresh_token():
+    """Get fresh Dropbox access token using refresh token."""
     load_dotenv(ENV_FILE)
-    token = os.getenv("DROPBOX_ACCESS_TOKEN")
-    if not token:
-        raise RuntimeError(f"DROPBOX_ACCESS_TOKEN not found in {ENV_FILE}")
-    return token
+
+    client_id = os.getenv("DROPBOX_CLIENT_ID")
+    client_secret = os.getenv("DROPBOX_CLIENT_SECRET")
+    refresh_token = os.getenv("DROPBOX_REFRESH_TOKEN")
+
+    if not all([client_id, client_secret, refresh_token]):
+        raise RuntimeError(
+            f"Missing Dropbox credentials in {ENV_FILE}. "
+            "Required: DROPBOX_CLIENT_ID, DROPBOX_CLIENT_SECRET, DROPBOX_REFRESH_TOKEN"
+        )
+
+    # Request fresh access token
+    response = requests.post(
+        "https://api.dropboxapi.com/oauth2/token",
+        data={
+            "grant_type": "refresh_token",
+            "refresh_token": refresh_token,
+            "client_id": client_id,
+            "client_secret": client_secret,
+        },
+    )
+
+    if not response.ok:
+        raise RuntimeError(
+            f"Failed to refresh Dropbox token: {response.status_code} - {response.text}"
+        )
+
+    return response.json()["access_token"]
 
 
 def list_dropbox_files(token):
@@ -94,7 +118,7 @@ def main():
     print("=== Dropbox Music Backup ===\n")
 
     # Load token
-    token = load_token()
+    token = refresh_token()
     print(f"Loaded token from: {ENV_FILE}")
 
     # List Dropbox files
