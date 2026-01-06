@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+"""
+Test RD-03D Serial Protocol Doppler Radar Sensor with RPi.GPIO (polling)
+LED on GPIO23 indicates motion state
+"""
+
 from RdLib.Rd import Rd
 from RdLib.config import config
 import numpy as np

@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+Test Script to verify GPIO connections for LEDs, Buttons, and Switches on Raspberry Pi.
+"""
+
 import RPi.GPIO as GPIO
 import time
 import sys
