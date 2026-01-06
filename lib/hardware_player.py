@@ -6,6 +6,7 @@ from typing import Optional
 from loguru import logger
 import time
 from lib.player import AudioPlayer
+from lib.settings import load_settings
 
 try:
     import RPi.GPIO as GPIO
@@ -14,10 +15,17 @@ except (RuntimeError, ModuleNotFoundError):
     IS_PI = False
     logger.warning("RPi.GPIO library not found. GPIO functionality will be disabled.")
 
-# Pin Definitions
-LED_PIN = 25
-PLAY_PAUSE_BTN_PIN = 22
-STOP_BTN_PIN = 27
+# Load settings
+settings = load_settings()
+
+# Pin Definitions (from settings.json)
+LED_PIN = settings["outputPins"]["playerStateLED_pin"]
+PLAY_PAUSE_BTN_PIN = settings["inputPins"]["playPauseBtn_pin"]
+STOP_BTN_PIN = settings["inputPins"]["stopBtn_pin"]
+
+# Hardware Features (from settings.json)
+BTN_DEBOUNCE_TIME = settings["hwFeatures"]["btnDebounceTimeMs"]
+MAX_LED_BRIGHTNESS = settings["hwFeatures"]["maxLEDBrightness"]
 
 
 def find_latest_song(directory="music_generated") -> Optional[Path]:
@@ -93,7 +101,7 @@ class HardwarePlayer:
             
             last_play_state = play_state
             last_stop_state = stop_state
-            time.sleep(0.05) # Debounce delay
+            time.sleep(BTN_DEBOUNCE_TIME)
 
     def _update_led(self):
         if not IS_PI or not self.led_pwm:
@@ -107,7 +115,7 @@ class HardwarePlayer:
             self.breathing_thread.join()
 
         if self.state == "PLAYING":
-            self.led_pwm.ChangeDutyCycle(25)
+            self.led_pwm.ChangeDutyCycle(MAX_LED_BRIGHTNESS)
         elif self.state == "STOPPED":
             self.led_pwm.ChangeDutyCycle(0)
         elif self.state == "PAUSED":
@@ -121,11 +129,11 @@ class HardwarePlayer:
             return
         pause_time = 0.02
         while not self.stop_breathing.is_set():
-            for duty_cycle in range(0, 26, 5):
+            for duty_cycle in range(0, MAX_LED_BRIGHTNESS + 1, 5):
                 if self.stop_breathing.is_set(): break
                 self.led_pwm.ChangeDutyCycle(duty_cycle)
                 time.sleep(pause_time)
-            for duty_cycle in range(25, -1, -5):
+            for duty_cycle in range(MAX_LED_BRIGHTNESS, -1, -5):
                 if self.stop_breathing.is_set(): break
                 self.led_pwm.ChangeDutyCycle(duty_cycle)
                 time.sleep(pause_time)

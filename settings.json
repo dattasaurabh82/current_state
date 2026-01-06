@@ -1,0 +1,22 @@
+{
+    "inputPins":{
+        "playPauseBtn_pin":22,
+        "stopBtn_pin":27,
+        "runFullCycleBtn_pin":17,
+        "radarEnablePin":6,
+        "radarModel":"RCWL-0516",
+        "radarPin": 16
+    },
+    "outputPins":{
+        "playerStateLED_pin":25,
+        "radarStateLED_pin":23
+    },
+    "hwFeatures":{
+        "btnDebounceTimeMs":0.05,
+        "maxLEDBrightness": 25
+    },
+    "music":{
+        "fadeInDurationSec":1.5,
+        "fadeOutDurationSec":2.0
+    }
+}

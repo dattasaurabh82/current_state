@@ -6,21 +6,32 @@ Test Script to verify GPIO connections for LEDs, Buttons, and Switches on Raspbe
 import RPi.GPIO as GPIO
 import time
 import sys
+sys.path.insert(0, str(__file__).rsplit('/', 2)[0])  # Add project root to path
+from lib.settings import load_settings
+
+# Load settings
+settings = load_settings()
 
 # --- CONFIGURATION ---
-LEDS = {"LED_NET": 24, "LED_PLAYER": 25, "LED_RADAR_STATE": 23}
+LEDS = {
+    "LED_NET": 24,  # Hardcoded - used by another project
+    "LED_PLAYER": settings["outputPins"]["playerStateLED_pin"],
+    "LED_RADAR_STATE": settings["outputPins"]["radarStateLED_pin"],
+}
 
 # Note: Buttons connect to GND.
 # Code looks for LOW signal (Falling edge).
 BUTTONS = {
-    "NET_RESET_BTN": 26,
-    "BTN_POWER": 3,
-    "BTN_RUN_FULL_CYCLE": 17,
-    "BTN_PLAY_PAUSE": 22,
-    "BTN_STOP": 27,
+    "NET_RESET_BTN": 26,  # Hardcoded - used by another project
+    "BTN_POWER": 3,  # Hardcoded - used by Kernal (Follow README instructions)
+    "BTN_RUN_FULL_CYCLE": settings["inputPins"]["runFullCycleBtn_pin"],
+    "BTN_PLAY_PAUSE": settings["inputPins"]["playPauseBtn_pin"],
+    "BTN_STOP": settings["inputPins"]["stopBtn_pin"],
 }
 
-SWITCHES = {"SW_RADAR_ENABLE": 6}
+SWITCHES = {
+    "SW_RADAR_ENABLE": settings["inputPins"]["radarEnablePin"],
+}
 
 
 # --- SETUP ---

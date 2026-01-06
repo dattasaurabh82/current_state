@@ -8,11 +8,17 @@ LED on GPIO23 indicates motion state (PWM controlled)
 import RPi.GPIO as GPIO
 import time
 from datetime import datetime
+import sys
+sys.path.insert(0, str(__file__).rsplit('/', 2)[0])  # Add project root to path
+from lib.settings import load_settings
 
-# Configuration
-RADAR_PIN = 16  # BCM pin number
-LED_PIN = 23    # BCM pin number
-LED_BRIGHTNESS = 25  # Percentage (0-100)
+# Load settings
+settings = load_settings()
+
+# Configuration (from settings.json)
+RADAR_PIN = settings["inputPins"]["radarPin"]
+LED_PIN = settings["outputPins"]["radarStateLED_pin"]
+LED_BRIGHTNESS = settings["hwFeatures"]["maxLEDBrightness"]
 
 def timestamp():
     """Return current time as formatted string."""

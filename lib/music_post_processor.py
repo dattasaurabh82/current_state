@@ -2,12 +2,21 @@ import numpy as np
 import soundfile as sf
 from pathlib import Path
 from loguru import logger
+from lib.settings import load_settings
+
+# Load settings
+settings = load_settings()
+
+# Music settings (from settings.json)
+FADE_IN_DURATION = settings["music"]["fadeInDurationSec"]
+FADE_OUT_DURATION = settings["music"]["fadeOutDurationSec"]
+
 
 def apply_fade(
     audio_array: np.ndarray,
     sample_rate: int,
-    fade_in_duration: float = 1.5,
-    fade_out_duration: float = 2.0,
+    fade_in_duration: float = FADE_IN_DURATION,
+    fade_out_duration: float = FADE_OUT_DURATION,
 ) -> np.ndarray:
     """
     Applies a linear fade-in and fade-out to a NumPy audio array,
