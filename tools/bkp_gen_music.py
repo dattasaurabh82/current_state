@@ -25,6 +25,7 @@ MUSIC_DIR = PROJECT_ROOT / "music_generated"
 
 def refresh_token():
     """Get fresh Dropbox access token using refresh token."""
+    
     load_dotenv(ENV_FILE)
 
     client_id = os.getenv("DROPBOX_CLIENT_ID")
