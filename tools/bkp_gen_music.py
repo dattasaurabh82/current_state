@@ -23,27 +23,40 @@ ENV_FILE = PROJECT_ROOT / ".env"
 MUSIC_DIR = PROJECT_ROOT / "music_generated"
 
 
-def load_token():
+def truncate(s, prefix=4, suffix=4):
+    """Truncate string showing first and last chars."""
+    if len(s) <= prefix + suffix + 3:
+        return s
+    return f"{s[:prefix]}...{s[-suffix:]}"
+
+
+def refresh_token():
     """Get fresh Dropbox access token using refresh token."""
-    
     load_dotenv(ENV_FILE)
+
+    print(f"Loading credentials from: {ENV_FILE}")
 
     client_id = os.getenv("DROPBOX_CLIENT_ID")
     client_secret = os.getenv("DROPBOX_CLIENT_SECRET")
-    refresh_token = os.getenv("DROPBOX_REFRESH_TOKEN")
+    stored_refresh_token = os.getenv("DROPBOX_REFRESH_TOKEN")
 
-    if not all([client_id, client_secret, refresh_token]):
+    if not all([client_id, client_secret, stored_refresh_token]):
         raise RuntimeError(
             f"Missing Dropbox credentials in {ENV_FILE}. "
             "Required: DROPBOX_CLIENT_ID, DROPBOX_CLIENT_SECRET, DROPBOX_REFRESH_TOKEN"
         )
+
+    print(f"  DROPBOX_CLIENT_ID: {truncate(client_id)}")
+    print(f"  DROPBOX_REFRESH_TOKEN: {truncate(stored_refresh_token)}")
+
+    print("Requesting fresh access token...")
 
     # Request fresh access token
     response = requests.post(
         "https://api.dropboxapi.com/oauth2/token",
         data={
             "grant_type": "refresh_token",
-            "refresh_token": refresh_token,
+            "refresh_token": stored_refresh_token,
             "client_id": client_id,
             "client_secret": client_secret,
         },
@@ -54,7 +67,13 @@ def load_token():
             f"Failed to refresh Dropbox token: {response.status_code} - {response.text}"
         )
 
-    return response.json()["access_token"]
+    data = response.json()
+    access_token = data["access_token"]
+    expires_in = data.get("expires_in", "unknown")
+
+    print(f"✓ Access token obtained: {truncate(access_token)} (expires in {expires_in}s)")
+
+    return access_token
 
 
 def list_dropbox_files(token):
@@ -118,9 +137,8 @@ def cleanup_old_files(file_to_keep):
 def main():
     print("=== Dropbox Music Backup ===\n")
 
-    # Load token
-    token = load_token()
-    print(f"Loaded token from: {ENV_FILE}")
+    # Get fresh access token
+    token = refresh_token()
 
     # List Dropbox files
     print(f"\nListing Dropbox folder: {DROPBOX_FOLDER}")
