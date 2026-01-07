@@ -1,21 +1,22 @@
 {
     "inputPins":{
-        "playPauseBtn_pin":22,
-        "stopBtn_pin":27,
-        "runFullCycleBtn_pin":17,
+        "playPauseBtnPin":22,
+        "stopBtnPin":27,
+        "runFullCycleBtnPin":17,
         "radarEnablePin":6,
         "radarModel":"RCWL-0516",
         "radarPin": 16
     },
     "outputPins":{
-        "processStatusLED_pin":25,
-        "radarStateLED_pin":23
+        "playerStateLEDPin":25,
+        "radarStateLEDPin":23
     },
     "hwFeatures":{
         "btnDebounceTimeMs":0.05,
         "maxLEDBrightness": 25,
         "pauseBreathingFreq":0.25,
-        "ProcessErrBreathingFreq":0.02
+        "ProcessProgressBreathingFreq":0.15,
+        "ProcessErrBreathingFreq":0.05
     },
     "music":{
         "fadeInDurationSec":1.5,
