@@ -8,7 +8,6 @@ WorkingDirectory=/home/pi/daily_mood_theme_song_player
 ExecStart=/home/pi/.local/bin/uv run python run_full_cycle_btn.py
 Restart=on-failure
 RestartSec=5
-SupplementaryGroups=gpio
 
 [Install]
 WantedBy=default.target
