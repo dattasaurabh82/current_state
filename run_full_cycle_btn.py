@@ -106,7 +106,7 @@ def handle_button_press():
     
     try:
         result = subprocess.run(
-            ["uv", "run", "python", "main.py", "--fetch", "true", "--play", "false"],
+            ["/home/pi/.local/bin/uv", "run", "python", "main.py", "--fetch", "true", "--play", "false"],
             cwd=PROJECT_DIR
         )
         
