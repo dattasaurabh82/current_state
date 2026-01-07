@@ -30,6 +30,7 @@ class RadarController:
         self.enable_pin = settings["inputPins"]["radarEnablePin"]
         self.enabled = False
         self._last_state = None
+        self._motion_active = False  # Tracks current motion state for LED
         
         # Validate radar model
         if self.radar_model not in VALID_MODELS:
@@ -39,6 +40,14 @@ class RadarController:
                 f"Please update settings.json and restart."
             )
             sys.exit(1)
+        
+        if not IS_PI:
+            logger.warning("Not running on Pi. Radar detection disabled.")
+            self.enabled = False
+            return
+        
+        # Always setup enable pin so we can read switch state
+        self._setup_enable_pin()
         
         # Check for RD-03D (not implemented)
         if self.radar_model == "RD-03D":
@@ -51,21 +60,18 @@ class RadarController:
             return
         
         # RCWL-0516 setup
-        if IS_PI:
-            self._setup_gpio()
-            self.enabled = True
-            logger.info(f"RadarController initialized: {self.radar_model} on GPIO{self.radar_pin}")
-        else:
-            logger.warning("Not running on Pi. Radar detection disabled.")
-            self.enabled = False
+        self._setup_radar_pin()
+        self.enabled = True
+        logger.info(f"RadarController initialized: {self.radar_model} on GPIO{self.radar_pin}")
     
-    def _setup_gpio(self):
-        """Setup GPIO pins for radar and enable switch."""
+    def _setup_enable_pin(self):
+        """Setup GPIO for enable switch (always needed to check switch state)."""
+        GPIO.setup(self.enable_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    
+    def _setup_radar_pin(self):
+        """Setup GPIO pin for radar sensor."""
         # Radar pin - input with pull-down (RCWL-0516 outputs HIGH on motion)
         GPIO.setup(self.radar_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        
-        # Enable switch - input with pull-up (switch closes to GND)
-        GPIO.setup(self.enable_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         
         # Initialize last state
         self._last_state = GPIO.input(self.radar_pin)
@@ -79,21 +85,33 @@ class RadarController:
             return False
         return GPIO.input(self.enable_pin) == GPIO.LOW
     
-    def is_motion_detected(self) -> bool:
+    def check_motion_state(self) -> tuple[bool, bool]:
         """
-        Check for motion (rising edge detection).
-        Returns True only on the transition from LOW to HIGH.
+        Check motion state and detect edges.
+        Returns: (motion_started, motion_stopped)
+        - motion_started: True on rising edge (LOW -> HIGH)
+        - motion_stopped: True on falling edge (HIGH -> LOW)
         """
         if not self.enabled or not IS_PI:
-            return False
+            return False, False
         
         current_state = GPIO.input(self.radar_pin)
         
-        # Detect rising edge (LOW -> HIGH)
-        motion_detected = (current_state == GPIO.HIGH and self._last_state == GPIO.LOW)
+        motion_started = (current_state == GPIO.HIGH and self._last_state == GPIO.LOW)
+        motion_stopped = (current_state == GPIO.LOW and self._last_state == GPIO.HIGH)
+        
+        # Update motion active state
+        if motion_started:
+            self._motion_active = True
+        elif motion_stopped:
+            self._motion_active = False
         
         self._last_state = current_state
-        return motion_detected
+        return motion_started, motion_stopped
+    
+    def is_motion_active(self) -> bool:
+        """Get current motion active state (for LED display)."""
+        return self._motion_active
     
     def get_current_state(self) -> bool:
         """Get raw current state of radar pin (HIGH = motion active)."""

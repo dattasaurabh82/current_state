@@ -58,8 +58,9 @@ class HardwarePlayer:
         self.radar_controller: Optional[RadarController] = None
         self.radar_led_pwm = None
         self.initiated_by: Optional[str] = None  # 'user' | 'radar' | None
-        self.radar_playback_active = False  # When True, ignore motion
+        self.radar_playback_active = False  # When True, ignore motion for triggering
         self.auto_stop_timer: Optional[threading.Timer] = None
+        self.auto_stop_start_time: float = 0  # Track when timer started
         self.last_user_action_time: float = 0
 
         logger.info("Hardware Player initialized. State: STOPPED")
@@ -102,7 +103,7 @@ class HardwarePlayer:
         try:
             self.radar_controller = RadarController()
             
-            if self.radar_controller.is_switch_enabled():
+            if self.radar_controller.is_switch_enabled() and self.radar_controller.enabled:
                 # Setup radar LED (GPIO23)
                 GPIO.setup(RADAR_LED_PIN, GPIO.OUT)
                 self.radar_led_pwm = GPIO.PWM(RADAR_LED_PIN, 100)
@@ -113,6 +114,8 @@ class HardwarePlayer:
                 radar_thread.start()
                 
                 logger.info(f"Radar enabled. Listening on GPIO{self.radar_controller.radar_pin}")
+            elif self.radar_controller.is_switch_enabled() and not self.radar_controller.enabled:
+                logger.info("Radar switch is ON but radar detection is disabled (model not supported).")
             else:
                 logger.info("Radar switch is OFF. Radar detection disabled.")
         except Exception as e:
@@ -139,6 +142,22 @@ class HardwarePlayer:
             last_stop_state = stop_state
             time.sleep(BTN_DEBOUNCE_TIME)
     
+    def _get_timer_remaining(self) -> int:
+        """Get seconds remaining on auto-stop timer."""
+        if not self.auto_stop_timer or self.auto_stop_start_time == 0:
+            return 0
+        elapsed = time.time() - self.auto_stop_start_time
+        remaining = MOTION_PLAYBACK_DURATION - elapsed
+        return max(0, int(remaining))
+    
+    def _get_cooldown_remaining(self) -> int:
+        """Get seconds remaining on cooldown."""
+        if self.last_user_action_time == 0:
+            return 0
+        elapsed = time.time() - self.last_user_action_time
+        remaining = COOLDOWN_AFTER_USER_ACTION - elapsed
+        return max(0, int(remaining))
+    
     def _poll_radar(self):
         """Runs in a background thread to check for radar motion."""
         logger.info("Radar polling thread started.")
@@ -149,19 +168,28 @@ class HardwarePlayer:
                 time.sleep(0.5)
                 continue
             
-            # Skip if radar-triggered playback is active
-            if self.radar_playback_active:
-                time.sleep(0.1)
-                continue
+            # Check for motion edges (for LED and potential trigger)
+            motion_started, motion_stopped = self.radar_controller.check_motion_state()
             
-            # Check cooldown after user action
-            if time.time() - self.last_user_action_time < COOLDOWN_AFTER_USER_ACTION:
-                time.sleep(0.1)
-                continue
+            # Update radar LED based on actual motion state
+            if motion_started:
+                self._update_radar_led(True)
+                logger.info("🏃🏻 Motion DETECTED!")
+                
+                # Check if we should trigger playback
+                cooldown_remaining = self._get_cooldown_remaining()
+                if cooldown_remaining > 0:
+                    logger.info(f"   ↳ Ignoring trigger: Cooldown active ({cooldown_remaining}s remaining)")
+                elif self.radar_playback_active:
+                    timer_remaining = self._get_timer_remaining()
+                    logger.info(f"   ↳ Ignoring trigger: Playback active (auto-stop in {timer_remaining}s)")
+                else:
+                    # Trigger playback
+                    self.handle_radar_motion()
             
-            # Check for motion
-            if self.radar_controller.is_motion_detected():
-                self.handle_radar_motion()
+            if motion_stopped:
+                self._update_radar_led(False)
+                logger.info("Motion stopped.")
             
             time.sleep(0.05)  # 50ms polling
         
@@ -188,7 +216,7 @@ class HardwarePlayer:
             self.breathing_thread.start()
     
     def _update_radar_led(self, on: bool):
-        """Update radar LED state."""
+        """Update radar LED state based on motion detection."""
         if self.radar_led_pwm:
             if on:
                 self.radar_led_pwm.ChangeDutyCycle(MAX_LED_BRIGHTNESS)
@@ -215,10 +243,12 @@ class HardwarePlayer:
         if self.auto_stop_timer:
             self.auto_stop_timer.cancel()
             self.auto_stop_timer = None
+            self.auto_stop_start_time = 0
     
     def _start_auto_stop_timer(self):
         """Start the auto-stop timer."""
         self._cancel_auto_stop_timer()
+        self.auto_stop_start_time = time.time()
         self.auto_stop_timer = threading.Timer(
             MOTION_PLAYBACK_DURATION, 
             self._auto_stop_callback
@@ -230,14 +260,14 @@ class HardwarePlayer:
     def _auto_stop_callback(self):
         """Called when auto-stop timer expires."""
         with self.lock:
-            logger.warning("Auto-stop timer expired. Stopping playback.")
+            logger.warning("⏱️ Auto-stop timer expired. Stopping playback.")
             if self.player:
                 self.player.stop()
                 self.player = None
             self.state = "STOPPED"
             self.initiated_by = None
             self.radar_playback_active = False
-            self._update_radar_led(False)
+            self.auto_stop_start_time = 0
         self._update_led()
         self._print_status()
 
@@ -265,12 +295,12 @@ class HardwarePlayer:
                 if self.player:
                     self.player.pause()
                     self.state = "PAUSED"
+                    logger.info(f"Cooldown started: {COOLDOWN_AFTER_USER_ACTION}s")
             elif self.state == "PAUSED":
                 if self.player:
                     self.player.resume()
                     self.state = "PLAYING"
         self._update_led()
-        self._print_status()
 
     def handle_stop(self):
         with self.lock:
@@ -289,18 +319,12 @@ class HardwarePlayer:
                     self.player.stop()
                     self.player = None
                 self.state = "STOPPED"
+                logger.info(f"Cooldown started: {COOLDOWN_AFTER_USER_ACTION}s")
         self._update_led()
-        self._update_radar_led(False)
-        self._print_status()
     
     def handle_radar_motion(self):
-        """Handle motion detected by radar."""
+        """Handle motion detected by radar - trigger playback."""
         with self.lock:
-            logger.info(f"🏃🏻 Radar motion detected! Current state: {self.state}")
-            
-            # Turn on radar LED
-            self._update_radar_led(True)
-            
             if self.state == "STOPPED":
                 self.latest_song = find_latest_song()
                 if self.latest_song:
@@ -310,10 +334,9 @@ class HardwarePlayer:
                     self.initiated_by = 'radar'
                     self.radar_playback_active = True
                     self._start_auto_stop_timer()
-                    logger.info("Radar triggered playback started.")
+                    logger.success("Radar triggered playback started.")
                 else:
                     logger.error("No song file found to play.")
-                    self._update_radar_led(False)
             elif self.state == "PAUSED":
                 if self.player:
                     self.player.resume()
@@ -321,10 +344,9 @@ class HardwarePlayer:
                     self.initiated_by = 'radar'
                     self.radar_playback_active = True
                     self._start_auto_stop_timer()
-                    logger.info("Radar triggered playback resumed.")
+                    logger.success("Radar triggered playback resumed.")
         
         self._update_led()
-        self._print_status()
     
     def listen_for_input(self, daemon_mode=False):
         """
@@ -332,7 +354,7 @@ class HardwarePlayer:
         """
         if daemon_mode:
             logger.info("Running in daemon mode. Listening for GPIO button presses...")
-            if self.radar_controller and self.radar_controller.is_switch_enabled():
+            if self.radar_controller and self.radar_controller.is_switch_enabled() and self.radar_controller.enabled:
                 logger.info("Radar detection is active.")
             # In daemon mode, the GPIO polling is running in the background.
             # This loop just keeps the main script alive indefinitely.
@@ -340,7 +362,7 @@ class HardwarePlayer:
                 time.sleep(1)
         else:
             logger.info("Running in interactive mode. Listening for keyboard commands and GPIO.")
-            if self.radar_controller and self.radar_controller.is_switch_enabled():
+            if self.radar_controller and self.radar_controller.is_switch_enabled() and self.radar_controller.enabled:
                 logger.info("Radar detection is active.")
             # This loop listens for keyboard commands in the foreground.
             while True:
@@ -362,11 +384,14 @@ class HardwarePlayer:
 
     def _print_status(self):
         song_name = self.latest_song.name if self.latest_song else "None"
-        radar_status = "ON" if (self.radar_controller and self.radar_controller.is_switch_enabled()) else "OFF"
+        radar_status = "ON" if (self.radar_controller and self.radar_controller.is_switch_enabled() and self.radar_controller.enabled) else "OFF"
+        timer_info = ""
+        if self.radar_playback_active:
+            timer_info = f" | Timer: {self._get_timer_remaining()}s"
         print("\n" + "="*20 + " PLAYER STATUS " + "="*20)
         print(f"  State: {self.state}")
         print(f"  Song:  {song_name}")
-        print(f"  Radar: {radar_status} | Initiated by: {self.initiated_by or 'N/A'}")
+        print(f"  Radar: {radar_status} | Initiated by: {self.initiated_by or 'N/A'}{timer_info}")
         print("="*55)
         print("Controls: [P] Play/Pause | [S] Stop | [Q] Quit")
 
