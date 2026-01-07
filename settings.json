@@ -18,7 +18,9 @@
         "ProcessProgressBreathingFreq":0.15,
         "ProcessErrBreathingFreq":0.05,
         "motionTriggeredPlaybackDurationSec": 60,
-        "cooldownAfterUserActionSec": 60
+        "cooldownAfterUserActionSec": 60,
+        "radarMaxRangeMeters": 2.5,
+        "radarTargetTimeoutSec": 1.0
     },
     "music":{
         "fadeInDurationSec":1.5,
