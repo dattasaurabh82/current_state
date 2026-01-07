@@ -4,55 +4,68 @@
         "articles": [
             {
                 "source": {
-                    "id": null,
-                    "name": "ZDNet"
-                },
-                "author": "Cesar Cadenas",
-                "title": "Why Nvidia's new Rubin platform could change the future of AI computing forever",
-                "description": "At CES 2026, Nvidia unveiled Rubin, a new AI supercomputing platform that aims to accelerate the adoption of LLMs among the public.",
-                "url": "https://www.zdnet.com/article/nvidia-rubin-ai-ces-2026/",
-                "urlToImage": "https://www.zdnet.com/a/img/resize/b84fe21f649f4b93a6143ce571d86cf2e6f4c306/2026/01/05/ca0129da-1b05-4418-9950-752d6af0e0e2/nvidia-rubin-supercomputer-ces-2026.png?auto=webp&fit=crop&height=675&width=1200",
-                "publishedAt": "2026-01-06T00:17:16Z",
-                "content": "Nvidia\r\nFollow ZDNET: Add us as a preferred source on Google.\r\nZDNET's key takeaways\r\n<ul><li>Nvidia's new platform aims to reduce the cost of training LLMs.</li><li>It uses six AI chips to lower tok… [+3574 chars]"
-            },
-            {
-                "source": {
                     "id": "the-times-of-india",
                     "name": "The Times of India"
                 },
                 "author": "ET Bureau",
-                "title": "Rupee falls to 90.27 against dollar amid trade deal delay",
-                "description": "The Indian rupee fell another seven paise to close at 90.27 against the dollar on Monday, with experts anticipating further declines. This depreciation is attributed to a delayed US trade deal and reduced foreign investment in Mumbai equities. The Reserve Ban…",
-                "url": "https://economictimes.indiatimes.com/markets/forex/rupee-falls-to-90-27-against-dollar-amid-trade-deal-delay/articleshow/126363438.cms",
-                "urlToImage": "https://img.etimg.com/thumb/msid-126363430,width-1200,height-630,imgsize-41576,overlay-etmarkets/articleshow.jpg",
-                "publishedAt": "2026-01-06T00:15:34Z",
+                "title": "Indira Ivf and 7 others get nod for IPOs",
+                "description": "Sebi has approved IPOs for eight companies, including Indira IVF and Chartered Speed. Chartered Speed plans a ₹855 crore issue, while RKCPL aims for ₹1,250 crore. Several companies, like Indira IVF and Rays of Belief, utilized confidential filings for their I…",
+                "url": "https://economictimes.indiatimes.com/markets/ipos/fpos/indira-ivf-and-7-others-get-nod-for-ipos/articleshow/126363487.cms",
+                "urlToImage": "https://img.etimg.com/thumb/msid-126363482,width-1200,height-630,imgsize-196602,overlay-etmarkets/articleshow.jpg",
+                "publishedAt": "2026-01-06T00:22:36Z",
                 "content": "(What's moving Sensex and Nifty Track latest market news, stock tips, Budget 2025, Share Market on Budget 2025 and expert advice, on ETMarkets. Also, ETMarkets.com is now on Telegram. For fastest new… [+330 chars]"
             },
             {
                 "source": {
                     "id": null,
-                    "name": "Biztoc.com"
+                    "name": "Slashdot.org"
                 },
-                "author": "bloomberg.com",
-                "title": "Intel Shows Off New Computers That Are Central to Comeback Bid",
-                "description": "",
-                "url": "https://biztoc.com/x/46267d1a32d68306",
-                "urlToImage": "https://biztoc.com/cdn/46267d1a32d68306_s.webp",
-                "publishedAt": "2026-01-06T00:15:22Z",
-                "content": "{ window.open(this.href, '_blank'); }, 200); return false;\"&gt;Why did oil stocks rally today? { window.open(this.href, '_blank'); }, 200); return false;\"&gt;How did Maduro's capture impact markets? … [+715 chars]"
+                "author": "BeauHD",
+                "title": "Corporation for Public Broadcasting To Shut Down After 58 Years",
+                "description": "After Congress approved President Donald Trump's rescission package eliminating federal funding, the Corporation for Public Broadcasting voted to dissolve after 58 years, rather than continue to exist and potentially be \"vulnerable to future political manipul…",
+                "url": "https://entertainment.slashdot.org/story/26/01/05/235245/corporation-for-public-broadcasting-to-shut-down-after-58-years",
+                "urlToImage": "https://a.fsdn.com/sd/topics/tv_64.png",
+                "publishedAt": "2026-01-06T00:22:00Z",
+                "content": "The CPB was created by Congress by the Public Broadcasting Act of 1967 to support the federal government's investment in public broadcasting. The org noted that the rescission of all of CPB's federal… [+1959 chars]"
             },
             {
                 "source": {
-                    "id": null,
-                    "name": "Sinocism.com"
+                    "id": "usa-today",
+                    "name": "USA Today"
                 },
-                "author": "Bill Bishop",
-                "title": "China’s Venezuela Calculations; Real Estate Market Expectations; December Politburo and Democratic Life Meetings; Museum Scandal; 2026 Propaganda Tasks",
-                "description": "This looks to have been a massive PRC intelligence and analytical failure. PRC special envoy Qiu Xiaoqi met with Maduro in Caracas just hours before the raid, and may have still been in country when it occurred. And as with Syria, the value of any sort of par…",
-                "url": "https://sinocism.com/p/chinas-venezuela-calculations-real",
-                "urlToImage": "https://substackcdn.com/image/fetch/$s_!hPY1!,w_1200,h_600,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffdc6720d-9f3f-44a0-a56c-83740f1ee867_1240x1734.png",
-                "publishedAt": "2026-01-06T00:15:10Z",
-                "content": "Happy New Year! I hope all of you who got some time off had a nice break. It has not been a quiet twelve days since the last newsletter, but sometimes you just have to unplug. Apologies for missing s… [+7000 chars]"
+                "author": "Robert Bondy, Spartans Wire",
+                "title": "MSU football transfer OL reportedly commits to ACC school",
+                "description": "Michigan State transfer offensive lineman Justin Bell has committed to an ACC program led by a former Big Ten head coach",
+                "url": "https://spartanswire.usatoday.com/story/sports/college/spartans/football/2026/01/05/msu-football-transfer-ol-justin-bell-reportedly-commits-to-acc-school/88038970007/",
+                "urlToImage": "https://s.yimg.com/ny/api/res/1.2/GVLGXHD6Is5VCYy0YU_SwA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD04MDA7Y2Y9d2VicA--/https://media.zenfs.com/en/spartans_wire_usa_today_articles_977/55eea5cca95f8577a6831552536228b2",
+                "publishedAt": "2026-01-06T00:21:43Z",
+                "content": "Michigan State transfer offensive lineman Justin Bell has committed to an ACC program led by a former Big Ten head coach.\r\nAllen Trieu of 247Sports reported on Monday evening that Bell has committed … [+964 chars]"
+            },
+            {
+                "source": {
+                    "id": "abc-news",
+                    "name": "ABC News"
+                },
+                "author": "ALI SWENSON Associated Press, LAURAN NEERGAARD Associated Press",
+                "title": "US cuts the number of vaccines recommended for every child, a move slammed by physicians",
+                "description": "The U.S. has taken the unprecedented step of dropping the number of vaccines it recommends for every child — a move that leading medical groups say would undermine protections against a half-dozen diseases",
+                "url": "https://abcnews.go.com/Health/wireStory/us-cuts-number-vaccines-recommended-child-move-slammed-128919303",
+                "urlToImage": "https://i.abcnewsfe.com/a/24f668c7-ed0c-4eee-a169-fbdc29c61742/wirestory_9b8df9e2767c1261aaac4e2331e77fa3_16x9.jpg?w=1600",
+                "publishedAt": "2026-01-06T00:21:29Z",
+                "content": "WASHINGTON -- The U.S. took the unprecedented step Monday of cutting the number of vaccines it recommends for every child a move that leading medical groups said would undermine protections against a… [+7136 chars]"
+            },
+            {
+                "source": {
+                    "id": "usa-today",
+                    "name": "USA Today"
+                },
+                "author": "Cameron Ohnysty, Aggies Wire",
+                "title": "Texas A&M land commitment from South Carolina transfer OL",
+                "description": "Texas A&M landed its second OL commitment from the transfer portal, as former South Carolina guard Trovon Baugh brings more beef to the trenches.",
+                "url": "https://aggieswire.usatoday.com/story/sports/college/aggies/football/2026/01/05/trovon-baugh-texas-aggies-football-south-carolina-transfer-portal/88038877007/",
+                "urlToImage": "https://s.yimg.com/ny/api/res/1.2/yW4WR7YXgRLHbU5P38WqSA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD04MDA7Y2Y9d2VicA--/https://media.zenfs.com/en/aggies_wire_usa_today_articles_632/995d1a502b44fbcc3f171d3b8399e556",
+                "publishedAt": "2026-01-06T00:21:26Z",
+                "content": "Texas A&amp;M landed its seventh transfer addition since the portal opened on Monday afternoon, securing its second offensive line commitment, as South Carolina guard Trovon Baugh will head to Colleg… [+1608 chars]"
             }
         ]
     },
@@ -202,6 +215,19 @@
             {
                 "source": {
                     "id": null,
+                    "name": "Milenio"
+                },
+                "author": "Milenio Internacional ,Agencia EFE",
+                "title": "Trump descarta elecciones en Venezuela este mes; rechaza estar en guerra",
+                "description": "El presidente de Estados Unidos, Donald Trump, declaró durante una entrevista con NBC News que Venezuela no tendrá elecciones en los próximos 30 días, luego de que el gobierno de su país capturara a Nicolás Maduro durante la madrugada del sábado 3 de enero.Ad…",
+                "url": "https://www.milenio.com/internacional/trump-descarta-elecciones-en-los-proximos-30-dias-en-venezuela",
+                "urlToImage": "https://cdn.milenio.com/uploads/media/2026/01/04/residentes-venezuela-concentraron-ciudad-mexico.jpeg",
+                "publishedAt": "2026-01-06T00:22:00Z",
+                "content": "El presidente de Estados Unidos, Donald Trump, declaró durante una entrevista con NBC News que Venezuela no tendrá elecciones en los próximos 30 días, luego de que el gobierno de su país capturara a … [+2323 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
                     "name": "BBC News"
                 },
                 "author": "https://www.facebook.com/bbcnews",
@@ -250,19 +276,6 @@
                 "urlToImage": "https://cdn.forbes.com.mx/2026/01/popko.webp",
                 "publishedAt": "2026-01-05T23:41:04Z",
                 "content": "El representante Ritchie Torres, demócrata de Nueva York, presentó un proyecto de ley el lunes que propone prohibir a los empleados del gobierno utilizar mercados de predicción mientras tengan acceso… [+3156 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Meneame.net"
-                },
-                "author": "cocolisto",
-                "title": "Trump amenaza con una nueva incursión en Venezuela (ingles)",
-                "description": "Estados Unidos podría emprender una segunda incursión militar en Venezuela, ha declarado Donald Trump en una entrevista con NBC News, matizando que contempla este escenario en el caso de que la presidenta encargada del país latinoamericano, Delcy Rodríguez, d…",
-                "url": "https://www.meneame.net/m/actualidad/trump-amenaza-nueva-incursion-venezuela-ingles",
-                "urlToImage": "https://www.meneame.net//cdn.mnmstatic.net/img/mnm/logo-350x350.png",
-                "publishedAt": "2026-01-05T23:38:16Z",
-                "content": ""
             }
         ]
     }
