@@ -26,6 +26,7 @@ STOP_BTN_PIN = settings["inputPins"]["stopBtn_pin"]
 # Hardware Features (from settings.json)
 BTN_DEBOUNCE_TIME = settings["hwFeatures"]["btnDebounceTimeMs"]
 MAX_LED_BRIGHTNESS = settings["hwFeatures"]["maxLEDBrightness"]
+PAUSE_BREATHING_FREQ = settings["hwFeatures"]["pauseBreathingFreq"]
 
 
 def find_latest_song(directory="music_generated") -> Optional[Path]:
@@ -127,7 +128,7 @@ class HardwarePlayer:
         """Runs in a thread to create a breathing effect for the LED."""
         if not self.led_pwm:
             return
-        pause_time = 0.02
+        pause_time = PAUSE_BREATHING_FREQ
         while not self.stop_breathing.is_set():
             for duty_cycle in range(0, MAX_LED_BRIGHTNESS + 1, 5):
                 if self.stop_breathing.is_set(): break

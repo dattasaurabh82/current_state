@@ -13,7 +13,9 @@
     },
     "hwFeatures":{
         "btnDebounceTimeMs":0.05,
-        "maxLEDBrightness": 25
+        "maxLEDBrightness": 25,
+        "pauseBreathingFreq":0.10,
+        "ProcessErrBreathingFreq":0.02
     },
     "music":{
         "fadeInDurationSec":1.5,
