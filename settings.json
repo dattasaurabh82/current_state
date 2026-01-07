@@ -16,7 +16,9 @@
         "maxLEDBrightness": 25,
         "pauseBreathingFreq":0.25,
         "ProcessProgressBreathingFreq":0.15,
-        "ProcessErrBreathingFreq":0.05
+        "ProcessErrBreathingFreq":0.05,
+        "motionTriggeredPlaybackDurationSec": 1800,
+        "cooldownAfterUserActionSec": 60
     },
     "music":{
         "fadeInDurationSec":1.5,
