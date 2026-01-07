@@ -14,7 +14,7 @@
     "hwFeatures":{
         "btnDebounceTimeMs":0.05,
         "maxLEDBrightness": 25,
-        "pauseBreathingFreq":0.10,
+        "pauseBreathingFreq":0.25,
         "ProcessErrBreathingFreq":0.02
     },
     "music":{
