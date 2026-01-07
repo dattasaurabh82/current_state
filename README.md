@@ -4,31 +4,24 @@
 
 ### Low
 
-- MQTT / radar trigger 
-- Other region of news 
 - WIP: Docu ...
-- WIP: All code base cleanup 
-- System provisioning docu and tooling .... 
+- WIP: All code base cleanup - System provisioning docu and tooling ....
+- maybe web ui
+- SfX with music
+- Other region of news 
 
 ### High
 
-- Blink factor
-- Pin and other configs as ext vars ...
-- HW sensor plugin
-- Business logic of operation ...
+- Business logic of operation ... (radar trigger )
+- Improve music prompt gen algo
 
 ### Backlog
 
-- How often and how long silent audio player plays
-  - Currently happy with the implementation
-- maybe web ui
-- Send cancel to other agent calls
-- slow down track for 30 sec to make it feel longer [post processing]
-
-### Bug
-
-- silent audio to keep the channel active did not work ....
-
+- ~~How often and how long silent audio player plays~~
+  - silent audio to keep the channel active did not work ... so implement HW sol to trigger Audio On on FREKVENS
+- ~~Currently happy with the implementation~~
+- ~~Send cancel to other agent calls~~
+- ~~slow down track for 30 sec to make it feel longer [post processing]~~
 
 ---
 
@@ -87,10 +80,10 @@ Once happy, 'tab' to `<Finish>` and restart (`sudo reboot`)
 ### Install Python Build Dependencies:
 
 ```bash
-sudo apt update && sudo apt install -y python3-dev build-essential libssl-dev zlib1g-dev libbz2-dev \
-libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev \
-libxmlsec1-dev libffi-dev liblzma-dev -y
-
+sudo apt update -y
+sudo apt upgrade -y 
+sudo apt install git -y 
+sudo apt install build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev jq tree -y
 sudo apt install python3-dev -y
 ```
 
