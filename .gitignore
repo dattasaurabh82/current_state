@@ -24,5 +24,6 @@ tmp/*
 .env
 
 uv.lock
+settings.json
 
 music_generated/*

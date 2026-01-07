@@ -4,7 +4,7 @@
         "stopBtnPin":27,
         "runFullCycleBtnPin":17,
         "radarEnablePin":6,
-        "radarModel":"RD-03D",
+        "radarModel":"RCWL-0516",
         "radarPin": 16
     },
     "outputPins":{
@@ -17,7 +17,7 @@
         "pauseBreathingFreq":0.25,
         "ProcessProgressBreathingFreq":0.15,
         "ProcessErrBreathingFreq":0.05,
-        "motionTriggeredPlaybackDurationSec": 60,
+        "motionTriggeredPlaybackDurationSec": 300,
         "cooldownAfterUserActionSec": 60,
         "radarMaxRangeMeters": 2.5,
         "radarTargetTimeoutSec": 1.0
