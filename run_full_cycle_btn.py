@@ -22,6 +22,7 @@ settings = load_settings()
 # Configuration (from settings.json)
 BTN_PIN = settings["inputPins"]["runFullCycleBtnPin"]
 LED_PIN = settings["outputPins"]["radarStateLEDPin"]
+RADAR_ENABLE_PIN = settings["inputPins"]["radarEnablePin"]
 DEBOUNCE = settings["hwFeatures"]["btnDebounceTimeMs"]
 MAX_LED_BRIGHTNESS = settings["hwFeatures"]["maxLEDBrightness"]
 PROGRESS_BREATHING_FREQ = settings["hwFeatures"]["ProcessProgressBreathingFreq"]
@@ -29,6 +30,7 @@ ERROR_BREATHING_FREQ = settings["hwFeatures"]["ProcessErrBreathingFreq"]
 
 # Global state
 led_pwm = None
+led_enabled = False  # Whether we own the LED
 stop_breathing = threading.Event()
 breathing_thread = None
 
@@ -54,10 +56,15 @@ def setup_logger():
     logger.info(f"Full cycle button logger initialized. Logging to '{log_file_path}'")
 
 
+def is_radar_enabled() -> bool:
+    """Check if radar enable switch is ON (LOW = enabled)."""
+    return GPIO.input(RADAR_ENABLE_PIN) == GPIO.LOW
+
+
 def breathe_led(freq):
     """Breathing effect for LED at specified frequency."""
     global led_pwm
-    if not led_pwm:
+    if not led_pwm or not led_enabled:
         return
     while not stop_breathing.is_set():
         for duty_cycle in range(0, MAX_LED_BRIGHTNESS + 1, 5):
@@ -75,6 +82,8 @@ def breathe_led(freq):
 def start_breathing(freq):
     """Start LED breathing in background thread."""
     global breathing_thread
+    if not led_enabled:
+        return
     stop_breathing.clear()
     breathing_thread = threading.Thread(target=breathe_led, args=(freq,), daemon=True)
     breathing_thread.start()
@@ -86,12 +95,14 @@ def stop_breathing_led():
     stop_breathing.set()
     if breathing_thread and breathing_thread.is_alive():
         breathing_thread.join(timeout=1)
-    if led_pwm:
+    if led_pwm and led_enabled:
         led_pwm.ChangeDutyCycle(0)
 
 
 def error_blink(duration=3):
     """Fast breathing for error indication."""
+    if not led_enabled:
+        return
     start_breathing(ERROR_BREATHING_FREQ)
     time.sleep(duration)
     stop_breathing_led()
@@ -99,10 +110,21 @@ def error_blink(duration=3):
 
 def handle_button_press():
     """Trigger the full news→music generation cycle."""
+    global led_enabled
+    
+    # Check if radar is enabled - if so, skip entirely
+    if is_radar_enabled():
+        logger.warning(
+            "⚠️ Radar is enabled. Cannot run full cycle while radar is active. "
+            "Disable the radar switch (GPIO6) to use this button."
+        )
+        return
+    
     logger.warning("Full cycle button pressed! Starting news→music pipeline...")
     
-    # Start progress breathing
-    start_breathing(PROGRESS_BREATHING_FREQ)
+    # Start progress breathing (only if LED is available)
+    if led_enabled:
+        start_breathing(PROGRESS_BREATHING_FREQ)
     
     try:
         result = subprocess.run(
@@ -111,7 +133,8 @@ def handle_button_press():
         )
         
         # Stop progress breathing
-        stop_breathing_led()
+        if led_enabled:
+            stop_breathing_led()
         
         if result.returncode == 0:
             logger.success("✅ Pipeline completed successfully!")
@@ -120,7 +143,8 @@ def handle_button_press():
             error_blink(duration=3)
             
     except Exception as e:
-        stop_breathing_led()
+        if led_enabled:
+            stop_breathing_led()
         logger.error(f"Failed to start pipeline: {e}")
         error_blink(duration=3)
     finally:
@@ -128,7 +152,7 @@ def handle_button_press():
 
 
 def main():
-    global led_pwm
+    global led_pwm, led_enabled
     
     setup_logger()
     logger.info("--- Starting Full Cycle Button Monitor ---")
@@ -144,10 +168,19 @@ def main():
         # Setup button
         GPIO.setup(BTN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         
-        # Setup LED with PWM
-        GPIO.setup(LED_PIN, GPIO.OUT)
-        led_pwm = GPIO.PWM(LED_PIN, 100)
-        led_pwm.start(0)
+        # Setup radar enable pin to check switch state
+        GPIO.setup(RADAR_ENABLE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        
+        # Setup LED only if radar is disabled
+        if not is_radar_enabled():
+            GPIO.setup(LED_PIN, GPIO.OUT)
+            led_pwm = GPIO.PWM(LED_PIN, 100)
+            led_pwm.start(0)
+            led_enabled = True
+            logger.info("Radar is OFF. LED feedback enabled.")
+        else:
+            led_enabled = False
+            logger.info("Radar is ON. LED feedback disabled (owned by HardwarePlayer).")
 
         last_state = GPIO.HIGH
 
@@ -165,7 +198,7 @@ def main():
         logger.warning("Interrupted. Shutting down...")
     finally:
         stop_breathing_led()
-        if led_pwm:
+        if led_pwm and led_enabled:
             led_pwm.stop()
         GPIO.cleanup()
         logger.info("--- Full Cycle Button Monitor Stopped ---")
