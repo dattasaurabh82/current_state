@@ -4,55 +4,55 @@
         "articles": [
             {
                 "source": {
-                    "id": "cbs-news",
-                    "name": "CBS News"
+                    "id": null,
+                    "name": "ZDNet"
                 },
-                "author": "Richard  Escobedo, Ed  O'Keefe, Mary  Cunningham, Joe  Walsh",
-                "title": "Major oil companies to meet with Trump admin. on Venezuela, sources say",
-                "description": "Petroleum giants Chevron, ConocoPhillips and ExxonMobil are planning to meet with the Trump administration later this week, sources told CBS News, as President Trump pushes oil companies to invest in Venezuela.",
-                "url": "https://www.cbsnews.com/news/venezuela-major-oil-companies-to-meet-with-trump-administration/",
-                "urlToImage": "https://assets3.cbsnewsstatic.com/hub/i/r/2026/01/05/6e1b6964-1a3e-4f2d-9f79-bb747c9be461/thumbnail/1200x630/84b8896cdee241f7d928d7dd1c8e773b/cbsn-fusion-us-eyeing-venezuelas-oil-reserves-after-maduros-capture-thumbnail.jpg",
-                "publishedAt": "2026-01-05T23:45:14Z",
-                "content": "Representatives from petroleum giants Chevron, ConocoPhillips and ExxonMobil are planning to meet with the Trump administration later this week to discuss Venezuela, two sources confirmed to CBS News… [+2321 chars]"
+                "author": "Cesar Cadenas",
+                "title": "Why Nvidia's new Rubin platform could change the future of AI computing forever",
+                "description": "At CES 2026, Nvidia unveiled Rubin, a new AI supercomputing platform that aims to accelerate the adoption of LLMs among the public.",
+                "url": "https://www.zdnet.com/article/nvidia-rubin-ai-ces-2026/",
+                "urlToImage": "https://www.zdnet.com/a/img/resize/b84fe21f649f4b93a6143ce571d86cf2e6f4c306/2026/01/05/ca0129da-1b05-4418-9950-752d6af0e0e2/nvidia-rubin-supercomputer-ces-2026.png?auto=webp&fit=crop&height=675&width=1200",
+                "publishedAt": "2026-01-06T00:17:16Z",
+                "content": "Nvidia\r\nFollow ZDNET: Add us as a preferred source on Google.\r\nZDNET's key takeaways\r\n<ul><li>Nvidia's new platform aims to reduce the cost of training LLMs.</li><li>It uses six AI chips to lower tok… [+3574 chars]"
+            },
+            {
+                "source": {
+                    "id": "the-times-of-india",
+                    "name": "The Times of India"
+                },
+                "author": "ET Bureau",
+                "title": "Rupee falls to 90.27 against dollar amid trade deal delay",
+                "description": "The Indian rupee fell another seven paise to close at 90.27 against the dollar on Monday, with experts anticipating further declines. This depreciation is attributed to a delayed US trade deal and reduced foreign investment in Mumbai equities. The Reserve Ban…",
+                "url": "https://economictimes.indiatimes.com/markets/forex/rupee-falls-to-90-27-against-dollar-amid-trade-deal-delay/articleshow/126363438.cms",
+                "urlToImage": "https://img.etimg.com/thumb/msid-126363430,width-1200,height-630,imgsize-41576,overlay-etmarkets/articleshow.jpg",
+                "publishedAt": "2026-01-06T00:15:34Z",
+                "content": "(What's moving Sensex and Nifty Track latest market news, stock tips, Budget 2025, Share Market on Budget 2025 and expert advice, on ETMarkets. Also, ETMarkets.com is now on Telegram. For fastest new… [+330 chars]"
             },
             {
                 "source": {
                     "id": null,
-                    "name": "The Denver Post"
+                    "name": "Biztoc.com"
                 },
-                "author": "Shelly Bradbury",
-                "title": "Pedestrian killed in Denver hit-and-run, police seeking tips on driver",
-                "description": "A Denver pedestrian was killed in an hit-and-run crash in Denver's Lincoln Park neighborhood on Friday, according to Denver police.",
-                "url": "https://www.denverpost.com/2026/01/05/pedestrian-killed-hit-and-run-denver-kalamath/",
-                "urlToImage": "https://www.denverpost.com/wp-content/uploads/2025/02/Philadelphia_Small_Plane_Crash_88823_8cb90b.jpg?w=1024&h=683",
-                "publishedAt": "2026-01-05T23:44:20Z",
-                "content": "A man was killed in a hit-and-run crash in Denver’s Lincoln Park neighborhood on Friday, according to Denver police.\r\nPolice believe a driver in a gray Honda Accord Crosstour struck and killed the ma… [+670 chars]"
-            },
-            {
-                "source": {
-                    "id": "cbs-news",
-                    "name": "CBS News"
-                },
-                "author": "CBS News",
-                "title": "The long-term risks of U.S. military action in Venezuela",
-                "description": "The  raid in Venezuela over the weekend has triggered worries of another long U.S. war like the ones fought in Iraq and Afghanistan. To discuss, CBS News was joined by Elliot Ackerman, veteran of the Marines and CIA special operations, and Aaron MacLean, a Ma…",
-                "url": "https://www.cbsnews.com/video/the-long-term-risks-of-us-military-action-in-venezuela/",
-                "urlToImage": "https://assets1.cbsnewsstatic.com/hub/i/r/2026/01/05/c8fd1ff3-8a50-4065-92cc-12dc512c6782/thumbnail/1200x630/bb16dd6185ccea36ab6ad9fcc38a2304/cbsn-fusion-the-long-term-risks-of-us-military-action-in-venezuela-thumbnail.jpg",
-                "publishedAt": "2026-01-05T23:43:00Z",
-                "content": "Copyright ©2026 CBS Interactive Inc. All rights reserved."
+                "author": "bloomberg.com",
+                "title": "Intel Shows Off New Computers That Are Central to Comeback Bid",
+                "description": "",
+                "url": "https://biztoc.com/x/46267d1a32d68306",
+                "urlToImage": "https://biztoc.com/cdn/46267d1a32d68306_s.webp",
+                "publishedAt": "2026-01-06T00:15:22Z",
+                "content": "{ window.open(this.href, '_blank'); }, 200); return false;\"&gt;Why did oil stocks rally today? { window.open(this.href, '_blank'); }, 200); return false;\"&gt;How did Maduro's capture impact markets? … [+715 chars]"
             },
             {
                 "source": {
                     "id": null,
-                    "name": "Variety"
+                    "name": "Sinocism.com"
                 },
-                "author": "Clayton Davis",
-                "title": "Oscar Predictions: Film Editing — Why This Category Remains Best Picture’s Strongest Tell",
-                "description": "Variety Awards Circuit section is the home for all awards news and related content throughout the year, featuring the following: the official predictions for the upcoming Oscars, Emmys, Grammys and Tony Awards ceremonies, curated by Variety chief awards edito…",
-                "url": "https://variety.com/lists/2026-oscars-best-film-editing-predictions/",
-                "urlToImage": "https://variety.com/wp-content/uploads/2024/12/Benicio-del-Toro-One-Battle-After-Another.jpg?crop=0px%2C35px%2C900px%2C506px&resize=1000%2C563",
-                "publishedAt": "2026-01-05T23:42:22Z",
-                "content": "Variety Awards Circuit section is the home for all awards news and related content throughout the year, featuring the following: the official predictions for the upcoming Oscars, Emmys, Grammys and T… [+3036 chars]"
+                "author": "Bill Bishop",
+                "title": "China’s Venezuela Calculations; Real Estate Market Expectations; December Politburo and Democratic Life Meetings; Museum Scandal; 2026 Propaganda Tasks",
+                "description": "This looks to have been a massive PRC intelligence and analytical failure. PRC special envoy Qiu Xiaoqi met with Maduro in Caracas just hours before the raid, and may have still been in country when it occurred. And as with Syria, the value of any sort of par…",
+                "url": "https://sinocism.com/p/chinas-venezuela-calculations-real",
+                "urlToImage": "https://substackcdn.com/image/fetch/$s_!hPY1!,w_1200,h_600,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffdc6720d-9f3f-44a0-a56c-83740f1ee867_1240x1734.png",
+                "publishedAt": "2026-01-06T00:15:10Z",
+                "content": "Happy New Year! I hope all of you who got some time off had a nice break. It has not been a quiet twelve days since the last newsletter, but sometimes you just have to unplug. Apologies for missing s… [+7000 chars]"
             }
         ]
     },
@@ -202,6 +202,45 @@
             {
                 "source": {
                     "id": null,
+                    "name": "BBC News"
+                },
+                "author": "https://www.facebook.com/bbcnews",
+                "title": "5 países a los que Trump ha lanzado advertencias después de la detención de Maduro",
+                "description": "Trump ha lanzado en los últimos días una serie de advertencias y amenazas a otros países. Te contamos cuáles son y qué ha dicho.",
+                "url": "https://www.bbc.com/mundo/articles/cew8x7vqx7zo",
+                "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_mundo/cb18/live/a029d1c0-ea94-11f0-9005-011cce76811d.png",
+                "publishedAt": "2026-01-06T00:16:27Z",
+                "content": "Fuente de la imagen, Reuters\r\nPie de foto, Trump habló con la prensa en el Air Force One después de la detención de Maduro.\r\nInformación del artículo<ul><li><ul><li>Autor, Tom Bennett</li><li>Título … [+7448 chars]"
+            },
+            {
+                "source": {
+                    "id": "rt",
+                    "name": "RT"
+                },
+                "author": "RT en Español\n , RT en Español",
+                "title": "Trump revela quiénes supervisarán la gestión de EE.UU. en Venezuela tras el secuestro de Maduro",
+                "description": "El equipo grupo incluye a los secretarios de Estado y de Guerra, Marco Rubio, y Pete Hegseth, el subjefe de Gabinete de la Casa Blanca, Stephen Miller, y el vicepresidente, J.D. Vance.",
+                "url": "https://actualidad.rt.com/actualidad/580772-trump-revela-quienes-supervisaran-gestion-venezuela",
+                "urlToImage": "https://mfes.b37m.ru/actualidad/public_images/2026.01/article/695c5172e9ff714f544dc75a.jpg",
+                "publishedAt": "2026-01-06T00:04:42Z",
+                "content": "Un grupo de altos funcionarios de EE.UU. –entre ellos los secretarios de Estado y de Guerra, Marco Rubio, y Pete Hegseth, el subjefe de Gabinete de la Casa Blanca, Stephen Miller, y el vicepresidente… [+2109 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Forbes.com.mx"
+                },
+                "author": "Sara Dorn",
+                "title": "Autoridad de Salud de EU elimina seis enfermedades del calendario de vacunación infantil",
+                "description": "Forbes México.\n Autoridad de Salud de EU elimina seis enfermedades del calendario de vacunación infantil\n\nLos CDC limitará las recomendaciones para el virus sincitial respiratorio (RSV), la enfermedad meningocócica, la hepatitis A y la hepatitis B solo a niño…",
+                "url": "https://forbes.com.mx/autoridad-de-salud-de-eu-elimina-seis-enfermedades-del-calendario-de-vacunacion-infantil/",
+                "urlToImage": "https://cdn.forbes.com.mx/2026/01/Proyecto-nuevo12.png",
+                "publishedAt": "2026-01-05T23:45:55Z",
+                "content": "Los Centros para el Control y la Prevención de Enfermedades (CDC) de EUrevisaron el calendario de vacunas infantiles el lunes para recomendar vacunas para 11 enfermedades, en lugar de 17, uno de los … [+3569 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
                     "name": "Forbes.com.mx"
                 },
                 "author": "Antonio Pequeño IV",
@@ -224,45 +263,6 @@
                 "urlToImage": "https://www.meneame.net//cdn.mnmstatic.net/img/mnm/logo-350x350.png",
                 "publishedAt": "2026-01-05T23:38:16Z",
                 "content": ""
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Latercera.com"
-                },
-                "author": "Fernando Fuentes",
-                "title": "Radiografía a las FF.AA. de Venezuela: ataque de EE.UU. pone a prueba su lealtad al chavismo",
-                "description": "Las Fuerzas Armadas, como los cuerpos de seguridad del Estado, se han desplegado en todo el país para garantizar el control territorial. Otrora la niña bonita del Caribe militar, el poder de la institución parece diezmado.",
-                "url": "https://www.latercera.com/mundo/noticia/radiografia-a-las-ffaa-de-venezuela-ataque-de-eeuu-pone-a-prueba-su-lealtad-al-chavismo/",
-                "urlToImage": "https://www.latercera.com/resizer/v2/GEEWYQJN45D6LCJV234SQNUFEQ.jpg?auth=46a14aee77f3997f3c3c352920dcaba55b0f69a102756e3986711773d8a578de&height=630&width=1200&smart=true",
-                "publishedAt": "2026-01-05T23:34:54Z",
-                "content": "Un día después de la cinematográfica captura de Nicolás Maduro la madrugada del sábado, la Fuerza Armada Nacional Bolivariana (FANB) de Venezuela exigió la liberación inmediata del presidente y de su… [+6865 chars]"
-            },
-            {
-                "source": {
-                    "id": "rt",
-                    "name": "RT"
-                },
-                "author": "RT en Español\n , RT en Español",
-                "title": "Trump amenaza con una nueva incursión en Venezuela",
-                "description": "Afirmó que Washington podría lanzarla si Delcy Rodríguez no coopera con EE.UU.",
-                "url": "https://actualidad.rt.com/actualidad/580767-trump-no-descarta-nueva-incursion-militar-venezuela",
-                "urlToImage": "https://mfes.b37m.ru/actualidad/public_images/static.es/article/rt-ultimo4.jpg",
-                "publishedAt": "2026-01-05T23:16:56Z",
-                "content": "Estados Unidos podría emprender una segunda incursión militar en Venezuela, ha declarado Donald Trump en una entrevista con NBC News, matizando que contempla este escenario en el caso de que la presi… [+118 chars]"
-            },
-            {
-                "source": {
-                    "id": "rt",
-                    "name": "RT"
-                },
-                "author": "RT en Español\n , RT en Español",
-                "title": "Trump: No estamos en guerra con Venezuela",
-                "description": "\"Estamos en guerra con las personas que venden drogas\", declaró en una entrevista con NBC News.",
-                "url": "https://actualidad.rt.com/actualidad/580766-trump-no-estamos-guerra-venezuela",
-                "urlToImage": "https://mfes.b37m.ru/actualidad/public_images/2026.01/article/695c479759bf5b3aec619402.jpg",
-                "publishedAt": "2026-01-05T23:10:09Z",
-                "content": "El presidente de Estados Unidos, Donald Trump, afirmó que su país no está en guerra con Venezuela, a pesar del secuestro del presidente Nicolás Maduro y su esposa, así como de los ataques perpetrados… [+71 chars]"
             }
         ]
     }
