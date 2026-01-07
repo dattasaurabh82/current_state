@@ -4,7 +4,7 @@
         "stopBtnPin":27,
         "runFullCycleBtnPin":17,
         "radarEnablePin":6,
-        "radarModel":"RCWL-0516",
+        "radarModel":"RD-03D",
         "radarPin": 16
     },
     "outputPins":{
