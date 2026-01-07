@@ -4,59 +4,77 @@
 
 ### Low
 
-- MQTT / radar trigger 
-- Other region of news 
 - WIP: Docu ...
-- WIP: All code base cleanup 
-- System provisioning docu and tooling .... 
+- WIP: All code base cleanup - System provisioning docu and tooling ....
+- maybe web ui
+- SfX with music
+- Other region of news 
 
 ### High
 
-- Blink factor
-- Pin and other configs as ext vars ...
-- HW sensor plugin
-- Business logic of operation ...
+- Business logic of operation ... (radar trigger )
+- Improve music prompt gen algo
 
 ### Backlog
 
-- How often and how long silent audio player plays
-  - Currently happy with the implementation
-- maybe web ui
-- Send cancel to other agent calls
-- slow down track for 30 sec to make it feel longer [post processing]
-
-### Bug
-
-- silent audio to keep the channel active did not work ....
-
+- ~~How often and how long silent audio player plays~~
+  - silent audio to keep the channel active did not work ... so implement HW sol to trigger Audio On on FREKVENS
+- ~~Currently happy with the implementation~~
+- ~~Send cancel to other agent calls~~
+- ~~slow down track for 30 sec to make it feel longer [post processing]~~
 
 ---
 
 ## Project structure
 
 ```txt
-.
 ├── README.md
-├── pyproject.toml
-├── config.json
-├── main.py
-├── lib
-│   ├── __init__.py
-│   ├── llm_analyzer.py
-│   ├── music_generator.py
-│   ├── music_post_processor.py
-│   ├── news_fetcher.py
-│   └── player.py
-├── llm_agents
-│   ├── __init__.py
-│   ├── musicgen_prompt_crafter.py
-│   └── news_analyzer.py
-├── prompts
-│   ├── musicgen_prompt_crafter_system.md
-│   └── news_analyzer_system.md
-├── music_generated/*
+├── PI-POSTBOOT-SETUP.md
 ├── LICENSE
-└── uv.lock
+├── assets/
+├── lib/
+│   ├── hardware_player.py
+│   ├── __init__.py
+│   ├── llm_analyzer.py
+│   ├── music_generator.py
+│   ├── music_post_processor.py
+│   ├── news_fetcher.py
+│   ├── player.py
+│   └── settings.py
+├── llm_agents/
+│   ├── __init__.py
+│   ├── musicgen_prompt_crafter.py
+│   ├── news_analyzer.py
+├── logs/
+│   ├── this_is_where_the_logs_will_go
+│   ├── cron.log
+│   ├── full_cycle_btn.log
+│   ├── player_service.log
+│   └── world_theme_music_player.log
+├── music_generated/
+│   └── generated_music_will_go_here
+├── prompts/
+│   ├── musicgen_prompt_crafter_system.md
+│   └── news_analyzer_system.md
+├── pyproject.toml
+├── uv.lock
+├── news_config.json
+├── settings.json
+├── main.py
+├── run_full_cycle_btn.py
+├── run_player.py
+├── Dockerfile
+├── keep_audio_ch_active.wav
+├── services/
+│   ├── full-cycle-btn.service
+│   └── music-player.service
+├── tests
+│   ├── 01_test_IOs.py
+│   ├── 02_test_event_radar.py
+│   └── 02_test_serial_radar.py
+├── tools
+│   └── bkp_gen_music.py
+└── news_data_2026-01-07.json
 ```
 
 ### Setup your pi time correct to region
@@ -87,10 +105,10 @@ Once happy, 'tab' to `<Finish>` and restart (`sudo reboot`)
 ### Install Python Build Dependencies:
 
 ```bash
-sudo apt update && sudo apt install -y python3-dev build-essential libssl-dev zlib1g-dev libbz2-dev \
-libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev \
-libxmlsec1-dev libffi-dev liblzma-dev -y
-
+sudo apt update -y
+sudo apt upgrade -y 
+sudo apt install git -y 
+sudo apt install build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev jq tree -y
 sudo apt install python3-dev -y
 ```
 
@@ -201,6 +219,7 @@ docker run --rm -it \
   --dns=8.8.8.8 \
   -v ./music_generated:/app/music_generated \
   -v ./news_data_cache:/app/news_data_cache \
+  -v ./logs:/app/logs \
   --env-file .env \
   world-theme-music \
   uv run python main.py --fetch true --play false
@@ -224,6 +243,7 @@ docker run --rm -it \
   --privileged \
   -v /dev/snd:/dev/snd \
   -v ./music_generated:/app/music_generated \
+  -v ./logs:/app/logs \
   world-theme-music
 ```
 
@@ -236,6 +256,7 @@ docker run --rm --name world-theme-player \
   --privileged \
   -v /dev/snd:/dev/snd \
   -v ./music_generated:/app/music_generated \
+  -v ./logs:/app/logs \
   world-theme-music \
   uv run python run_player.py --daemon
 ```
@@ -260,7 +281,7 @@ crontab -e
 
 # Select nano as the editor
 # Then at the bottom, add:
-0 3 * * * /usr/bin/docker run --rm --name world-theme-generator --dns=8.8.8.8 -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated -v /home/pi/daily_mood_theme_song_player/news_data_cache:/app/news_data_cache --env-file /home/pi/daily_mood_theme_song_player/.env world-theme-music uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/cron.log 2>&1
+0 3 * * * /usr/bin/docker run --rm --name world-theme-generator --dns=8.8.8.8 -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated -v /home/pi/daily_mood_theme_song_player/news_data_cache:/app/news_data_cache -v /home/pi/daily_mood_theme_song_player/logs:/app/logs --env-file /home/pi/daily_mood_theme_song_player/.env world-theme-music uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/logs/cron.log 2>&1
 ```
 
 ### gen music file size management
@@ -272,7 +293,7 @@ crontab -e
 
 # Select nano as the editor
 # Then at the bottom, add:
-40 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/backup.log 2>&1
+40 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/logs/backup.log 2>&1
 ```
 
 Why this order?

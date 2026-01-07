@@ -35,7 +35,7 @@ breathing_thread = None
 
 def setup_logger():
     """Configures a simple logger for the service."""
-    log_file_path = "full_cycle_btn.log"
+    log_file_path = PROJECT_DIR / "logs" / "full_cycle_btn.log"
     logger.remove()
     logger.add(
         lambda msg: print(msg, end=""),
