@@ -20,7 +20,7 @@ PROJECT_DIR = Path(__file__).parent
 settings = load_settings()
 
 # Configuration (from settings.json)
-BTN_PIN = settings["inputPins"]["runFullCycleBtn_pin"]
+BTN_PIN = settings["inputPins"]["runFullCycleBtnPin"]
 DEBOUNCE = settings["hwFeatures"]["btnDebounceTimeMs"]
 
 

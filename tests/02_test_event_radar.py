@@ -17,7 +17,7 @@ settings = load_settings()
 
 # Configuration (from settings.json)
 RADAR_PIN = settings["inputPins"]["radarPin"]
-LED_PIN = settings["outputPins"]["radarStateLED_pin"]
+LED_PIN = settings["outputPins"]["radarStateLEDPin"]
 LED_BRIGHTNESS = settings["hwFeatures"]["maxLEDBrightness"]
 
 def timestamp():

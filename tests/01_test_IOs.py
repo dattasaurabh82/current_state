@@ -15,8 +15,8 @@ settings = load_settings()
 # --- CONFIGURATION ---
 LEDS = {
     "LED_NET": 24,  # Hardcoded - used by another project
-    "LED_PLAYER": settings["outputPins"]["playerStateLED_pin"],
-    "LED_RADAR_STATE": settings["outputPins"]["radarStateLED_pin"],
+    "LED_PLAYER": settings["outputPins"]["playerStateLEDPin"],
+    "LED_RADAR_STATE": settings["outputPins"]["radarStateLEDPin"],
 }
 
 # Note: Buttons connect to GND.
@@ -24,9 +24,9 @@ LEDS = {
 BUTTONS = {
     "NET_RESET_BTN": 26,  # Hardcoded - used by another project
     "BTN_POWER": 3,  # Hardcoded - used by Kernal (Follow README instructions)
-    "BTN_RUN_FULL_CYCLE": settings["inputPins"]["runFullCycleBtn_pin"],
-    "BTN_PLAY_PAUSE": settings["inputPins"]["playPauseBtn_pin"],
-    "BTN_STOP": settings["inputPins"]["stopBtn_pin"],
+    "BTN_RUN_FULL_CYCLE": settings["inputPins"]["runFullCycleBtnPin"],
+    "BTN_PLAY_PAUSE": settings["inputPins"]["playPauseBtnPin"],
+    "BTN_STOP": settings["inputPins"]["stopBtnPin"],
 }
 
 SWITCHES = {

@@ -19,9 +19,9 @@ except (RuntimeError, ModuleNotFoundError):
 settings = load_settings()
 
 # Pin Definitions (from settings.json)
-LED_PIN = settings["outputPins"]["processStatusLED_pin"]
-PLAY_PAUSE_BTN_PIN = settings["inputPins"]["playPauseBtn_pin"]
-STOP_BTN_PIN = settings["inputPins"]["stopBtn_pin"]
+LED_PIN = settings["outputPins"]["playerStateLEDPin"]
+PLAY_PAUSE_BTN_PIN = settings["inputPins"]["playPauseBtnPin"]
+STOP_BTN_PIN = settings["inputPins"]["stopBtnPin"]
 
 # Hardware Features (from settings.json)
 BTN_DEBOUNCE_TIME = settings["hwFeatures"]["btnDebounceTimeMs"]
