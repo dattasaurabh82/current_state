@@ -28,43 +28,11 @@
 ## Project structure
 
 ```txt
-├── assets
-├── cron.log
-├── Dockerfile
-├── full_cycle_btn.log
-├── full-cycle-btn.service
-├── _HW
-│   └── pi_hat
-│       ├── bom
-│       │   └── ibom.html
-│       ├── GERBERS
-│       │   ├── NEWS_POET_PI_HAT_PCB_v1_2025-11-17.zip
-│       │   └── NEWS_POET_PI_HAT_PCB_V2_2025-12-04.zip
-│       ├── NewsPoet.flbr
-│       ├── NewsPoet.lbr
-│       ├── PI_HAT.brd
-│       ├── PI_HAT.f3d
-│       ├── PI_HAT.f3z
-│       ├── PI_HAT.fbrd
-│       ├── PI_HAT.fsch
-│       ├── PI_HAT_Fusion_Electronics_Design_Rule.dru
-│       ├── PI_HAT_Fusion_Electronics_Design_Rule.edru
-│       ├── PI_HAT.sch
-│       └── references for silkscreen
-│           ├── bottom.svg
-│           ├── copper_bottom.gbr.svg
-│           ├── copper_top.gbr.svg
-│           ├── drill_1_64.xln.svg
-│           ├── profile.gbr.svg
-│           ├── README.md
-│           ├── silkscreen_top.gbr.svg
-│           ├── soldermask_bottom.gbr.svg
-│           ├── soldermask_top.gbr.svg
-│           ├── solderpaste_top.gbr.svg
-│           ├── temp_outline.svg
-│           └── top.svg
-├── keep_audio_ch_active.wav
-├── lib
+├── README.md
+├── PI-POSTBOOT-SETUP.md
+├── LICENSE
+├── assets/
+├── lib/
 │   ├── hardware_player.py
 │   ├── __init__.py
 │   ├── llm_analyzer.py
@@ -72,86 +40,41 @@
 │   ├── music_post_processor.py
 │   ├── news_fetcher.py
 │   ├── player.py
-│   ├── __pycache__
-│   │   ├── hardware_player.cpython-311.pyc
-│   │   ├── __init__.cpython-311.pyc
-│   │   ├── llm_analyzer.cpython-311.pyc
-│   │   ├── music_generator.cpython-311.pyc
-│   │   ├── music_post_processor.cpython-311.pyc
-│   │   ├── news_fetcher.cpython-311.pyc
-│   │   ├── player.cpython-311.pyc
-│   │   └── settings.cpython-311.pyc
 │   └── settings.py
-├── LICENSE
-├── llm_agents
+├── llm_agents/
 │   ├── __init__.py
 │   ├── musicgen_prompt_crafter.py
 │   ├── news_analyzer.py
-│   └── __pycache__
-│       ├── __init__.cpython-311.pyc
-│       ├── musicgen_prompt_crafter.cpython-311.pyc
-│       └── news_analyzer.cpython-311.pyc
-├── main.py
-├── music_created
-├── music_generated
-│   ├── generated_music_will_go_here
-│   ├── world_theme_2025-10-01_01-01-51.wav
-│   ├── world_theme_2025-10-02_01-01-30.wav
-│   ├── world_theme_2025-10-03_01-01-37.wav
-│   ├── world_theme_2025-10-04_01-01-29.wav
-│   ├── world_theme_2025-10-05_01-01-24.wav
-│   ├── world_theme_2025-10-06_01-02-13.wav
-│   ├── world_theme_2025-10-07_01-01-28.wav
-│   ├── world_theme_2025-10-08_01-01-39.wav
-│   ├── world_theme_2025-10-10_01-02-01.wav
-│   ├── world_theme_2025-10-11_01-01-32.wav
-│   ├── world_theme_2025-10-12_01-01-51.wav
-│   ├── world_theme_2025-10-13_01-01-50.wav
-│   ├── world_theme_2025-10-14_01-01-41.wav
-│   ├── world_theme_2025-10-15_01-01-36.wav
-│   ├── world_theme_2025-10-16_01-02-39.wav
-│   ├── world_theme_2025-10-19_01-01-36.wav
-│   ├── world_theme_2025-10-20_01-03-02.wav
-│   ├── world_theme_2025-11-20_02-01-19.wav
-│   ├── world_theme_2026-01-07_00-46-31.wav
-│   ├── world_theme_2026-01-07_01-09-00.wav
-│   ├── world_theme_2026-01-07_01-10-14.wav
-│   ├── world_theme_2026-01-07_01-18-28.wav
-│   ├── world_theme_2026-01-07_01-23-39.wav
-│   ├── world_theme_2026-01-07_01-49-57.wav
-│   └── world_theme_2026-01-07_02-04-55.wav
-├── music-player.service
-├── news_config.json
-├── news_data_2026-01-07.json
-├── news_data_cache
-├── PI-POSTBOOT-SETUP.md
-├── player_service.log
-├── prompts
+├── logs/
+│   ├── this_is_where_the_logs_will_go
+│   ├── cron.log
+│   ├── full_cycle_btn.log
+│   ├── player_service.log
+│   └── world_theme_music_player.log
+├── music_generated/
+│   └── generated_music_will_go_here
+├── prompts/
 │   ├── musicgen_prompt_crafter_system.md
 │   └── news_analyzer_system.md
-├── __pycache__
-│   ├── emotion_analyzer.cpython-311.pyc
-│   ├── llm_analyzer.cpython-311.pyc
-│   ├── music_generator.cpython-311.pyc
-│   ├── music_post_processor.cpython-311.pyc
-│   ├── news_fetcher.cpython-311.pyc
-│   └── player.cpython-311.pyc
 ├── pyproject.toml
-├── README.md
+├── uv.lock
+├── news_config.json
+├── settings.json
+├── main.py
 ├── run_full_cycle_btn.py
 ├── run_player.py
-├── settings.json
+├── Dockerfile
+├── keep_audio_ch_active.wav
+├── services/
+│   ├── full-cycle-btn.service
+│   └── music-player.service
 ├── tests
 │   ├── 01_test_IOs.py
 │   ├── 02_test_event_radar.py
-│   ├── 02_test_serial_radar.py
-│   └── __pycache__
-│       └── test_replicate_musicgen.cpython-311.pyc
+│   └── 02_test_serial_radar.py
 ├── tools
-│   ├── bkp_gen_music.py
-│   └── helper_utils_will_go_here
-├── uv.lock
-└── world_theme_music_player.log
+│   └── bkp_gen_music.py
+└── news_data_2026-01-07.json
 ```
 
 ### Setup your pi time correct to region
@@ -296,6 +219,7 @@ docker run --rm -it \
   --dns=8.8.8.8 \
   -v ./music_generated:/app/music_generated \
   -v ./news_data_cache:/app/news_data_cache \
+  -v ./logs:/app/logs \
   --env-file .env \
   world-theme-music \
   uv run python main.py --fetch true --play false
@@ -319,6 +243,7 @@ docker run --rm -it \
   --privileged \
   -v /dev/snd:/dev/snd \
   -v ./music_generated:/app/music_generated \
+  -v ./logs:/app/logs \
   world-theme-music
 ```
 
@@ -331,6 +256,7 @@ docker run --rm --name world-theme-player \
   --privileged \
   -v /dev/snd:/dev/snd \
   -v ./music_generated:/app/music_generated \
+  -v ./logs:/app/logs \
   world-theme-music \
   uv run python run_player.py --daemon
 ```
@@ -355,7 +281,7 @@ crontab -e
 
 # Select nano as the editor
 # Then at the bottom, add:
-0 3 * * * /usr/bin/docker run --rm --name world-theme-generator --dns=8.8.8.8 -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated -v /home/pi/daily_mood_theme_song_player/news_data_cache:/app/news_data_cache --env-file /home/pi/daily_mood_theme_song_player/.env world-theme-music uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/cron.log 2>&1
+0 3 * * * /usr/bin/docker run --rm --name world-theme-generator --dns=8.8.8.8 -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated -v /home/pi/daily_mood_theme_song_player/news_data_cache:/app/news_data_cache -v /home/pi/daily_mood_theme_song_player/logs:/app/logs --env-file /home/pi/daily_mood_theme_song_player/.env world-theme-music uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/logs/cron.log 2>&1
 ```
 
 ### gen music file size management
@@ -367,7 +293,7 @@ crontab -e
 
 # Select nano as the editor
 # Then at the bottom, add:
-40 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/backup.log 2>&1
+40 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/logs/backup.log 2>&1
 ```
 
 Why this order?

@@ -13,7 +13,7 @@ KEEP_ALIVE_DELAY = 60
 
 def setup_logger():
     """Configures a simple logger for the player service."""
-    log_file_path = "player_service.log"
+    log_file_path = Path(__file__).parent / "logs" / "player_service.log"
     logger.remove()
     logger.add(
         lambda msg: print(msg, end=""),
