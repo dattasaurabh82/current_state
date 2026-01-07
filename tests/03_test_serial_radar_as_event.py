@@ -6,6 +6,12 @@ Converts continuous distance readings into motion_started/motion_stopped events.
 
 import time
 from datetime import datetime
+import sys
+sys.path.insert(0, str(__file__).rsplit('/', 2)[0])  # Add project root to path
+from lib.settings import load_settings
+
+# Load settings
+settings = load_settings()
 
 try:
     from RdLib.Rd import Rd
@@ -19,7 +25,7 @@ except ImportError:
 # --- CONFIGURATION ---
 MAX_RANGE_METERS = 2.5  # Ignore readings beyond this (walls)
 TARGET_TIMEOUT_SEC = 1.0  # Seconds without valid reading = target gone
-LED_PIN = 23  # Same as RCWL-0516 test
+LED_PIN = settings["outputPins"]["radarStateLEDPin"]
 
 # Try to import GPIO for LED feedback
 try:
