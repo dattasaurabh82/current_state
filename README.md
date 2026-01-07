@@ -28,28 +28,130 @@
 ## Project structure
 
 ```txt
-.
-├── README.md
-├── pyproject.toml
-├── config.json
-├── main.py
+├── assets
+├── cron.log
+├── Dockerfile
+├── full_cycle_btn.log
+├── full-cycle-btn.service
+├── _HW
+│   └── pi_hat
+│       ├── bom
+│       │   └── ibom.html
+│       ├── GERBERS
+│       │   ├── NEWS_POET_PI_HAT_PCB_v1_2025-11-17.zip
+│       │   └── NEWS_POET_PI_HAT_PCB_V2_2025-12-04.zip
+│       ├── NewsPoet.flbr
+│       ├── NewsPoet.lbr
+│       ├── PI_HAT.brd
+│       ├── PI_HAT.f3d
+│       ├── PI_HAT.f3z
+│       ├── PI_HAT.fbrd
+│       ├── PI_HAT.fsch
+│       ├── PI_HAT_Fusion_Electronics_Design_Rule.dru
+│       ├── PI_HAT_Fusion_Electronics_Design_Rule.edru
+│       ├── PI_HAT.sch
+│       └── references for silkscreen
+│           ├── bottom.svg
+│           ├── copper_bottom.gbr.svg
+│           ├── copper_top.gbr.svg
+│           ├── drill_1_64.xln.svg
+│           ├── profile.gbr.svg
+│           ├── README.md
+│           ├── silkscreen_top.gbr.svg
+│           ├── soldermask_bottom.gbr.svg
+│           ├── soldermask_top.gbr.svg
+│           ├── solderpaste_top.gbr.svg
+│           ├── temp_outline.svg
+│           └── top.svg
+├── keep_audio_ch_active.wav
 ├── lib
-│   ├── __init__.py
-│   ├── llm_analyzer.py
-│   ├── music_generator.py
-│   ├── music_post_processor.py
-│   ├── news_fetcher.py
-│   └── player.py
-├── llm_agents
-│   ├── __init__.py
-│   ├── musicgen_prompt_crafter.py
-│   └── news_analyzer.py
-├── prompts
-│   ├── musicgen_prompt_crafter_system.md
-│   └── news_analyzer_system.md
-├── music_generated/*
+│   ├── hardware_player.py
+│   ├── __init__.py
+│   ├── llm_analyzer.py
+│   ├── music_generator.py
+│   ├── music_post_processor.py
+│   ├── news_fetcher.py
+│   ├── player.py
+│   ├── __pycache__
+│   │   ├── hardware_player.cpython-311.pyc
+│   │   ├── __init__.cpython-311.pyc
+│   │   ├── llm_analyzer.cpython-311.pyc
+│   │   ├── music_generator.cpython-311.pyc
+│   │   ├── music_post_processor.cpython-311.pyc
+│   │   ├── news_fetcher.cpython-311.pyc
+│   │   ├── player.cpython-311.pyc
+│   │   └── settings.cpython-311.pyc
+│   └── settings.py
 ├── LICENSE
-└── uv.lock
+├── llm_agents
+│   ├── __init__.py
+│   ├── musicgen_prompt_crafter.py
+│   ├── news_analyzer.py
+│   └── __pycache__
+│       ├── __init__.cpython-311.pyc
+│       ├── musicgen_prompt_crafter.cpython-311.pyc
+│       └── news_analyzer.cpython-311.pyc
+├── main.py
+├── music_created
+├── music_generated
+│   ├── generated_music_will_go_here
+│   ├── world_theme_2025-10-01_01-01-51.wav
+│   ├── world_theme_2025-10-02_01-01-30.wav
+│   ├── world_theme_2025-10-03_01-01-37.wav
+│   ├── world_theme_2025-10-04_01-01-29.wav
+│   ├── world_theme_2025-10-05_01-01-24.wav
+│   ├── world_theme_2025-10-06_01-02-13.wav
+│   ├── world_theme_2025-10-07_01-01-28.wav
+│   ├── world_theme_2025-10-08_01-01-39.wav
+│   ├── world_theme_2025-10-10_01-02-01.wav
+│   ├── world_theme_2025-10-11_01-01-32.wav
+│   ├── world_theme_2025-10-12_01-01-51.wav
+│   ├── world_theme_2025-10-13_01-01-50.wav
+│   ├── world_theme_2025-10-14_01-01-41.wav
+│   ├── world_theme_2025-10-15_01-01-36.wav
+│   ├── world_theme_2025-10-16_01-02-39.wav
+│   ├── world_theme_2025-10-19_01-01-36.wav
+│   ├── world_theme_2025-10-20_01-03-02.wav
+│   ├── world_theme_2025-11-20_02-01-19.wav
+│   ├── world_theme_2026-01-07_00-46-31.wav
+│   ├── world_theme_2026-01-07_01-09-00.wav
+│   ├── world_theme_2026-01-07_01-10-14.wav
+│   ├── world_theme_2026-01-07_01-18-28.wav
+│   ├── world_theme_2026-01-07_01-23-39.wav
+│   ├── world_theme_2026-01-07_01-49-57.wav
+│   └── world_theme_2026-01-07_02-04-55.wav
+├── music-player.service
+├── news_config.json
+├── news_data_2026-01-07.json
+├── news_data_cache
+├── PI-POSTBOOT-SETUP.md
+├── player_service.log
+├── prompts
+│   ├── musicgen_prompt_crafter_system.md
+│   └── news_analyzer_system.md
+├── __pycache__
+│   ├── emotion_analyzer.cpython-311.pyc
+│   ├── llm_analyzer.cpython-311.pyc
+│   ├── music_generator.cpython-311.pyc
+│   ├── music_post_processor.cpython-311.pyc
+│   ├── news_fetcher.cpython-311.pyc
+│   └── player.cpython-311.pyc
+├── pyproject.toml
+├── README.md
+├── run_full_cycle_btn.py
+├── run_player.py
+├── settings.json
+├── tests
+│   ├── 01_test_IOs.py
+│   ├── 02_test_event_radar.py
+│   ├── 02_test_serial_radar.py
+│   └── __pycache__
+│       └── test_replicate_musicgen.cpython-311.pyc
+├── tools
+│   ├── bkp_gen_music.py
+│   └── helper_utils_will_go_here
+├── uv.lock
+└── world_theme_music_player.log
 ```
 
 ### Setup your pi time correct to region
