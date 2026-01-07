@@ -1,12 +1,13 @@
 # lib/hardware_player.py
 
 import threading
+import time
 from pathlib import Path
 from typing import Optional
 from loguru import logger
-import time
 from lib.player import AudioPlayer
 from lib.settings import load_settings
+from lib.radar_controller import RadarController
 
 try:
     import RPi.GPIO as GPIO
@@ -20,6 +21,7 @@ settings = load_settings()
 
 # Pin Definitions (from settings.json)
 LED_PIN = settings["outputPins"]["playerStateLEDPin"]
+RADAR_LED_PIN = settings["outputPins"]["radarStateLEDPin"]
 PLAY_PAUSE_BTN_PIN = settings["inputPins"]["playPauseBtnPin"]
 STOP_BTN_PIN = settings["inputPins"]["stopBtnPin"]
 
@@ -27,6 +29,8 @@ STOP_BTN_PIN = settings["inputPins"]["stopBtnPin"]
 BTN_DEBOUNCE_TIME = settings["hwFeatures"]["btnDebounceTimeMs"]
 MAX_LED_BRIGHTNESS = settings["hwFeatures"]["maxLEDBrightness"]
 PAUSE_BREATHING_FREQ = settings["hwFeatures"]["pauseBreathingFreq"]
+MOTION_PLAYBACK_DURATION = settings["hwFeatures"]["motionTriggeredPlaybackDurationSec"]
+COOLDOWN_AFTER_USER_ACTION = settings["hwFeatures"]["cooldownAfterUserActionSec"]
 
 
 def find_latest_song(directory="music_generated") -> Optional[Path]:
@@ -49,6 +53,14 @@ class HardwarePlayer:
         self.stop_breathing = threading.Event()
         self.lock = threading.Lock()
         self.stop_polling = threading.Event()
+        
+        # Radar-related state
+        self.radar_controller: Optional[RadarController] = None
+        self.radar_led_pwm = None
+        self.initiated_by: Optional[str] = None  # 'user' | 'radar' | None
+        self.radar_playback_active = False  # When True, ignore motion
+        self.auto_stop_timer: Optional[threading.Timer] = None
+        self.last_user_action_time: float = 0
 
         logger.info("Hardware Player initialized. State: STOPPED")
         if self.latest_song:
@@ -58,6 +70,7 @@ class HardwarePlayer:
 
         if IS_PI:
             self._setup_gpio()
+            self._setup_radar()
 
     def _setup_gpio(self):
         try:
@@ -74,7 +87,7 @@ class HardwarePlayer:
             GPIO.setup(PLAY_PAUSE_BTN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             GPIO.setup(STOP_BTN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             
-            # Start the new polling thread instead of using event detection
+            # Start the button polling thread
             polling_thread = threading.Thread(target=self._poll_buttons, daemon=True)
             polling_thread.start()
             
@@ -83,6 +96,28 @@ class HardwarePlayer:
             logger.error(f"Failed to set up GPIO: {e}")
             global IS_PI
             IS_PI = False
+    
+    def _setup_radar(self):
+        """Initialize radar controller and radar LED if switch is enabled."""
+        try:
+            self.radar_controller = RadarController()
+            
+            if self.radar_controller.is_switch_enabled():
+                # Setup radar LED (GPIO23)
+                GPIO.setup(RADAR_LED_PIN, GPIO.OUT)
+                self.radar_led_pwm = GPIO.PWM(RADAR_LED_PIN, 100)
+                self.radar_led_pwm.start(0)
+                
+                # Start radar polling thread
+                radar_thread = threading.Thread(target=self._poll_radar, daemon=True)
+                radar_thread.start()
+                
+                logger.info(f"Radar enabled. Listening on GPIO{self.radar_controller.radar_pin}")
+            else:
+                logger.info("Radar switch is OFF. Radar detection disabled.")
+        except Exception as e:
+            logger.error(f"Failed to set up radar: {e}")
+            self.radar_controller = None
             
     def _poll_buttons(self):
         """Runs in a background thread to check for button presses."""
@@ -103,6 +138,34 @@ class HardwarePlayer:
             last_play_state = play_state
             last_stop_state = stop_state
             time.sleep(BTN_DEBOUNCE_TIME)
+    
+    def _poll_radar(self):
+        """Runs in a background thread to check for radar motion."""
+        logger.info("Radar polling thread started.")
+        
+        while not self.stop_polling.is_set():
+            # Check if radar switch is still enabled
+            if not self.radar_controller or not self.radar_controller.is_switch_enabled():
+                time.sleep(0.5)
+                continue
+            
+            # Skip if radar-triggered playback is active
+            if self.radar_playback_active:
+                time.sleep(0.1)
+                continue
+            
+            # Check cooldown after user action
+            if time.time() - self.last_user_action_time < COOLDOWN_AFTER_USER_ACTION:
+                time.sleep(0.1)
+                continue
+            
+            # Check for motion
+            if self.radar_controller.is_motion_detected():
+                self.handle_radar_motion()
+            
+            time.sleep(0.05)  # 50ms polling
+        
+        logger.info("Radar polling thread stopped.")
 
     def _update_led(self):
         if not IS_PI or not self.led_pwm:
@@ -123,6 +186,14 @@ class HardwarePlayer:
             self.stop_breathing.clear()
             self.breathing_thread = threading.Thread(target=self._breathe_led, daemon=True)
             self.breathing_thread.start()
+    
+    def _update_radar_led(self, on: bool):
+        """Update radar LED state."""
+        if self.radar_led_pwm:
+            if on:
+                self.radar_led_pwm.ChangeDutyCycle(MAX_LED_BRIGHTNESS)
+            else:
+                self.radar_led_pwm.ChangeDutyCycle(0)
 
     def _breathe_led(self):
         """Runs in a thread to create a breathing effect for the LED."""
@@ -138,10 +209,50 @@ class HardwarePlayer:
                 if self.stop_breathing.is_set(): break
                 self.led_pwm.ChangeDutyCycle(duty_cycle)
                 time.sleep(pause_time)
+    
+    def _cancel_auto_stop_timer(self):
+        """Cancel the auto-stop timer if running."""
+        if self.auto_stop_timer:
+            self.auto_stop_timer.cancel()
+            self.auto_stop_timer = None
+    
+    def _start_auto_stop_timer(self):
+        """Start the auto-stop timer."""
+        self._cancel_auto_stop_timer()
+        self.auto_stop_timer = threading.Timer(
+            MOTION_PLAYBACK_DURATION, 
+            self._auto_stop_callback
+        )
+        self.auto_stop_timer.daemon = True
+        self.auto_stop_timer.start()
+        logger.info(f"Auto-stop timer started: {MOTION_PLAYBACK_DURATION}s")
+    
+    def _auto_stop_callback(self):
+        """Called when auto-stop timer expires."""
+        with self.lock:
+            logger.warning("Auto-stop timer expired. Stopping playback.")
+            if self.player:
+                self.player.stop()
+                self.player = None
+            self.state = "STOPPED"
+            self.initiated_by = None
+            self.radar_playback_active = False
+            self._update_radar_led(False)
+        self._update_led()
+        self._print_status()
 
     def handle_toggle_play_pause(self):
         with self.lock:
             logger.info(f"'Play/Pause' triggered. Current state: {self.state}")
+            
+            # Record user action time for cooldown
+            self.last_user_action_time = time.time()
+            
+            # User took control - cancel auto-stop and clear radar state
+            self._cancel_auto_stop_timer()
+            self.radar_playback_active = False
+            self.initiated_by = 'user'
+            
             if self.state == "STOPPED":
                 self.latest_song = find_latest_song()
                 if self.latest_song:
@@ -164,11 +275,54 @@ class HardwarePlayer:
     def handle_stop(self):
         with self.lock:
             logger.info(f"'Stop' triggered. Current state: {self.state}")
+            
+            # Record user action time for cooldown
+            self.last_user_action_time = time.time()
+            
+            # User took control - cancel auto-stop and clear radar state
+            self._cancel_auto_stop_timer()
+            self.radar_playback_active = False
+            self.initiated_by = None
+            
             if self.state in ["PLAYING", "PAUSED"]:
                 if self.player:
                     self.player.stop()
                     self.player = None
                 self.state = "STOPPED"
+        self._update_led()
+        self._update_radar_led(False)
+        self._print_status()
+    
+    def handle_radar_motion(self):
+        """Handle motion detected by radar."""
+        with self.lock:
+            logger.info(f"🏃🏻 Radar motion detected! Current state: {self.state}")
+            
+            # Turn on radar LED
+            self._update_radar_led(True)
+            
+            if self.state == "STOPPED":
+                self.latest_song = find_latest_song()
+                if self.latest_song:
+                    self.player = AudioPlayer(self.latest_song, loop_by_default=True)
+                    self.player.play()
+                    self.state = "PLAYING"
+                    self.initiated_by = 'radar'
+                    self.radar_playback_active = True
+                    self._start_auto_stop_timer()
+                    logger.info("Radar triggered playback started.")
+                else:
+                    logger.error("No song file found to play.")
+                    self._update_radar_led(False)
+            elif self.state == "PAUSED":
+                if self.player:
+                    self.player.resume()
+                    self.state = "PLAYING"
+                    self.initiated_by = 'radar'
+                    self.radar_playback_active = True
+                    self._start_auto_stop_timer()
+                    logger.info("Radar triggered playback resumed.")
+        
         self._update_led()
         self._print_status()
     
@@ -178,12 +332,16 @@ class HardwarePlayer:
         """
         if daemon_mode:
             logger.info("Running in daemon mode. Listening for GPIO button presses...")
+            if self.radar_controller and self.radar_controller.is_switch_enabled():
+                logger.info("Radar detection is active.")
             # In daemon mode, the GPIO polling is running in the background.
             # This loop just keeps the main script alive indefinitely.
             while True:
                 time.sleep(1)
         else:
             logger.info("Running in interactive mode. Listening for keyboard commands and GPIO.")
+            if self.radar_controller and self.radar_controller.is_switch_enabled():
+                logger.info("Radar detection is active.")
             # This loop listens for keyboard commands in the foreground.
             while True:
                 self._print_status()
@@ -204,15 +362,18 @@ class HardwarePlayer:
 
     def _print_status(self):
         song_name = self.latest_song.name if self.latest_song else "None"
+        radar_status = "ON" if (self.radar_controller and self.radar_controller.is_switch_enabled()) else "OFF"
         print("\n" + "="*20 + " PLAYER STATUS " + "="*20)
         print(f"  State: {self.state}")
         print(f"  Song:  {song_name}")
+        print(f"  Radar: {radar_status} | Initiated by: {self.initiated_by or 'N/A'}")
         print("="*55)
         print("Controls: [P] Play/Pause | [S] Stop | [Q] Quit")
 
     def cleanup(self):
         logger.warning("Cleaning up player...")
         self.stop_polling.set()
+        self._cancel_auto_stop_timer()
         if self.player:
             self.player.stop()
         if IS_PI:
@@ -221,5 +382,7 @@ class HardwarePlayer:
                 self.breathing_thread.join()
             if self.led_pwm:
                 self.led_pwm.stop()
+            if self.radar_led_pwm:
+                self.radar_led_pwm.stop()
             GPIO.cleanup()
         logger.info("Cleanup complete.")
