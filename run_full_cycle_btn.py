@@ -47,7 +47,7 @@ def setup_logger():
 
 def handle_button_press():
     """Trigger the full news→music generation cycle."""
-    logger.warning("🚀 Full cycle button pressed! Starting news→music pipeline...")
+    logger.warning("〄 Full cycle button pressed! Starting news→music pipeline...")
     try:
         result = subprocess.run(
             ["uv", "run", "python", "main.py", "--fetch", "true", "--play", "false"],
