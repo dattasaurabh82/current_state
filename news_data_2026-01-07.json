@@ -1,18 +1,282 @@
 {
     "English_Speaking": {
         "language": "en",
-        "articles": []
+        "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "ZDNet"
+                },
+                "author": "Kayla Solino",
+                "title": "Every serious gamer should consider Belkin's new Nintendo Switch case - here's why",
+                "description": "Belkin's Charging Case Pro for Nintendo Switch 2 receives a facelift, and it's now available in three colors.",
+                "url": "https://www.zdnet.com/home-and-office/home-entertainment/belkin-charging-case-pro-nintendo-switch-ces/",
+                "urlToImage": "https://www.zdnet.com/a/img/resize/e2aa6a593f7c4eccb72f9e9278a3b2876bc44251/2026/01/05/16f1b2d6-cc15-4ae8-96b9-5fbe606d4490/ena003-case-pro-lifestyle-3.jpg?auto=webp&fit=crop&height=675&width=1200",
+                "publishedAt": "2026-01-06T01:29:00Z",
+                "content": "Belkin\r\nOver the weekend, Belkin launched the new Charging Case Pro for the Nintendo Switch 2. The case is a high-tech and elevated option for the serious Nintendo user, and it's specially designed f… [+1596 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "The Topeka Capital-Journal"
+                },
+                "author": "Jordan Guskey, Topeka Capital-Journal",
+                "title": "See Kansas basketball’s Big 12 player availability report for TCU game",
+                "description": "Kansas basketball has a Big 12 Conference matchup Tuesday at home against TCU. Here’s the Jayhawks’ player availability report for this game.",
+                "url": "https://www.cjonline.com/story/sports/college/hawk-zone/2026/01/05/kansas-basketball-big-12-conference-player-availability-report-tcu-darryn-peterson-elmarko-jackson/88039371007/",
+                "urlToImage": "https://s.yimg.com/ny/api/res/1.2/Fj4adPoC0LKUfc_r6RWe4Q--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD03ODk7Y2Y9d2VicA--/https://media.zenfs.com/en/the-topeka-capital-journal/8e88c93d388a610dea2452eb237f32a5",
+                "publishedAt": "2026-01-06T01:27:04Z",
+                "content": "LAWRENCE  There was good news for Kansas basketball Monday, as no Jayhawks players were listed in the initial Big 12 Conference player availability report for Tuesdays home game against TCU.\r\nKU coac… [+1256 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Athlon Sports"
+                },
+                "author": "Athlon Sports",
+                "title": "Georgia Receives Transfer Portal News After Zachariah Branch Decision",
+                "description": "Georgia is in the mix for a 6-foot-4 transfer wide receiver.",
+                "url": "https://athlonsports.com/college-football/georgia-receives-transfer-portal-news-after-zachariah-branch-decision",
+                "urlToImage": "https://media.zenfs.com/en/athlon_sports_articles_610/c57f9cb0348ad2d85df4fe6718d401b3",
+                "publishedAt": "2026-01-06T01:26:58Z",
+                "content": "The Georgia Bulldogs saw their season come to an end this past Thursday, losing a 39-34 thriller to the Ole Miss Rebels in the College Football Playoff quarterfinal at the Sugar Bowl.\r\nWith the seaso… [+1890 chars]"
+            },
+            {
+                "source": {
+                    "id": "financial-post",
+                    "name": "Financial Post"
+                },
+                "author": "Bloomberg News",
+                "title": "Oil Steady After Biggest Gain in a Week With Focus on Venezuela",
+                "description": "Oil steadied after the biggest gain in a week as traders weighed the outlook for Venezuela, while concerns about a global glut persisted.",
+                "url": "https://financialpost.com/pmn/business-pmn/oil-steady-after-biggest-gain-in-a-week-with-focus-on-venezuela",
+                "urlToImage": null,
+                "publishedAt": "2026-01-06T01:26:50Z",
+                "content": "(Bloomberg) Oil steadied after the biggest gain in a week as traders weighed the outlook for Venezuela, while concerns about a global glut persisted.\r\nTHIS CONTENT IS RESERVED FOR SUBSCRIBERS ONLY\r\nS… [+4194 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Thechronicle.com.gh"
+                },
+                "author": "admin",
+                "title": "Accra-Kumasi-Accra By Road On 24 December & January 2 – A Layman’s Perspective",
+                "description": "As posited by Kaakyire Kwame Appiah in his famous song, “24th”, l took a cue and quickly bought a black polythene bag, packed a few belongings therein, stuck it firmly under my armpit for good reasons and “pa”, headed for my helmet at Asante Effiduasi from Ac…",
+                "url": "https://thechronicle.com.gh/accra-kumasi-accra-by-road-on-24-december-january-2-a-laymans-perspective/",
+                "urlToImage": "https://thechronicle.com.gh/wp-content/uploads/2026/01/IMG-20260105-WA0016.jpg",
+                "publishedAt": "2026-01-06T01:26:33Z",
+                "content": "As posited by Kaakyire Kwame Appiah in his famous song, “24th”, l took a cue and quickly bought a black polythene bag, packed a few belongings therein, stuck it firmly under my armpit for good reason… [+7253 chars]"
+            }
+        ]
     },
     "German_Speaking": {
         "language": "de",
-        "articles": []
+        "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "Biztoc.com"
+                },
+                "author": "bloomberg.com",
+                "title": "Trump Tells NBC US May Reimburse Firms for Venezuela Oil Efforts",
+                "description": "",
+                "url": "https://biztoc.com/x/71a5663b680a2299",
+                "urlToImage": "https://biztoc.com/cdn/71a5663b680a2299_s.webp",
+                "publishedAt": "2026-01-05T23:31:03Z",
+                "content": "{ window.open(this.href, '_blank'); }, 200); return false;\"&gt;Why did oil stocks surge today? { window.open(this.href, '_blank'); }, 200); return false;\"&gt;How did the Venezuela operation affect ma… [+697 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Giga"
+                },
+                "author": "Martin Maciej",
+                "title": "Heilige drei Könige: Sind Geschäfte offen? Wo ist Feiertag?",
+                "description": "Nach Silvester und Neujahr folgt Anfang des Jahres der Tag der „Heiligen drei Könige“. Wo ist das ein Feiertag und wie sieht es mit den Öffnungszeiten von Geschäften aus?",
+                "url": "https://www.giga.de/tech/heilige-drei-koenige-sind-geschaefte-offen-wo-ist-feiertag--01J5QX2Y9ZTT1DWPW2PZW06HH4",
+                "urlToImage": "https://static.giga.de/cb/02/f7/30fd59c311be73f498dfe9a078_cmUgMTkyMCAxMDgwA2MyM2RjMTc0ZDk3.jpeg",
+                "publishedAt": "2026-01-05T22:04:19Z",
+                "content": "Nach Silvester und Neujahr folgt Anfang des Jahres der Tag der Heiligen drei Könige. Wo ist das ein Feiertag und wie sieht es mit den Öffnungszeiten von Geschäften aus?\r\nDer Tag wandert nicht im Kale… [+3568 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "STERN.de"
+                },
+                "author": "STERN.de",
+                "title": "TV-Vorschau 2026: Bewährte Formate und neue Show-Ideen",
+                "description": "2026 hält einige bekannte Formate wie \"GNTM\", \"DSDS\" oder das Dschungelcamp bereit. Doch auch neue Konzepte schafften es in den TV-Kalender.",
+                "url": "https://www.stern.de/kultur/tv-vorschau-2026--bewaehrte-formate-und-neue-show-ideen-37012844.html",
+                "urlToImage": "https://image.stern.de/37012848/t/fx/v1/w1440/r1.7778/-/05--bewaehrte-formate-und-neue-show-ideen---16-9---spoton-article-1123104.jpg",
+                "publishedAt": "2026-01-05T19:34:00Z",
+                "content": "Kopiere den aktuellen Link\r\nZur Merkliste hinzufügen\r\n2026 hält einige bekannte Formate wie \"GNTM\", \"DSDS\" oder das Dschungelcamp bereit. Doch auch neue Konzepte schafften es in den TV-Kalender.\r\nWen… [+8711 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "GameStar"
+                },
+                "author": "Patrick Schneider",
+                "title": "News: Gadgets - Ein anderer Hersteller bringt ein spezielles Audio-Gadget auf den Markt und damit dürfte ein weiterer Trend für 2026 klar sein",
+                "description": "Neben Anker, Plaud und Bee ist nun auch Switchbot dabei. Im Rahmen der CES 2026 hat der Smart-Home-Hersteller ein neues Gadget angekündigt.",
+                "url": "https://www.gamestar.de/artikel/switchbot-ai-mindclip-ki-diktiergeraet-ces-2026,3445614.html",
+                "urlToImage": "https://images.cgames.de/images/gamestar/293/switchbot-mindclip-teaser_6394970.jpg",
+                "publishedAt": "2026-01-05T19:30:00Z",
+                "content": "Auf der CES 2026 dürfen KI-Gadgets natürlich nicht fehlen. Switchbot hat seinen AI MindClip vorgestellt. (Bild: Switchbot, GameStar Tech).\r\nDas leckere Weihnachtsessen ist gerade erst verdaut, und di… [+1919 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Basicthinking.de"
+                },
+                "author": "Jonathan Harsch",
+                "title": "Die Krankenkassen mit den niedrigsten Beitragssätzen 2026",
+                "description": "Der Beitrag Die Krankenkassen mit den niedrigsten Beitragssätzen 2026 erschien zuerst beim Online-Magazin BASIC thinking. Über unseren Newsletter UPDATE startest du jeden Morgen bestens informiert in den Tag.\nEin neues Jahr bedeutet immer auch neue Kosten. 20…",
+                "url": "https://www.basicthinking.de/blog/2026/01/05/krankenkassen-mit-den-niedrigsten-beitragssaetzen-2026/",
+                "urlToImage": "https://www.basicthinking.de/blog/wp-content/uploads/2026/01/arzt-mit-sparschwein-freepik-scaled-e1767623108274.jpg",
+                "publishedAt": "2026-01-05T19:12:26Z",
+                "content": "Ein neues Jahr bedeutet immer auch neue Kosten. 2026 müssen die Menschen in Deutschland in vielen Bereichen tiefer in die Tasche greifen, darunter auch für die Krankenversicherung. Deshalb ist es ums… [+2225 chars]"
+            }
+        ]
     },
     "French_Speaking": {
         "language": "fr",
-        "articles": []
+        "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "Frandroid"
+                },
+                "author": "Ulrich Rozier",
+                "title": "« C’était inacceptable » : Dell avoue son échec, la marque XPS est de retour et les vraies touches aussi",
+                "description": "Vous vous souvenez du désastre de la gamme Dell 2025 ? Ces noms à rallonge et ces choix ergonomiques douteux ? C'est terminé. Pour le CES 2025, la direction de Dell vient de faire son mea culpa. La marque XPS revient au centre du jeu, et c'est une victoire po…",
+                "url": "https://www.frandroid.com/marques/dell/2926185_cetait-inacceptable-dell-avoue-son-echec-la-marque-xps-est-de-retour-et-les-vraies-touches-aussi",
+                "urlToImage": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2026/01/image-1-17.jpg?resize=1600,900&key=0565f241&watermark",
+                "publishedAt": "2026-01-05T23:00:00Z",
+                "content": "Vous vous souvenez du désastre de la gamme Dell 2025 ? Ces noms à rallonge et ces choix ergonomiques douteux ? C’est terminé. Pour le CES 2025, la direction de Dell vient de faire son mea culpa. La m… [+3495 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "P-nintendo.com"
+                },
+                "author": "ThibaultPN",
+                "title": "News - Une démo pour Dragon Quest VII Reimagined et une belle vidéo d'introduction (Switch 2)",
+                "description": "A moins d'un mois de sa sortie sur Switch et Switch 2, une démo de Dragon Quest VII Reimagined sortira ce mercredi 7 janvier.",
+                "url": "https://www.p-nintendo.com/news/une-demo-pour-dragon-quest-vii-reimagined-et-une-belle-d-introduction-262870",
+                "urlToImage": "https://images.p-nintendo.com/cover/68c472cc19aba.jpg?v=695c3a4bc35c2",
+                "publishedAt": "2026-01-05T22:24:00Z",
+                "content": "Les jeux Dragon Quest s'enchainent les consoles Nintendo, après les épisodes I, II et III sortis en 2025, le remake de Dragon Quest VII s'apprête à débarquer d'ici quelques semaines.Dragon Quest VII … [+966 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "CinemaBlend"
+                },
+                "author": "Philip Sledge",
+                "title": "Captain America: Civil War Turns 10 Years Old This Year, And This LEGO Set Has Me Ready To Celebrate",
+                "description": "LEGO Avengers... Assemble!",
+                "url": "https://www.cinemablend.com/movies/captain-america-civil-war-turns-10-years-old-this-year-lego-set-has-me-ready-to-celebrate",
+                "urlToImage": "https://cdn.mos.cms.futurecdn.net/bmww6ZDGGgq4BwhoHDxNxH-1280-80.png",
+                "publishedAt": "2026-01-05T22:04:34Z",
+                "content": "As unbelievable as it may sound, this year marks the 10th anniversary of the Avengers splitting up in Captain America: Civil War. One of the best Marvel movies (and an all-time great superhero film),… [+3413 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Le HuffPost"
+                },
+                "author": "Maxime Birken",
+                "title": "Michael B. Jordan a eu besoin de voir un psy après avoir incarné le méchant de « Black Panther » pour Marvel",
+                "description": "En 2018, l’acteur incarnait un certain Erik Killmonger sur grand écran. Un rôle dans lequel il s’est énormément impliqué. Au point d’y laisser quelques plumes.",
+                "url": "https://www.huffingtonpost.fr/culture/article/michael-b-jordan-a-eu-besoin-de-voir-un-psy-apres-avoir-incarne-le-mechant-de-black-panther-pour-marvel_258911.html",
+                "urlToImage": "https://focus.huffingtonpost.fr/2026/01/05/0/0/1399/786/1820/1023/75/0/ca2b2c5_upload-1-gxjpucndsj6c-capture-d-ecran-2026-01-05-212536.png",
+                "publishedAt": "2026-01-05T20:58:23Z",
+                "content": "Avant une campagne des Oscars 2026 qui pourrait très bien conduire lacteur Michael B. Jordan vers sa première statuette pour sa double performance époustouflante dans lexcellent Sinners, le comédien … [+3763 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Frandroid"
+                },
+                "author": "Vincent Sergère",
+                "title": "On a vu la nouvelle batterie solaire d’Ecoflow capable d’alimenter toute une maison (et bien plus)",
+                "description": "La nouvelle batterie solaire d'Ecoflow est un monstre de puissance, qui prend tout son sens en France avec les nouvelles réglementations sur les installations solaires. On a pu approcher la bête au CES.",
+                "url": "https://www.frandroid.com/events/ces/2929783_on-a-vu-la-nouvelle-batterie-solaire-decoflow-capable-dalimenter-toute-une-maison-et-bien-plus",
+                "urlToImage": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2026/01/ecoflow-delta-pro-ultra-x-00001.jpeg?resize=1600,900&key=8d142f6c&watermark",
+                "publishedAt": "2026-01-05T20:09:04Z",
+                "content": "La nouvelle batterie solaire d’Ecoflow est un monstre de puissance, qui prend tout son sens en France avec les nouvelles réglementations sur les installations solaires. On a pu approcher la bête au C… [+4082 chars]"
+            }
+        ]
     },
     "Spanish_Speaking": {
         "language": "es",
-        "articles": []
+        "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "Peru21.pe"
+                },
+                "author": "Katherine Llanos Fajardo",
+                "title": "Trump designa a Rubio, Hegseth, Miller y Vance para liderar la transición en Venezuela",
+                "description": "Afirmó que Washington no está en guerra con el país caribeño, sino contra el narcotráfico. Destacó la actitud “cooperativa” de Delcy Rodríguez en los primeros días del nuevo escenario político.",
+                "url": "https://peru21.pe/mundo/trump-designa-rubio-hegseth-miller-y-vance-para-liderar-la-transicion-en-venezuela/",
+                "urlToImage": "http://peru21.pe/sites/default/efsfiles/styles/amp_1200x675_16_9/public/2026-01/abridoras-peru21-2026-01-05t201746.477.png?itok=8YrKxRhg",
+                "publishedAt": "2026-01-06T01:26:41Z",
+                "content": "El presidente de Estados Unidos, Donald Trump, confirmó este lunes la conformación de un equipo de alto nivel que se encargará de coordinar la transición política en Venezuela, tras la reciente deten… [+2768 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "DW (English)"
+                },
+                "author": "Noticias DW",
+                "title": "Trump descarta pronta convocatoria a elecciones en Venezuela",
+                "description": "El gobernante estadounidense comentó que están enfocados primero en “arreglar” Venezuela, porque \"el país es un desastre\".",
+                "url": "https://www.dw.com/es/trump-descarta-pronta-convocatoria-a-elecciones-en-venezuela/a-75401289",
+                "urlToImage": "https://static.dw.com/image/75398873_6.jpg",
+                "publishedAt": "2026-01-06T01:21:00Z",
+                "content": "El presidente de Estados Unidos, Donald Trump, descartó este lunes (05.01.2026) una convocatoria a elecciones en Venezuela en los próximos 30 días hasta que el país andino \"recupere su salud\".\r\nEn un… [+1646 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Forbes.com.mx"
+                },
+                "author": "Forbes México Staff",
+                "title": "Trump dice que Estados Unidos no está en guerra con Venezuela",
+                "description": "Forbes México.\n Trump dice que Estados Unidos no está en guerra con Venezuela\n\nTrump aseguró que la captura de Nicolás Maduro y su esposa Cilia Flores en una espectacular operación de las fuerzas especiales la madrugada del viernes al sábado es un \"momento ex…",
+                "url": "https://forbes.com.mx/trump-dice-que-estados-unidos-no-esta-en-guerra-con-venezuela/",
+                "urlToImage": "https://cdn.forbes.com.mx/2025/12/Trump-economia-discurso.webp",
+                "publishedAt": "2026-01-06T01:14:42Z",
+                "content": "El presidente estadounidense, Donald Trump, aseguró este lunes en una entrevista telefónica con NBC News que “no estamos en guerra con Venezuela. Estamos en guerra con la gente que vende drogas; esta… [+1657 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Forbes.com.mx"
+                },
+                "author": "Forbes México Staff",
+                "title": "Trump descarta una pronta convocatoria a elecciones libres en Venezuela",
+                "description": "Forbes México.\n Trump descarta una pronta convocatoria a elecciones libres en Venezuela\n\nTrump ve una transición en Venezuela a más largo plazo y volvió a insistir en que la prioridad es reparar las infraestructuras del país.\nTrump descarta una pronta convoca…",
+                "url": "https://forbes.com.mx/trump-descarta-una-pronta-convocatoria-a-elecciones-libres-en-venezuela/",
+                "urlToImage": "https://cdn.forbes.com.mx/2026/01/733e20822b2d5da8bae8602ac8fcc8924fc887bew.jpg",
+                "publishedAt": "2026-01-06T01:04:47Z",
+                "content": "El presidente estadounidense, Donald Trump, descartó este lunes una convocatoria de elecciones en Venezuela en los próximos 30 días hasta que el país andino “recupere su salud”.\r\nEn una entrevista co… [+1850 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Diario EL PAIS Uruguay"
+                },
+                "author": "Martín Veloz",
+                "title": "Trump: EE.UU. no informó a Delcy Rodríguez sobre los planes para capturar a Maduro antes de la operación",
+                "description": "En una entrevista telefónica, el mandatario republicano dijo además, que la presidenta encargada de Venezuela, Delcy Rodríguez, está \"cooperando\" con las autoridades estadounidenses.",
+                "url": "https://www.elpais.com.uy/mundo/estados-unidos/trump-ee-uu-no-informo-a-delcy-rodriguez-sobre-los-planes-para-capturar-a-maduro-antes-de-la-operacion",
+                "urlToImage": "https://imgs.elpais.com.uy/dims4/default/a8cafb5/2147483647/strip/true/crop/5370x2610+0+0/resize/1440x700!/quality/90/?url=https%3A%2F%2Fel-pais-uruguay-production-web.s3.us-east-1.amazonaws.com%2Fbrightspot%2Fda%2Ffd%2F6bd1472c49d78293a0956c7ca38b%2Fdonald-trump-21112403.jpg",
+                "publishedAt": "2026-01-06T01:00:49Z",
+                "content": "Redacción El PaísEl presidente estadounidense, Donald Trump, dijo este lunes en una entrevista telefónica con NBC News que la presidenta encargada de Venezuela, Delcy Rodríguez, está \"cooperando\" con… [+4014 chars]"
+            }
+        ]
     }
 }
