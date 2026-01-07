@@ -5,7 +5,7 @@ After=default.target
 [Service]
 Type=simple
 WorkingDirectory=/home/pi/daily_mood_theme_song_player
-ExecStart=/home/pi/.local/bin/uv run python run_player.py
+ExecStart=/home/pi/.local/bin/uv run python run_player.py --daemon
 Restart=on-failure
 RestartSec=5
 
