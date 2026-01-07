@@ -161,12 +161,20 @@ class HardwarePlayer:
     def _poll_radar(self):
         """Runs in a background thread to check for radar motion."""
         logger.info("Radar polling thread started.")
+        last_cooldown_active = False
         
         while not self.stop_polling.is_set():
             # Check if radar switch is still enabled
             if not self.radar_controller or not self.radar_controller.is_switch_enabled():
                 time.sleep(0.5)
                 continue
+            
+            # Check for cooldown transition (active -> inactive)
+            cooldown_remaining = self._get_cooldown_remaining()
+            cooldown_active = cooldown_remaining > 0
+            if last_cooldown_active and not cooldown_active:
+                logger.info("✅ Cooldown ended. Ready for motion trigger.")
+            last_cooldown_active = cooldown_active
             
             # Check for motion edges (for LED and potential trigger)
             motion_started, motion_stopped = self.radar_controller.check_motion_state()
@@ -177,12 +185,13 @@ class HardwarePlayer:
                 logger.info("🏃🏻 Motion DETECTED!")
                 
                 # Check if we should trigger playback
-                cooldown_remaining = self._get_cooldown_remaining()
                 if cooldown_remaining > 0:
                     logger.info(f"   ↳ Ignoring trigger: Cooldown active ({cooldown_remaining}s remaining)")
                 elif self.radar_playback_active:
                     timer_remaining = self._get_timer_remaining()
-                    logger.info(f"   ↳ Ignoring trigger: Playback active (auto-stop in {timer_remaining}s)")
+                    logger.info(f"   ↳ Ignoring trigger: Radar playback active (auto-stop in {timer_remaining}s)")
+                elif self.state == "PLAYING":
+                    logger.info("   ↳ Ignoring trigger: User playback active")
                 else:
                     # Trigger playback
                     self.handle_radar_motion()

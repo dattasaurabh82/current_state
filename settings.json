@@ -17,7 +17,7 @@
         "pauseBreathingFreq":0.25,
         "ProcessProgressBreathingFreq":0.15,
         "ProcessErrBreathingFreq":0.05,
-        "motionTriggeredPlaybackDurationSec": 120,
+        "motionTriggeredPlaybackDurationSec": 60,
         "cooldownAfterUserActionSec": 60
     },
     "music":{
