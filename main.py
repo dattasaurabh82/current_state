@@ -21,7 +21,7 @@ player_instance: Optional[AudioPlayer] = None
 
 def setup_logger():
     """Configures the logger for clean, colored output and file logging."""
-    log_file_path = "world_theme_music_player.log"
+    log_file_path = Path(__file__).parent / "logs" / "world_theme_music_player.log"
     logger.remove()  # Remove default handler
     # Console logger for interactive use
     logger.add(
