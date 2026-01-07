@@ -274,6 +274,25 @@ check logs:
 docker logs -f world-theme-player
 ```
 
+---
+
+>[!Note]
+
+### Docker cleanup 
+
+```bash
+# Remove dangling images (partial builds)
+docker image prune
+
+# If you want to also remove unused build cache
+docker builder prune
+
+# Nuclear option — remove ALL unused stuff (images, containers, networks, cache)
+docker system prune -a
+```
+
+---
+
 ### Run cron for fetcher and generator ...
 
 ```bash
