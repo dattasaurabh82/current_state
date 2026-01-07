@@ -51,9 +51,7 @@ def handle_button_press():
     try:
         subprocess.Popen(
             ["uv", "run", "python", "main.py", "--fetch", "true", "--play", "false"],
-            cwd=PROJECT_DIR,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
+            cwd=PROJECT_DIR
         )
         logger.success("Pipeline subprocess started.")
     except Exception as e:
