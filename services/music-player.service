@@ -1,13 +1,13 @@
 [Unit]
 Description=World Theme Music Player Service
-Requires=docker.service
-After=docker.service
+After=default.target
 
 [Service]
-Restart=always
-User=pi
-Group=docker
-ExecStart=/usr/bin/docker run --rm --name world-theme-player --privileged -v /dev/snd:/dev/snd -v /home/pi/daily_mood_theme_song_player/music_generated:/app/music_generated world-theme-music uv run python run_player.py --daemon
+Type=simple
+WorkingDirectory=/home/pi/daily_mood_theme_song_player
+ExecStart=/home/pi/.local/bin/uv run python run_player.py
+Restart=on-failure
+RestartSec=5
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
