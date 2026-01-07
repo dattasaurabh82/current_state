@@ -19,7 +19,7 @@ except (RuntimeError, ModuleNotFoundError):
 settings = load_settings()
 
 # Pin Definitions (from settings.json)
-LED_PIN = settings["outputPins"]["playerStateLED_pin"]
+LED_PIN = settings["outputPins"]["processStatusLED_pin"]
 PLAY_PAUSE_BTN_PIN = settings["inputPins"]["playPauseBtn_pin"]
 STOP_BTN_PIN = settings["inputPins"]["stopBtn_pin"]
 

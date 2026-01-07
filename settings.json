@@ -8,7 +8,7 @@
         "radarPin": 16
     },
     "outputPins":{
-        "playerStateLED_pin":25,
+        "processStatusLED_pin":25,
         "radarStateLED_pin":23
     },
     "hwFeatures":{

@@ -49,13 +49,18 @@ def handle_button_press():
     """Trigger the full news→music generation cycle."""
     logger.warning("🚀 Full cycle button pressed! Starting news→music pipeline...")
     try:
-        subprocess.Popen(
+        result = subprocess.run(
             ["uv", "run", "python", "main.py", "--fetch", "true", "--play", "false"],
             cwd=PROJECT_DIR
         )
-        logger.success("Pipeline subprocess started.")
+        if result.returncode == 0:
+            logger.success("✅ Pipeline completed successfully!")
+        else:
+            logger.error(f"❌ Pipeline failed with exit code: {result.returncode}")
     except Exception as e:
         logger.error(f"Failed to start pipeline: {e}")
+    finally:
+        logger.info(f"Listening on GPIO{BTN_PIN}")
 
 
 def main():

@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from datetime import datetime
 import argparse
 from pathlib import Path
@@ -202,10 +203,13 @@ def main():
             player_instance.play()
             player_instance.wait()
             logger.info("AUTO MODE: Playback finished. Exiting.")
+            sys.exit(0)
         elif not latest_audio_file_path:
             logger.error("AUTO MODE: Song generation failed. Exiting.")
+            sys.exit(1)
         else:
             logger.info("AUTO MODE: Song generated successfully. Exiting without playback.")
+            sys.exit(0)
         return
 
     elif args.mode == "interactive":
