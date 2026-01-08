@@ -1,0 +1,8 @@
+DEFAULT:
+Ambient electronic, with atmospheric pads, soft synths and gentle bells, building and hopeful, thoughtful, moderate 72 BPM, stereo, spacious
+
+MINIMAL:
+ambient electronic, atmospheric pads, building, curious, 72 BPM, stereo
+
+NATURAL:
+A building and hopeful piece of ambient electronic music with curious textures featuring atmospheric pads and soft synths, at a moderate 72 BPM tempo

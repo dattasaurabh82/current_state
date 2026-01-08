@@ -1,0 +1,163 @@
+{
+  "timestamp": "2026-01-08T21:32:08.753135",
+  "input_source": "scenario:negative",
+  "dry_run": false,
+  "date_seed": "2026-01-08",
+  "analysis": {
+    "emotional_valence": -0.7,
+    "tension_level": 0.9,
+    "hope_factor": 0.2,
+    "energy_level": "high",
+    "dominant_themes": [
+      "conflict",
+      "disaster",
+      "economy",
+      "health",
+      "politics"
+    ],
+    "summary": "A dire day marked by escalating conflicts, devastating disasters, and deepening crises."
+  },
+  "selection": {
+    "primary": "melancholic_beauty",
+    "primary_score": 0.572,
+    "secondary": null,
+    "secondary_score": null,
+    "intensity_level": "high",
+    "blend_ratio": null,
+    "all_scores": [
+      {
+        "archetype": "melancholic_beauty",
+        "score": 0.572,
+        "components": {
+          "valence": 0.57,
+          "tension": 0.169,
+          "hope": 0.895,
+          "energy": 0.6
+        }
+      },
+      {
+        "archetype": "gentle_tension",
+        "score": 0.466,
+        "components": {
+          "valence": 0.105,
+          "tension": 0.368,
+          "hope": 0.641,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "reflective_calm",
+        "score": 0.203,
+        "components": {
+          "valence": 0.006,
+          "tension": 0.004,
+          "hope": 0.368,
+          "energy": 0.6
+        }
+      },
+      {
+        "archetype": "cautious_hope",
+        "score": 0.185,
+        "components": {
+          "valence": 0.006,
+          "tension": 0.169,
+          "hope": 0.169,
+          "energy": 0.6
+        }
+      },
+      {
+        "archetype": "serene_resilience",
+        "score": 0.185,
+        "components": {
+          "valence": 0.002,
+          "tension": 0.062,
+          "hope": 0.062,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "tranquil_optimism",
+        "score": 0.097,
+        "components": {
+          "valence": 0.0,
+          "tension": 0.004,
+          "hope": 0.018,
+          "energy": 0.6
+        }
+      }
+    ]
+  },
+  "theme_textures": {
+    "source_themes": [
+      "conflict",
+      "disaster",
+      "economy",
+      "health",
+      "politics"
+    ],
+    "timbre": [
+      "measured",
+      "crushing"
+    ],
+    "movement": [
+      "careful",
+      "recovering"
+    ],
+    "harmonic": [
+      "dissonant"
+    ],
+    "daily_variation": {
+      "instrument_rotation": 2,
+      "texture_emphasis": "harmonic",
+      "tempo_nudge": 0
+    }
+  },
+  "prompt": {
+    "prompt": "Ambient orchestral, with expressive strings and warm piano, flowing and melancholic, dissonant, moderate 65 BPM, stereo, spacious",
+    "prompt_minimal": "ambient orchestral, expressive strings, flowing, measured, 65 BPM, stereo",
+    "prompt_natural": "A flowing and melancholic piece of ambient orchestral music with measured textures featuring expressive strings and warm piano, at a moderate 65 BPM tempo",
+    "components": {
+      "genre": "ambient orchestral",
+      "base_instruments": [
+        "expressive strings",
+        "warm piano"
+      ],
+      "base_moods": [
+        "flowing",
+        "melancholic",
+        "dissonant"
+      ],
+      "base_tempo": 62,
+      "texture_timbre": [
+        "measured",
+        "crushing"
+      ],
+      "texture_movement": [
+        "careful",
+        "recovering"
+      ],
+      "texture_harmonic": [
+        "dissonant"
+      ],
+      "tempo_final": 65,
+      "instrument_variant": 2,
+      "primary_archetype": "melancholic_beauty",
+      "secondary_archetype": null,
+      "blend_ratio": null,
+      "intensity_level": "high",
+      "source_themes": [
+        "conflict",
+        "disaster",
+        "economy",
+        "health",
+        "politics"
+      ],
+      "date_seed": "2026-01-08"
+    }
+  },
+  "visualizations": [
+    "outputs/run_negative/visualizations/mood_radar.svg",
+    "outputs/run_negative/visualizations/archetype_wheel.svg",
+    "outputs/run_negative/visualizations/prompt_dna.svg"
+  ]
+}

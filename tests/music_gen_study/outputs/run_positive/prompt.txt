@@ -1,0 +1,8 @@
+DEFAULT:
+Ambient electronic, with subtle swelling strings, soft synth pads and gentle piano, flowing and peaceful, calm, moderate 66 BPM, stereo, spacious
+
+MINIMAL:
+ambient electronic, subtle swelling strings, flowing, dense, 66 BPM, stereo
+
+NATURAL:
+A flowing and peaceful piece of ambient electronic music with dense textures featuring subtle swelling strings and soft synth pads, at a moderate 66 BPM tempo

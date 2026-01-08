@@ -1,0 +1,159 @@
+{
+  "timestamp": "2026-01-08T21:32:23.291440",
+  "input_source": "test_data/news_edge_cases.json",
+  "dry_run": false,
+  "date_seed": "2026-01-08",
+  "analysis": {
+    "emotional_valence": 0.7,
+    "tension_level": 0.2,
+    "hope_factor": 0.8,
+    "energy_level": "high",
+    "dominant_themes": [
+      "science",
+      "technology",
+      "innovation"
+    ],
+    "summary": "A day of excitement and optimism, driven by breakthroughs in AI, quantum computing, and sustainable energy."
+  },
+  "selection": {
+    "primary": "tranquil_optimism",
+    "primary_score": 0.922,
+    "secondary": "serene_resilience",
+    "secondary_score": 0.689,
+    "intensity_level": "low",
+    "blend_ratio": 0.57,
+    "all_scores": [
+      {
+        "archetype": "tranquil_optimism",
+        "score": 0.922,
+        "components": {
+          "valence": 0.939,
+          "tension": 1.0,
+          "hope": 1.0,
+          "energy": 0.6
+        }
+      },
+      {
+        "archetype": "serene_resilience",
+        "score": 0.689,
+        "components": {
+          "valence": 0.368,
+          "tension": 0.641,
+          "hope": 0.895,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "reflective_calm",
+        "score": 0.513,
+        "components": {
+          "valence": 0.21,
+          "tension": 1.0,
+          "hope": 0.368,
+          "energy": 0.6
+        }
+      },
+      {
+        "archetype": "cautious_hope",
+        "score": 0.437,
+        "components": {
+          "valence": 0.21,
+          "tension": 0.368,
+          "hope": 0.641,
+          "energy": 0.6
+        }
+      },
+      {
+        "archetype": "gentle_tension",
+        "score": 0.248,
+        "components": {
+          "valence": 0.018,
+          "tension": 0.169,
+          "hope": 0.169,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "melancholic_beauty",
+        "score": 0.201,
+        "components": {
+          "valence": 0.001,
+          "tension": 0.368,
+          "hope": 0.062,
+          "energy": 0.6
+        }
+      }
+    ]
+  },
+  "theme_textures": {
+    "source_themes": [
+      "science",
+      "technology",
+      "technology"
+    ],
+    "timbre": [
+      "clean",
+      "precise"
+    ],
+    "movement": [
+      "gridded",
+      "expanding"
+    ],
+    "harmonic": [
+      "electronic"
+    ],
+    "daily_variation": {
+      "instrument_rotation": 2,
+      "texture_emphasis": "harmonic",
+      "tempo_nudge": 0
+    }
+  },
+  "prompt": {
+    "prompt": "Ambient electronic, with subtle swelling strings, soft synth pads and gentle piano, flowing and peaceful, calm, moderate 66 BPM, stereo, spacious",
+    "prompt_minimal": "ambient electronic, subtle swelling strings, flowing, clean, 66 BPM, stereo",
+    "prompt_natural": "A flowing and peaceful piece of ambient electronic music with clean textures featuring subtle swelling strings and soft synth pads, at a moderate 66 BPM tempo",
+    "components": {
+      "genre": "ambient electronic",
+      "base_instruments": [
+        "subtle swelling strings",
+        "soft synth pads",
+        "gentle piano"
+      ],
+      "base_moods": [
+        "flowing",
+        "peaceful",
+        "calm",
+        "electronic"
+      ],
+      "base_tempo": 69,
+      "texture_timbre": [
+        "clean",
+        "precise"
+      ],
+      "texture_movement": [
+        "gridded",
+        "expanding"
+      ],
+      "texture_harmonic": [
+        "electronic"
+      ],
+      "tempo_final": 66,
+      "instrument_variant": 2,
+      "primary_archetype": "tranquil_optimism",
+      "secondary_archetype": "serene_resilience",
+      "blend_ratio": 0.57,
+      "intensity_level": "low",
+      "source_themes": [
+        "science",
+        "technology",
+        "technology"
+      ],
+      "date_seed": "2026-01-08"
+    }
+  },
+  "visualizations": [
+    "outputs/run_edge/visualizations/mood_radar.svg",
+    "outputs/run_edge/visualizations/archetype_wheel.svg",
+    "outputs/run_edge/visualizations/prompt_dna.svg"
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "timestamp": "2026-01-08T21:32:16.346609",
+  "input_source": "scenario:mixed",
+  "dry_run": false,
+  "date_seed": "2026-01-08",
+  "analysis": {
+    "emotional_valence": 0.1,
+    "tension_level": 0.6,
+    "hope_factor": 0.5,
+    "energy_level": "medium",
+    "dominant_themes": [
+      "economy",
+      "politics",
+      "science"
+    ],
+    "summary": "A day of mixed emotions, with economic uncertainty and political tensions offset by scientific breakthroughs and community resilience."
+  },
+  "selection": {
+    "primary": "cautious_hope",
+    "primary_score": 0.924,
+    "secondary": "gentle_tension",
+    "secondary_score": 0.902,
+    "intensity_level": "high",
+    "blend_ratio": 0.51,
+    "all_scores": [
+      {
+        "archetype": "cautious_hope",
+        "score": 0.924,
+        "components": {
+          "valence": 0.939,
+          "tension": 0.895,
+          "hope": 0.895,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "gentle_tension",
+        "score": 0.902,
+        "components": {
+          "valence": 0.779,
+          "tension": 1.0,
+          "hope": 0.895,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "reflective_calm",
+        "score": 0.774,
+        "components": {
+          "valence": 0.939,
+          "tension": 0.169,
+          "hope": 1.0,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "serene_resilience",
+        "score": 0.736,
+        "components": {
+          "valence": 0.779,
+          "tension": 0.641,
+          "hope": 0.641,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "melancholic_beauty",
+        "score": 0.629,
+        "components": {
+          "valence": 0.21,
+          "tension": 0.895,
+          "hope": 0.641,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "tranquil_optimism",
+        "score": 0.366,
+        "components": {
+          "valence": 0.21,
+          "tension": 0.169,
+          "hope": 0.368,
+          "energy": 1.0
+        }
+      }
+    ]
+  },
+  "theme_textures": {
+    "source_themes": [
+      "economy",
+      "politics",
+      "science"
+    ],
+    "timbre": [
+      "curious",
+      "woven"
+    ],
+    "movement": [
+      "expanding",
+      "careful"
+    ],
+    "harmonic": [
+      "nuanced"
+    ],
+    "daily_variation": {
+      "instrument_rotation": 2,
+      "texture_emphasis": "harmonic",
+      "tempo_nudge": 0
+    }
+  },
+  "prompt": {
+    "prompt": "Ambient electronic, with atmospheric pads, soft synths and gentle bells, building and hopeful, thoughtful, moderate 72 BPM, stereo, spacious",
+    "prompt_minimal": "ambient electronic, atmospheric pads, building, curious, 72 BPM, stereo",
+    "prompt_natural": "A building and hopeful piece of ambient electronic music with curious textures featuring atmospheric pads and soft synths, at a moderate 72 BPM tempo",
+    "components": {
+      "genre": "ambient electronic",
+      "base_instruments": [
+        "atmospheric pads",
+        "soft synths",
+        "gentle bells"
+      ],
+      "base_moods": [
+        "building",
+        "hopeful",
+        "thoughtful",
+        "nuanced"
+      ],
+      "base_tempo": 69,
+      "texture_timbre": [
+        "curious",
+        "woven"
+      ],
+      "texture_movement": [
+        "expanding",
+        "careful"
+      ],
+      "texture_harmonic": [
+        "nuanced"
+      ],
+      "tempo_final": 72,
+      "instrument_variant": 2,
+      "primary_archetype": "cautious_hope",
+      "secondary_archetype": "gentle_tension",
+      "blend_ratio": 0.51,
+      "intensity_level": "high",
+      "source_themes": [
+        "economy",
+        "politics",
+        "science"
+      ],
+      "date_seed": "2026-01-08"
+    }
+  },
+  "visualizations": [
+    "outputs/run_mixed/visualizations/mood_radar.svg",
+    "outputs/run_mixed/visualizations/archetype_wheel.svg",
+    "outputs/run_mixed/visualizations/prompt_dna.svg"
+  ]
+}

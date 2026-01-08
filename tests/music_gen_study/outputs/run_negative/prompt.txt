@@ -1,0 +1,8 @@
+DEFAULT:
+Ambient orchestral, with expressive strings and warm piano, flowing and melancholic, dissonant, moderate 65 BPM, stereo, spacious
+
+MINIMAL:
+ambient orchestral, expressive strings, flowing, measured, 65 BPM, stereo
+
+NATURAL:
+A flowing and melancholic piece of ambient orchestral music with measured textures featuring expressive strings and warm piano, at a moderate 65 BPM tempo

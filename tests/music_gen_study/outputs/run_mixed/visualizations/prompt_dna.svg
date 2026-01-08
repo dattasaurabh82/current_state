@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="500" height="400">
+  <title>Prompt DNA</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap');
+      .title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 600; fill: #e2e8f0; }
+      .label { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; fill: #e2e8f0; }
+      .value { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; fill: #e2e8f0; }
+      .dim { fill: #94a3b8; }
+      .small { font-size: 10px; }
+    </style>
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3d3d4d" />
+    </marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#1e1e2e"/>
+  <text x="250.0" y="30" text-anchor="middle" class="title">Prompt Composition — 2026-01-08</text>
+  <text x="105.0" y="60" text-anchor="middle" class="label" fill="#10b981">STRUCTURE</text>
+  <line x1="30" y1="70" x2="170" y2="70" stroke="#10b981" stroke-width="2" stroke-opacity="0.5"/>
+  <text x="255.0" y="60" text-anchor="middle" class="label" fill="#ec4899">COLOR</text>
+  <line x1="180" y1="70" x2="320" y2="70" stroke="#ec4899" stroke-width="2" stroke-opacity="0.5"/>
+  <text x="405.0" y="60" text-anchor="middle" class="label" fill="#6366f1">OUTPUT</text>
+  <line x1="330" y1="70" x2="470" y2="70" stroke="#6366f1" stroke-width="2" stroke-opacity="0.5"/>
+  <text x="30" y="95" class="label dim">Archetype</text>
+  <text x="30" y="113" class="value">Cautious Hope</text>
+  <text x="30" y="145" class="label dim">Genre</text>
+  <text x="30" y="163" class="value">ambient electronic</text>
+  <text x="30" y="195" class="label dim">Tempo</text>
+  <text x="30" y="213" class="value">72 BPM</text>
+  <text x="30" y="245" class="label dim">Intensity</text>
+  <text x="30" y="263" class="value">HIGH</text>
+  <text x="180" y="95" class="label dim">Themes</text>
+  <text x="180" y="113" class="value small">economy</text>
+  <text x="180" y="129" class="value small">politics</text>
+  <text x="180" y="145" class="value small">science</text>
+  <text x="180" y="175" class="label dim">Moods</text>
+  <text x="180" y="193" class="value small">building</text>
+  <text x="180" y="209" class="value small">hopeful</text>
+  <text x="180" y="225" class="value small">thoughtful</text>
+  <text x="330" y="95" class="label dim">Instruments</text>
+  <text x="330" y="113" class="value small">atmospheric pads</text>
+  <text x="330" y="131" class="value small">soft synths</text>
+  <text x="330" y="149" class="value small">gentle bells</text>
+  <text x="330" y="185" class="label dim">Characteristics</text>
+  <text x="330" y="203" class="value small">building</text>
+  <text x="330" y="219" class="value small">hopeful</text>
+  <text x="330" y="235" class="value small">72 BPM</text>
+  <line x1="160" y1="180" x2="170" y2="180" stroke="#3d3d4d" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="310" y1="180" x2="320" y2="180" stroke="#3d3d4d" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="30" y="320" width="440" height="60" fill="#2d2d3d" rx="8"/>
+  <text x="50" y="345" class="label dim">Generated Prompt</text>
+  <text x="50" y="365" class="value small">ambient electronic, atmospheric pads, building, 72 BPM</text>
+</svg>
