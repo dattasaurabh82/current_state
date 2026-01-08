@@ -1,0 +1,46 @@
+{
+    "scenario": "mixed_balanced",
+    "description": "Balanced mix of positive, negative, and neutral news - typical daily news cycle",
+    "articles": [
+        {
+            "source": {"name": "Reuters"},
+            "title": "Tech layoffs continue as industry adjusts to new economic reality",
+            "description": "Major companies announce restructuring plans affecting thousands of workers"
+        },
+        {
+            "source": {"name": "BBC"},
+            "title": "New space telescope captures stunning images of distant galaxies",
+            "description": "Astronomers excited by discoveries that could reshape understanding of universe"
+        },
+        {
+            "source": {"name": "AP News"},
+            "title": "Election results contested, opposition calls for recount",
+            "description": "Political tensions rise as both sides claim victory in tight race"
+        },
+        {
+            "source": {"name": "The Guardian"},
+            "title": "Community comes together to rebuild after devastating floods",
+            "description": "Volunteers and donations pour in as residents begin recovery efforts"
+        },
+        {
+            "source": {"name": "CNN"},
+            "title": "Trade negotiations stall over key disagreements",
+            "description": "Officials express cautious optimism despite setbacks in talks"
+        },
+        {
+            "source": {"name": "Bloomberg"},
+            "title": "Housing market shows mixed signals, analysts divided on outlook",
+            "description": "Some regions boom while others face declining prices"
+        },
+        {
+            "source": {"name": "NPR"},
+            "title": "Historic museum reopens after years of renovation",
+            "description": "Cultural landmark welcomes visitors with new exhibits and accessibility features"
+        },
+        {
+            "source": {"name": "Al Jazeera"},
+            "title": "Diplomatic efforts intensify to prevent regional escalation",
+            "description": "Mediators report progress but warn situation remains fragile"
+        }
+    ]
+}

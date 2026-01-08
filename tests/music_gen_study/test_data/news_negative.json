@@ -1,0 +1,46 @@
+{
+    "scenario": "negative_crisis",
+    "description": "Predominantly negative news - conflicts, disasters, economic downturns",
+    "articles": [
+        {
+            "source": {"name": "Reuters"},
+            "title": "Military tensions escalate as nations deploy troops to disputed border",
+            "description": "International community urges restraint as conflict threatens to spread"
+        },
+        {
+            "source": {"name": "BBC"},
+            "title": "Devastating earthquake kills thousands, rescue efforts underway",
+            "description": "7.8 magnitude quake leaves cities in ruins, humanitarian crisis looms"
+        },
+        {
+            "source": {"name": "AP News"},
+            "title": "Global markets plunge amid banking crisis fears",
+            "description": "Major financial institutions report significant losses, recession concerns grow"
+        },
+        {
+            "source": {"name": "The Guardian"},
+            "title": "Record-breaking heatwave claims hundreds of lives across southern Europe",
+            "description": "Climate emergency declared as temperatures soar past 50 degrees Celsius"
+        },
+        {
+            "source": {"name": "CNN"},
+            "title": "Refugee crisis deepens as millions flee ongoing civil war",
+            "description": "Aid agencies overwhelmed as camps reach breaking point"
+        },
+        {
+            "source": {"name": "Bloomberg"},
+            "title": "Inflation hits 40-year high, cost of living crisis intensifies",
+            "description": "Central banks face impossible choices as families struggle to afford basics"
+        },
+        {
+            "source": {"name": "Al Jazeera"},
+            "title": "Deadly hospital attack sparks international outrage",
+            "description": "Calls for war crimes investigation as civilian casualties mount"
+        },
+        {
+            "source": {"name": "WHO"},
+            "title": "New disease outbreak spreads rapidly, health systems strained",
+            "description": "Officials warn of potential pandemic as cases multiply across borders"
+        }
+    ]
+}

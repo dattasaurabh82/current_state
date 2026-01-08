@@ -1,0 +1,46 @@
+{
+    "scenario": "positive_hopeful",
+    "description": "Predominantly positive news - scientific breakthroughs, peace agreements, economic growth",
+    "articles": [
+        {
+            "source": {"name": "Reuters"},
+            "title": "Historic climate agreement signed by 150 nations, pledging carbon neutrality by 2040",
+            "description": "World leaders celebrate landmark environmental accord"
+        },
+        {
+            "source": {"name": "BBC"},
+            "title": "New cancer treatment shows 90% success rate in clinical trials",
+            "description": "Breakthrough therapy offers hope to millions of patients worldwide"
+        },
+        {
+            "source": {"name": "AP News"},
+            "title": "Global poverty rates drop to historic low, UN reports",
+            "description": "International aid efforts and economic growth lift millions out of extreme poverty"
+        },
+        {
+            "source": {"name": "The Guardian"},
+            "title": "Renewable energy now powers 60% of European homes",
+            "description": "Solar and wind investments pay off as continent reaches green milestone"
+        },
+        {
+            "source": {"name": "CNN"},
+            "title": "Peace talks succeed: Historic ceasefire agreement ends 20-year conflict",
+            "description": "Former enemies shake hands as humanitarian aid flows into affected regions"
+        },
+        {
+            "source": {"name": "Bloomberg"},
+            "title": "Global unemployment falls to lowest level in decades",
+            "description": "Economic recovery spreads across developing nations"
+        },
+        {
+            "source": {"name": "Nature"},
+            "title": "Scientists achieve fusion energy breakthrough, sustainable power within reach",
+            "description": "Research team produces net energy gain for first time"
+        },
+        {
+            "source": {"name": "WHO"},
+            "title": "Malaria cases drop 50% in Africa following vaccine rollout",
+            "description": "Public health triumph saves hundreds of thousands of lives"
+        }
+    ]
+}

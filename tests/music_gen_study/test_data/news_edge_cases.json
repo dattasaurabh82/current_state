@@ -1,0 +1,56 @@
+{
+    "scenario": "edge_cases",
+    "description": "Unusual scenarios - very specific themes, extreme moods, unusual combinations",
+    "test_cases": [
+        {
+            "name": "tech_heavy",
+            "description": "All technology news - neutral but future-focused",
+            "articles": [
+                {"source": {"name": "Wired"}, "title": "AI breakthrough enables real-time language translation for 100 languages"},
+                {"source": {"name": "TechCrunch"}, "title": "Quantum computing startup achieves new processing milestone"},
+                {"source": {"name": "The Verge"}, "title": "Electric vehicle sales surpass traditional cars for first time"},
+                {"source": {"name": "Ars Technica"}, "title": "New smartphone chip promises 50% better battery life"}
+            ]
+        },
+        {
+            "name": "sports_entertainment",
+            "description": "Light news - sports and entertainment only",
+            "articles": [
+                {"source": {"name": "ESPN"}, "title": "Underdog team wins championship in stunning upset"},
+                {"source": {"name": "Variety"}, "title": "Record-breaking film opens to massive box office weekend"},
+                {"source": {"name": "Billboard"}, "title": "New album breaks streaming records in first 24 hours"},
+                {"source": {"name": "Sports Illustrated"}, "title": "Legendary athlete announces retirement after historic career"}
+            ]
+        },
+        {
+            "name": "environmental_mixed",
+            "description": "Environmental news with both hope and concern",
+            "articles": [
+                {"source": {"name": "National Geographic"}, "title": "Amazon deforestation drops 30% following new conservation efforts"},
+                {"source": {"name": "Science"}, "title": "Arctic ice melting faster than predicted, scientists warn"},
+                {"source": {"name": "The Guardian"}, "title": "Endangered species population rebounds after protection measures"},
+                {"source": {"name": "Reuters"}, "title": "Coral reefs face extinction within decades without urgent action"}
+            ]
+        },
+        {
+            "name": "single_dominant_event",
+            "description": "One major event dominates all headlines",
+            "articles": [
+                {"source": {"name": "Reuters"}, "title": "World leaders gather for emergency summit on global crisis"},
+                {"source": {"name": "BBC"}, "title": "Live updates: International response to developing situation"},
+                {"source": {"name": "CNN"}, "title": "Experts analyze implications of unprecedented events"},
+                {"source": {"name": "AP News"}, "title": "Markets react to uncertainty as world watches developments"}
+            ]
+        },
+        {
+            "name": "melancholic_reflective",
+            "description": "Somber but not crisis - memorials, endings, transitions",
+            "articles": [
+                {"source": {"name": "NYT"}, "title": "Beloved public figure passes away at 92, world mourns"},
+                {"source": {"name": "BBC"}, "title": "End of an era as historic institution closes after 150 years"},
+                {"source": {"name": "The Guardian"}, "title": "Last surviving member of historic expedition shares final memories"},
+                {"source": {"name": "NPR"}, "title": "Community gathers to remember victims on anniversary of tragedy"}
+            ]
+        }
+    ]
+}
