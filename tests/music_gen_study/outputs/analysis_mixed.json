@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-01-08T20:45:40.545765",
+  "source_file": "/home/pi/daily_mood_theme_song_player/tests/music_gen_study/test_data/news_mixed.json",
+  "headline_count": 8,
+  "analysis": {
+    "emotional_valence": 0.1,
+    "tension_level": 0.6,
+    "hope_factor": 0.5,
+    "energy_level": "medium",
+    "dominant_themes": [
+      "economy",
+      "politics",
+      "science"
+    ],
+    "summary": "A day of mixed emotions, with economic uncertainty and political tensions offset by scientific breakthroughs and community resilience."
+  }
+}

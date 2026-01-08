@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-01-08T20:46:14.807114",
+  "source_file": "../../news_data_2026-01-07.json",
+  "headline_count": 20,
+  "analysis": {
+    "emotional_valence": 0.1,
+    "tension_level": 0.6,
+    "hope_factor": 0.4,
+    "energy_level": "medium",
+    "dominant_themes": [
+      "politics",
+      "economy",
+      "conflict"
+    ],
+    "summary": "A day marked by political tensions and economic concerns, with some glimmers of hope."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-01-08T20:44:46.422626",
+  "source_file": "/home/pi/daily_mood_theme_song_player/tests/music_gen_study/test_data/news_positive.json",
+  "headline_count": 8,
+  "analysis": {
+    "emotional_valence": 0.7,
+    "tension_level": 0.2,
+    "hope_factor": 0.8,
+    "energy_level": "high",
+    "dominant_themes": [
+      "environment",
+      "science",
+      "politics"
+    ],
+    "summary": "A highly positive day marked by historic agreements, breakthroughs, and significant progress in various fields."
+  }
+}
