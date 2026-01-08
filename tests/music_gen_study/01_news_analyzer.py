@@ -106,18 +106,18 @@ class NewsAnalysis:
 # SYSTEM PROMPT FOR STRUCTURED ANALYSIS
 # =============================================================================
 
+# NOTE: Curly braces are doubled to escape them in the format string
+# Only {prompt} remains as the actual placeholder
 SYSTEM_PROMPT = """You are a world news mood analyzer. Your task is to analyze news headlines and extract structured emotional dimensions.
 
 You MUST output ONLY a valid JSON object with these exact fields:
 
-{
-    "emotional_valence": <float from -1 to 1>,
-    "tension_level": <float from 0 to 1>,
-    "hope_factor": <float from 0 to 1>,
-    "energy_level": "<low|medium|high>",
-    "dominant_themes": ["theme1", "theme2", ...],
-    "summary": "<one sentence summary>"
-}
+emotional_valence: float from -1 to 1
+tension_level: float from 0 to 1
+hope_factor: float from 0 to 1
+energy_level: one of "low", "medium", "high"
+dominant_themes: list of up to 5 theme strings
+summary: one sentence summary string
 
 Field definitions:
 - emotional_valence: Overall emotional tone. -1 = very negative (crisis, tragedy), 0 = neutral, +1 = very positive (celebration, breakthrough)
@@ -226,11 +226,25 @@ def analyze_news_with_llm(headlines: List[str]) -> Optional[NewsAnalysis]:
         return None
     
     headlines_str = "\n".join(headlines)
+    
+    # JSON example is in user prompt to avoid format string issues in template
+    json_example = '''{
+    "emotional_valence": 0.3,
+    "tension_level": 0.5,
+    "hope_factor": 0.6,
+    "energy_level": "medium",
+    "dominant_themes": ["economy", "politics", "science"],
+    "summary": "A mixed day with economic concerns balanced by scientific progress."
+}'''
+    
     user_prompt = f"""Analyze these news headlines and provide a structured mood assessment:
 
 {headlines_str}
 
-Remember: Output ONLY a valid JSON object with the required fields."""
+Output format example:
+{json_example}
+
+Remember: Output ONLY a valid JSON object with the required fields. No other text."""
 
     if RICH_AVAILABLE:
         with Progress(
