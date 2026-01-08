@@ -574,6 +574,8 @@ Examples:
     # Save output if requested
     if args.output:
         output_path = Path(args.output)
+        # Create parent directories if they don't exist
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         output_data = {
             "timestamp": datetime.now().isoformat(),
             "source_file": str(filepath),
