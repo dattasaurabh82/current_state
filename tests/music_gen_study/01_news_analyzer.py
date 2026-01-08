@@ -34,6 +34,16 @@ import re
 # Add parent directories to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
+# Load .env from project root (two levels up from tests/music_gen_study/)
+from dotenv import load_dotenv
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+load_dotenv(PROJECT_ROOT / ".env")
+
+# Strip whitespace/quotes from the Replicate API token (same as main project)
+replicate_token = os.getenv("REPLICATE_API_TOKEN")
+if replicate_token:
+    os.environ["REPLICATE_API_TOKEN"] = replicate_token.strip().strip('"')
+
 # Try to import replicate - graceful fallback for dry-run mode
 try:
     import replicate
