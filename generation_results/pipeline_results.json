@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-01-08T22:35:30.975739",
+  "date": "2026-01-08",
+  "analysis": {
+    "emotional_valence": 0.1,
+    "tension_level": 0.4,
+    "hope_factor": 0.5,
+    "energy_level": "medium",
+    "dominant_themes": [
+      "economy",
+      "technology",
+      "politics"
+    ],
+    "summary": "A day of mixed economic news and technological advancements, with underlying tensions and concerns."
+  },
+  "selection": {
+    "primary": "cautious_hope",
+    "primary_score": 0.924,
+    "secondary": "serene_resilience",
+    "secondary_score": 0.826,
+    "intensity_level": "medium",
+    "blend_ratio": 0.53,
+    "all_scores": [
+      {
+        "archetype": "cautious_hope",
+        "score": 0.924,
+        "components": {
+          "valence": 0.939,
+          "tension": 0.895,
+          "hope": 0.895,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "reflective_calm",
+        "score": 0.892,
+        "components": {
+          "valence": 0.939,
+          "tension": 0.641,
+          "hope": 1.0,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "serene_resilience",
+        "score": 0.826,
+        "components": {
+          "valence": 0.779,
+          "tension": 1.0,
+          "hope": 0.641,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "gentle_tension",
+        "score": 0.812,
+        "components": {
+          "valence": 0.779,
+          "tension": 0.641,
+          "hope": 0.895,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "melancholic_beauty",
+        "score": 0.629,
+        "components": {
+          "valence": 0.21,
+          "tension": 0.895,
+          "hope": 0.641,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "tranquil_optimism",
+        "score": 0.484,
+        "components": {
+          "valence": 0.21,
+          "tension": 0.641,
+          "hope": 0.368,
+          "energy": 1.0
+        }
+      }
+    ]
+  },
+  "prompt": {
+    "prompt": "Ambient electronic, with smooth swelling strings, soft synths and gentle bells, building and hopeful, calm, moderate 72 BPM, stereo, spacious",
+    "prompt_minimal": "ambient electronic, smooth swelling strings, building, textured, 72 BPM, stereo",
+    "prompt_natural": "A building and hopeful piece of ambient electronic music with textured textures featuring smooth swelling strings and soft synths, at a moderate 72 BPM tempo",
+    "components": {
+      "genre": "ambient electronic",
+      "base_instruments": [
+        "smooth swelling strings",
+        "soft synths",
+        "gentle bells"
+      ],
+      "base_moods": [
+        "building",
+        "hopeful",
+        "calm",
+        "modal"
+      ],
+      "base_tempo": 72,
+      "texture_timbre": [
+        "textured",
+        "synthetic"
+      ],
+      "texture_movement": [
+        "measured",
+        "algorithmic"
+      ],
+      "texture_harmonic": [
+        "modal"
+      ],
+      "tempo_final": 72,
+      "instrument_variant": 2,
+      "primary_archetype": "cautious_hope",
+      "secondary_archetype": "serene_resilience",
+      "blend_ratio": 0.53,
+      "intensity_level": "medium",
+      "source_themes": [
+        "economy",
+        "technology",
+        "politics"
+      ],
+      "date_seed": "2026-01-08"
+    }
+  }
+}

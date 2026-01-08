@@ -35,7 +35,7 @@ import replicate
 
 from lib.archetypes import ArchetypeName
 from lib.archetype_selector import NewsAnalysis, select_archetypes
-from lib.prompt_builder import build_prompt_from_selection
+from lib.music_prompt_builder import build_prompt_from_selection
 from lib.visualizations import generate_all_visualizations
 
 
@@ -302,7 +302,7 @@ def generate_music_prompt_from_news(articles: List[Dict]) -> Tuple[Optional[str]
     # ==========================================================================
     logger.info("[Pipeline] Step 4: Saving Results & Visualizations")
     
-    output_dir = GENERATION_RESULTS_DIR / date_str
+    output_dir = GENERATION_RESULTS_DIR
     viz_dir = output_dir / "visualizations"
     
     # Generate visualizations

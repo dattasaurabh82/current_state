@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 500" width="450" height="500">
+  <title>Archetype Selection</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap');
+      .title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 600; fill: #e2e8f0; }
+      .label { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; fill: #e2e8f0; }
+      .value { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; fill: #e2e8f0; }
+      .dim { fill: #94a3b8; }
+      .small { font-size: 10px; }
+    </style>
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="#1e1e2e"/>
+  <text x="225" y="35" text-anchor="middle" class="title">Archetype Scores — 2026-01-08</text>
+  <path d="M 225.0 180.0 L 225.0 136.4 A 93.6 93.6 0 0 1 306.0 183.2 L 268.3 205.0 A 50.0 50.0 0 0 0 225.0 180.0 Z" fill="#34d399" fill-opacity="0.4" stroke="#3d3d4d" stroke-width="1"/>
+  <text x="310.0" y="82.8" text-anchor="middle" class="label small">Tranquil</text>
+  <text x="265.9" y="159.2" text-anchor="middle" dominant-baseline="middle" class="value small">0.48</text>
+  <path d="M 268.3 205.0 L 332.7 167.8 A 124.3 124.3 0 0 1 332.7 292.2 L 268.3 255.0 A 50.0 50.0 0 0 0 268.3 205.0 Z" fill="#f472b6" fill-opacity="0.7" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="395.0" y="230.0" text-anchor="start" class="label small">Serene</text>
+  <text x="322.2" y="230.0" text-anchor="middle" dominant-baseline="middle" class="value small">0.83</text>
+  <path d="M 268.3 255.0 L 340.3 296.6 A 133.2 133.2 0 0 1 225.0 363.2 L 225.0 280.0 A 50.0 50.0 0 0 0 268.3 255.0 Z" fill="#2dd4bf" fill-opacity="0.9" stroke="#e2e8f0" stroke-width="3"/>
+  <text x="310.0" y="377.2" text-anchor="middle" class="label small">Cautious</text>
+  <text x="275.8" y="318.0" text-anchor="middle" dominant-baseline="middle" class="value small">0.92</text>
+  <path d="M 225.0 280.0 L 225.0 353.1 A 123.1 123.1 0 0 1 118.4 291.5 L 181.7 255.0 A 50.0 50.0 0 0 0 225.0 280.0 Z" fill="#fbbf24" fill-opacity="0.4" stroke="#3d3d4d" stroke-width="1"/>
+  <text x="140.0" y="377.2" text-anchor="middle" class="label small">Gentle</text>
+  <text x="176.7" y="313.6" text-anchor="middle" dominant-baseline="middle" class="value small">0.81</text>
+  <path d="M 181.7 255.0 L 132.7 283.3 A 106.6 106.6 0 0 1 132.7 176.7 L 181.7 205.0 A 50.0 50.0 0 0 0 181.7 255.0 Z" fill="#a78bfa" fill-opacity="0.4" stroke="#3d3d4d" stroke-width="1"/>
+  <text x="55.0" y="230.0" text-anchor="end" class="label small">Melancholic</text>
+  <text x="136.7" y="230.0" text-anchor="middle" dominant-baseline="middle" class="value small">0.63</text>
+  <path d="M 181.7 205.0 L 112.2 164.9 A 130.3 130.3 0 0 1 225.0 99.7 L 225.0 180.0 A 50.0 50.0 0 0 0 181.7 205.0 Z" fill="#60a5fa" fill-opacity="0.4" stroke="#3d3d4d" stroke-width="1"/>
+  <text x="140.0" y="82.8" text-anchor="middle" class="label small">Reflective</text>
+  <text x="174.9" y="143.3" text-anchor="middle" dominant-baseline="middle" class="value small">0.89</text>
+  <circle cx="225" cy="230" r="45" fill="#2d2d3d"/>
+  <text x="225" y="225" text-anchor="middle" class="label">Primary</text>
+  <text x="225" y="245" text-anchor="middle" class="value">Cautious</text>
+  <rect x="50" y="430" width="15" height="15" fill="#2dd4bf" fill-opacity="0.9" rx="3"/>
+  <text x="75" y="442" class="label small">Primary</text>
+  <rect x="150" y="430" width="15" height="15" fill="#f472b6" fill-opacity="0.7" rx="3"/>
+  <text x="175" y="442" class="label small">Secondary</text>
+</svg>
