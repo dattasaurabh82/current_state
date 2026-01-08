@@ -1,0 +1,70 @@
+{
+  "primary": "gentle_tension",
+  "primary_score": 0.934,
+  "secondary": "cautious_hope",
+  "secondary_score": 0.848,
+  "intensity_level": "high",
+  "blend_ratio": 0.52,
+  "all_scores": [
+    {
+      "archetype": "gentle_tension",
+      "score": 0.934,
+      "components": {
+        "valence": 0.779,
+        "tension": 1.0,
+        "hope": 1.0,
+        "energy": 1.0
+      }
+    },
+    {
+      "archetype": "cautious_hope",
+      "score": 0.848,
+      "components": {
+        "valence": 0.939,
+        "tension": 0.895,
+        "hope": 0.641,
+        "energy": 1.0
+      }
+    },
+    {
+      "archetype": "reflective_calm",
+      "score": 0.743,
+      "components": {
+        "valence": 0.939,
+        "tension": 0.169,
+        "hope": 0.895,
+        "energy": 1.0
+      }
+    },
+    {
+      "archetype": "melancholic_beauty",
+      "score": 0.705,
+      "components": {
+        "valence": 0.21,
+        "tension": 0.895,
+        "hope": 0.895,
+        "energy": 1.0
+      }
+    },
+    {
+      "archetype": "serene_resilience",
+      "score": 0.654,
+      "components": {
+        "valence": 0.779,
+        "tension": 0.641,
+        "hope": 0.368,
+        "energy": 1.0
+      }
+    },
+    {
+      "archetype": "tranquil_optimism",
+      "score": 0.306,
+      "components": {
+        "valence": 0.21,
+        "tension": 0.169,
+        "hope": 0.169,
+        "energy": 1.0
+      }
+    }
+  ]
+}
