@@ -44,8 +44,8 @@
   <text x="30" y="263" class="value">MEDIUM</text>
   <text x="180" y="95" class="label dim">Themes</text>
   <text x="180" y="113" class="value small">economy</text>
-  <text x="180" y="129" class="value small">technology</text>
-  <text x="180" y="145" class="value small">politics</text>
+  <text x="180" y="129" class="value small">politics</text>
+  <text x="180" y="145" class="value small">technology</text>
   <text x="180" y="175" class="label dim">Moods</text>
   <text x="180" y="193" class="value small">building</text>
   <text x="180" y="209" class="value small">hopeful</text>
