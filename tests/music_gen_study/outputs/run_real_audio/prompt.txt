@@ -1,0 +1,8 @@
+DEFAULT:
+Cinematic ambient, with soft synths, veiled atmospheric pads and subtle strings, atmospheric and thoughtful, hopeful, moderate 71 BPM, stereo, spacious
+
+MINIMAL:
+cinematic ambient, soft synths, atmospheric, veiled, 71 BPM, stereo
+
+NATURAL:
+A atmospheric and thoughtful piece of cinematic ambient music with veiled textures featuring soft synths and veiled atmospheric pads, at a moderate 71 BPM tempo

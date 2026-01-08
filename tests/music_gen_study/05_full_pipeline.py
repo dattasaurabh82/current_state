@@ -1,25 +1,32 @@
 """
 Full Pipeline - News to MusicGen Prompt (Enhanced)
 
-Chains all steps together with theme textures and visualizations:
+Chains all steps together with theme textures, visualizations, and optional audio:
 1. News Analysis (LLM) → structured dimensions + themes
 2. Archetype Selection (rule-based) → primary/secondary archetypes  
 3. Theme Textures → timbral/movement/harmonic color
 4. Prompt Building (curated descriptors + daily variety) → MusicGen prompt
 5. Visualizations → SVG charts
+6. Music Generation (optional) → actual audio via MusicGen API
 
 Usage:
     # Full pipeline with real news
-    python 04_full_pipeline.py --news ../../news_data_2026-01-07.json
+    python 05_full_pipeline.py --news ../../news_data_2026-01-07.json
     
     # Full pipeline with test scenario
-    python 04_full_pipeline.py --scenario mixed
+    python 05_full_pipeline.py --scenario mixed
     
     # Dry run (no LLM call)
-    python 04_full_pipeline.py --scenario mixed --dry-run
+    python 05_full_pipeline.py --scenario mixed --dry-run
     
     # Save all outputs including visualizations
-    python 04_full_pipeline.py --news ../../news_data_2026-01-07.json --output-dir outputs/pipeline_run
+    python 05_full_pipeline.py --scenario positive --output-dir outputs/run_positive
+    
+    # Full pipeline WITH audio generation
+    python 05_full_pipeline.py --scenario positive -o outputs/run_positive --generate-music
+    
+    # Use minimal prompt style for audio
+    python 05_full_pipeline.py --scenario mixed -o outputs/run_mixed -g --music-style minimal
 """
 
 import json
@@ -72,6 +79,8 @@ def run_pipeline(
     dry_run: bool = False,
     output_dir: Optional[str] = None,
     date_override: Optional[date] = None,
+    generate_music: bool = False,
+    music_style: str = "default",
 ) -> dict:
     """
     Run the full news-to-prompt pipeline with theme textures and visualizations.
@@ -277,6 +286,65 @@ def run_pipeline(
             print(f"Generated {len(viz_files)} visualizations")
     
     # =========================================================================
+    # STEP 6: MUSIC GENERATION (optional)
+    # =========================================================================
+    if generate_music and output_dir:
+        if RICH_AVAILABLE:
+            console.print("\n[bold cyan]━━━ STEP 6: Music Generation ━━━[/bold cyan]")
+        else:
+            print("\n=== STEP 6: Music Generation ===")
+        
+        # Import music generator
+        music_gen = load_module("music_generator", base_path / "04_generate_music.py")
+        
+        # Get the prompt based on style
+        if music_style == "minimal":
+            music_prompt = prompt_result.prompt_minimal
+        elif music_style == "natural":
+            music_prompt = prompt_result.prompt_natural
+        else:
+            music_prompt = prompt_result.prompt
+        
+        # Generate audio
+        audio_dir = Path(output_dir) / "audio"
+        timestamp = datetime.now().strftime("%H%M%S")
+        audio_file = audio_dir / f"generated_{music_style}_{timestamp}.wav"
+        
+        if RICH_AVAILABLE:
+            console.print(f"[dim]Prompt: {music_prompt}[/dim]")
+        
+        success = music_gen.generate_music(music_prompt, str(audio_file))
+        
+        if success:
+            results["audio"] = str(audio_file)
+            
+            # Save audio metadata
+            metadata_file = audio_dir / f"generated_{music_style}_{timestamp}.json"
+            with open(metadata_file, 'w') as f:
+                json.dump({
+                    "timestamp": datetime.now().isoformat(),
+                    "style": music_style,
+                    "prompt": music_prompt,
+                    "audio_file": audio_file.name,
+                }, f, indent=2)
+            
+            if RICH_AVAILABLE:
+                console.print(f"[green]✓ Audio saved to:[/green] {audio_file}")
+            else:
+                print(f"✓ Audio saved to: {audio_file}")
+        else:
+            if RICH_AVAILABLE:
+                console.print("[red]✗ Music generation failed[/red]")
+            else:
+                print("✗ Music generation failed")
+    
+    elif generate_music and not output_dir:
+        if RICH_AVAILABLE:
+            console.print("[yellow]⚠ Skipping music generation (requires --output-dir)[/yellow]")
+        else:
+            print("⚠ Skipping music generation (requires --output-dir)")
+    
+    # =========================================================================
     # FINAL SUMMARY
     # =========================================================================
     if RICH_AVAILABLE:
@@ -364,6 +432,12 @@ Examples:
                        help="Directory to save all outputs")
     parser.add_argument("--date", type=str,
                        help="Date seed for daily variation (YYYY-MM-DD)")
+    parser.add_argument("--generate-music", "-g", action="store_true",
+                       help="Also generate audio using MusicGen (requires output-dir)")
+    parser.add_argument("--music-style", type=str,
+                       choices=["default", "minimal", "natural"],
+                       default="default",
+                       help="Prompt style for music generation")
     
     args = parser.parse_args()
     
@@ -378,6 +452,11 @@ Examples:
     if args.date:
         date_override = datetime.strptime(args.date, "%Y-%m-%d").date()
     
+    # Validate music generation requirements
+    if args.generate_music and not args.output_dir:
+        print("[ERROR] --generate-music requires --output-dir")
+        sys.exit(1)
+    
     # Run pipeline
     results = run_pipeline(
         news_file=args.news,
@@ -385,6 +464,8 @@ Examples:
         dry_run=args.dry_run,
         output_dir=args.output_dir,
         date_override=date_override,
+        generate_music=args.generate_music,
+        music_style=args.music_style,
     )
     
     return results

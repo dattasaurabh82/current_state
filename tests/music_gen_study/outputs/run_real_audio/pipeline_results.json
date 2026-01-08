@@ -1,0 +1,160 @@
+{
+  "timestamp": "2026-01-08T21:51:28.223114",
+  "input_source": "../../news_data_2026-01-07.json",
+  "dry_run": false,
+  "date_seed": "2026-01-08",
+  "analysis": {
+    "emotional_valence": 0.1,
+    "tension_level": 0.6,
+    "hope_factor": 0.4,
+    "energy_level": "medium",
+    "dominant_themes": [
+      "politics",
+      "economy",
+      "conflict"
+    ],
+    "summary": "A day marked by geopolitical tensions and economic uncertainty, with glimpses of hope and positivity."
+  },
+  "selection": {
+    "primary": "gentle_tension",
+    "primary_score": 0.934,
+    "secondary": "cautious_hope",
+    "secondary_score": 0.848,
+    "intensity_level": "high",
+    "blend_ratio": 0.52,
+    "all_scores": [
+      {
+        "archetype": "gentle_tension",
+        "score": 0.934,
+        "components": {
+          "valence": 0.779,
+          "tension": 1.0,
+          "hope": 1.0,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "cautious_hope",
+        "score": 0.848,
+        "components": {
+          "valence": 0.939,
+          "tension": 0.895,
+          "hope": 0.641,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "reflective_calm",
+        "score": 0.743,
+        "components": {
+          "valence": 0.939,
+          "tension": 0.169,
+          "hope": 0.895,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "melancholic_beauty",
+        "score": 0.705,
+        "components": {
+          "valence": 0.21,
+          "tension": 0.895,
+          "hope": 0.895,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "serene_resilience",
+        "score": 0.654,
+        "components": {
+          "valence": 0.779,
+          "tension": 0.641,
+          "hope": 0.368,
+          "energy": 1.0
+        }
+      },
+      {
+        "archetype": "tranquil_optimism",
+        "score": 0.306,
+        "components": {
+          "valence": 0.21,
+          "tension": 0.169,
+          "hope": 0.169,
+          "energy": 1.0
+        }
+      }
+    ]
+  },
+  "theme_textures": {
+    "source_themes": [
+      "politics",
+      "economy",
+      "conflict"
+    ],
+    "timbre": [
+      "veiled",
+      "mechanical"
+    ],
+    "movement": [
+      "unsettled",
+      "cycling"
+    ],
+    "harmonic": [
+      "functional"
+    ],
+    "daily_variation": {
+      "instrument_rotation": 2,
+      "texture_emphasis": "harmonic",
+      "tempo_nudge": 0
+    }
+  },
+  "prompt": {
+    "prompt": "Cinematic ambient, with soft synths, veiled atmospheric pads and subtle strings, atmospheric and thoughtful, hopeful, moderate 71 BPM, stereo, spacious",
+    "prompt_minimal": "cinematic ambient, soft synths, atmospheric, veiled, 71 BPM, stereo",
+    "prompt_natural": "A atmospheric and thoughtful piece of cinematic ambient music with veiled textures featuring soft synths and veiled atmospheric pads, at a moderate 71 BPM tempo",
+    "components": {
+      "genre": "cinematic ambient",
+      "base_instruments": [
+        "soft synths",
+        "veiled atmospheric pads",
+        "subtle strings"
+      ],
+      "base_moods": [
+        "atmospheric",
+        "thoughtful",
+        "hopeful",
+        "functional"
+      ],
+      "base_tempo": 68,
+      "texture_timbre": [
+        "veiled",
+        "mechanical"
+      ],
+      "texture_movement": [
+        "unsettled",
+        "cycling"
+      ],
+      "texture_harmonic": [
+        "functional"
+      ],
+      "tempo_final": 71,
+      "instrument_variant": 2,
+      "primary_archetype": "gentle_tension",
+      "secondary_archetype": "cautious_hope",
+      "blend_ratio": 0.52,
+      "intensity_level": "high",
+      "source_themes": [
+        "politics",
+        "economy",
+        "conflict"
+      ],
+      "date_seed": "2026-01-08"
+    }
+  },
+  "visualizations": [
+    "outputs/run_real_audio/visualizations/mood_radar.svg",
+    "outputs/run_real_audio/visualizations/archetype_wheel.svg",
+    "outputs/run_real_audio/visualizations/prompt_dna.svg"
+  ],
+  "audio": "outputs/run_real_audio/audio/generated_default_215131.wav"
+}

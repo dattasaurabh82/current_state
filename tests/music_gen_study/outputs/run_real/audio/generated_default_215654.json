@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-01-08T21:57:42.339385",
+  "run": "run_real",
+  "style": "default",
+  "prompt": "Cinematic ambient, with soft synths, veiled atmospheric pads and subtle strings, atmospheric and thoughtful, hopeful, moderate 71 BPM, stereo, spacious",
+  "audio_file": "generated_default_215654.wav",
+  "analysis": {
+    "emotional_valence": 0.1,
+    "tension_level": 0.6,
+    "hope_factor": 0.4,
+    "energy_level": "medium",
+    "dominant_themes": [
+      "politics",
+      "economy",
+      "conflict"
+    ],
+    "summary": "A day marked by geopolitical tensions and economic uncertainty, with some glimmers of hope."
+  },
+  "selection": {
+    "primary": "gentle_tension",
+    "secondary": "cautious_hope"
+  }
+}
