@@ -7,10 +7,9 @@
 - ~~Music Gen Pipeline docu~~ ✅
 - WIP: Main README Docu ... 🟠
 - WIP: All code base cleanup - System provisioning docu and tooling .... 🟠
-- Setup script 🔴
 - Web ui Monitor 🔴
-- Speaker Switch switcher 🔴
-- Along-side drop box do a freesound.org upload ... 
+- Setup script 🔴
+- Along-side drop box do a freesound.org upload ... 🔴
 - ~~SfX with music~~
 - Other region of news 🔴
 - ~~Business logic of operation ... (radar trigger)~~ ✅
@@ -19,6 +18,12 @@
 - ~~Send cancel to other agent calls~~
 - ~~slow down track for 30 sec to make it feel longer [post processing]~~
 
+- Hardware Update Steps: 🔴
+  - Speaker Switch switcher
+  - Update circuit
+  - Place new order for SLA prints
+  - Print PLA locally
+  - Assemble new one ... 
 ---
 
 ## Project structure
