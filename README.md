@@ -19,11 +19,11 @@
 - ~~slow down track for 30 sec to make it feel longer [post processing]~~
 
 - Hardware Update Steps: 🔴
-  - Speaker Switch switcher
-  - Update circuit
-  - Place new order for SLA prints
-  - Print PLA locally
-  - Assemble new one ... 
+  - Speaker Switch switcher 🔴
+  - Update circuit 🔴
+  - Place new order for SLA prints 🔴
+  - Print PLA locally 🔴
+  - Assemble new one ... 🔴
 ---
 
 ## Project structure

@@ -959,12 +959,19 @@ ANIMATIONS (Subtle)
 
 .audio-player-element {
     width: 100%;
-    height: 36px;
-    filter: grayscale(100%) brightness(0.8) contrast(1.2);
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-panel);
 }
 
-.audio-player-element::-webkit-media-controls-panel {
+/* Style audio controls for dark theme */
+audio::-webkit-media-controls-panel {
     background-color: var(--bg-panel);
+}
+
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+    color: var(--text-secondary);
 }
 
 /* Responsive audio section */
@@ -972,4 +979,64 @@ ANIMATIONS (Subtle)
     .audio-section {
         max-height: 400px;
     }
+}
+
+/* =============================================================================
+   WAVEFORM PLAYER
+   ============================================================================= */
+
+.waveform-container {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+}
+
+.waveform {
+    width: 100%;
+    height: 48px;
+    cursor: pointer;
+}
+
+.waveform-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border-color);
+}
+
+.waveform-btn {
+    width: 32px;
+    height: 32px;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s ease;
+}
+
+.waveform-btn:hover {
+    background-color: var(--bg-hover);
+    border-color: var(--border-light);
+}
+
+.waveform-btn:active {
+    background-color: var(--bg-active);
+}
+
+.waveform-time {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+}
+
+.waveform-time .current-time {
+    color: var(--text-secondary);
 }

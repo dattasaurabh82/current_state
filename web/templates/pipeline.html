@@ -173,16 +173,20 @@
             <div class="panel-body" id="audio-files-container">
                 {% if audio_files %}
                     {% for audio in audio_files %}
-                    <div class="audio-item" data-filename="{{ audio.filename }}">
+                    <div class="audio-item" data-filename="{{ audio.filename }}" data-url="{{ audio.url }}">
                         <div class="audio-item-header">
                             <span class="audio-item-date">{{ audio.date }}</span>
                             <span class="text-muted">{{ audio.time }}</span>
                             <span class="audio-item-size text-dim">{{ audio.size }}</span>
                         </div>
                         <div class="audio-item-filename text-secondary text-sm">{{ audio.filename }}</div>
-                        <audio controls preload="none" class="audio-player-element">
-                            <source src="{{ audio.url }}" type="audio/wav">
-                        </audio>
+                        <div class="waveform-container">
+                            <div class="waveform" id="waveform-{{ loop.index }}"></div>
+                            <div class="waveform-controls">
+                                <button class="waveform-btn play-btn" data-index="{{ loop.index }}">▶</button>
+                                <span class="waveform-time"><span class="current-time">0:00</span> / <span class="duration">0:00</span></span>
+                            </div>
+                        </div>
                     </div>
                     {% endfor %}
                 {% else %}
@@ -195,58 +199,12 @@
 
 <!-- Polling script for real-time audio updates -->
 <script>
-(function() {
-    let lastAudioCount = {{ audio_count }};
-    
-    async function pollAudioFiles() {
-        try {
-            const response = await fetch('/api/audio-files');
-            const data = await response.json();
-            
-            // Update count
-            document.getElementById('audio-count').textContent = data.count + ' files';
-            
-            // If count changed, refresh the list
-            if (data.count !== lastAudioCount) {
-                lastAudioCount = data.count;
-                updateAudioList(data.files);
-            }
-        } catch (e) {
-            console.error('[Pipeline] Error polling audio files:', e);
-        }
-    }
-    
-    function updateAudioList(files) {
-        const container = document.getElementById('audio-files-container');
-        
-        if (files.length === 0) {
-            container.innerHTML = '<p class="text-dim">No audio files found</p>';
-            return;
-        }
-        
-        let html = '';
-        files.forEach(audio => {
-            html += `
-                <div class="audio-item" data-filename="${audio.filename}">
-                    <div class="audio-item-header">
-                        <span class="audio-item-date">${audio.date}</span>
-                        <span class="text-muted">${audio.time}</span>
-                        <span class="audio-item-size text-dim">${audio.size}</span>
-                    </div>
-                    <div class="audio-item-filename text-secondary text-sm">${audio.filename}</div>
-                    <audio controls preload="none" class="audio-player-element">
-                        <source src="${audio.url}" type="audio/wav">
-                    </audio>
-                </div>
-            `;
-        });
-        
-        container.innerHTML = html;
-    }
-    
-    // Poll every 5 seconds
-    setInterval(pollAudioFiles, 5000);
-})();
+window.audioFilesData = [
+    {% for audio in audio_files %}
+    { filename: "{{ audio.filename }}", url: "{{ audio.url }}", date: "{{ audio.date }}", time: "{{ audio.time }}", size: "{{ audio.size }}" }{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+window.lastAudioCount = {{ audio_count }};
 </script>
 
 {% endif %}
