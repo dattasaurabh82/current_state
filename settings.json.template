@@ -25,5 +25,8 @@
     "music":{
         "fadeInDurationSec":1.5,
         "fadeOutDurationSec":2.0
+    },
+    "backup":{
+        "generation_results_to_dropbox": true
     }
 }
