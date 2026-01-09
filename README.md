@@ -7,9 +7,9 @@
 - ~~Music Gen Pipeline docu~~ ✅
 - WIP: Main README Docu ... 🟠
 - WIP: All code base cleanup - System provisioning docu and tooling .... 🟠
+- Setup script 🔴
 - Web ui Monitor 🔴
 - Speaker Switch switcher 🔴
-- Setup script 🔴
 - Along-side drop box do a freesound.org upload ... 
 - ~~SfX with music~~
 - Other region of news 
