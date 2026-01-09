@@ -15,6 +15,11 @@
   - Place new order for SLA prints 
   - Print PLA locally 
   - Assemble new one ... 
+
+**Future**:
+- More archetypes
+- embedding models if needed
+- data viz after a period of time on the world sentiment shifts
 ---
 
 ## Project structure
