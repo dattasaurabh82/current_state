@@ -4,22 +4,17 @@
 
 ### Low
 
-- WIP: Docu ... 🟠
+- ~~Music Gen Pipeline docu~~ ✅
+- WIP: Main README Docu ... 🟠
 - WIP: All code base cleanup - System provisioning docu and tooling .... 🟠
-- maybe web ui 🔴
+- Web ui Monitor 🔴
+- Speaker Switch switcher 🔴
+- Setup script 🔴
+- Along-side drop box do a freesound.org upload ... 
 - ~~SfX with music~~
 - Other region of news 
-
-### High
-
 - ~~Business logic of operation ... (radar trigger)~~ ✅
 - ~~Improve music prompt gen algo~~ ✅
-
-### Backlog
-
-- ~~How often and how long silent audio player plays~~
-  - ~~Silent audio to keep the channel active did not work ...~~ ✅
-    - so implement HW sol to trigger Audio On on FREKVENS 🟠
 - ~~Currently happy with the implementation~~
 - ~~Send cancel to other agent calls~~
 - ~~slow down track for 30 sec to make it feel longer [post processing]~~

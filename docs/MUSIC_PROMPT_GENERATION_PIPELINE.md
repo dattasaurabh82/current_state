@@ -423,28 +423,7 @@ V=Valence T=Tension H=Hope E=Energy
 
 ## The Three-Layer Prompt Architecture
 
-```mermaid
-flowchart TB
-    subgraph "Layer 1: STRUCTURE (from Archetype)"
-        A1[Genre] --> P[Final Prompt]
-        A2[Core Instruments] --> P
-        A3[Base Tempo] --> P
-        A4[Musical Moods] --> P
-    end
-    
-    subgraph "Layer 2: COLOR (from Theme Textures)"
-        T1[Timbre Words] --> P
-        T2[Movement Words] --> P
-        T3[Harmonic Hints] --> P
-    end
-    
-    subgraph "Layer 3: VARIETY (from Date Seed)"
-        V1[Instrument Rotation] --> P
-        V2[Mood Shuffle] --> P
-        V3[Tempo Nudge] --> P
-        V4[Texture Emphasis] --> P
-    end
-```
+![alt text](../assets/PromptArchitecture.png)
 
 ### Layer 1: Structure (from Archetype)
 
