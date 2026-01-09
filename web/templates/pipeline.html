@@ -16,7 +16,7 @@
     </div>
 
     <!-- Last Run Info -->
-    <div class="pipeline-header-bar">
+    <div class="pipeline-header-bar mb-md">
         <span class="text-dim">LAST RUN:</span>
         <span class="text-secondary">{{ pipeline.timestamp_display or pipeline.timestamp or 'N/A' }}</span>
         <span class="text-dim">│</span>
@@ -24,15 +24,15 @@
         <span class="text-secondary">{{ pipeline.date or 'N/A' }}</span>
     </div>
 
-    <!-- Main Grid: Steps + Audio -->
+    <!-- Main Grid: 4 columns, 2 rows -->
     <div class="pipeline-main-grid">
-        <!-- Steps Row -->
-        <div class="pipeline-steps">
-            <!-- Step 1: LLM Analysis -->
+        
+        <!-- Row 1, Col 1: Step 1 -->
+        <div class="pipeline-cell cell-step1">
             {% if pipeline.analysis %}
-            <div class="panel">
+            <div class="panel panel-fill">
                 <div class="panel-header">STEP 1: LLM ANALYSIS</div>
-                <div class="panel-body">
+                <div class="panel-body panel-body-scroll">
                     <p class="text-secondary mb-md">{{ pipeline.analysis.summary or 'NO SUMMARY AVAILABLE' | upper }}</p>
                     
                     {% if pipeline.analysis.dominant_themes %}
@@ -80,12 +80,14 @@
                 </div>
             </div>
             {% endif %}
+        </div>
 
-            <!-- Step 2: Archetype Selection -->
+        <!-- Row 1, Col 2: Step 2 -->
+        <div class="pipeline-cell cell-step2">
             {% if pipeline.selection %}
-            <div class="panel">
+            <div class="panel panel-fill">
                 <div class="panel-header">STEP 2: ARCHETYPE SELECTION</div>
-                <div class="panel-body">
+                <div class="panel-body panel-body-scroll">
                     <div class="archetype-selected mb-md">
                         <div class="archetype-primary">
                             <span class="text-dim text-xs">PRIMARY</span>
@@ -122,12 +124,14 @@
                 </div>
             </div>
             {% endif %}
+        </div>
 
-            <!-- Step 3: Prompt Building -->
+        <!-- Row 1, Col 3: Step 3 -->
+        <div class="pipeline-cell cell-step3">
             {% if pipeline.prompt %}
-            <div class="panel">
+            <div class="panel panel-fill">
                 <div class="panel-header">STEP 3: PROMPT BUILDING</div>
-                <div class="panel-body">
+                <div class="panel-body panel-body-scroll">
                     <div class="prompt-display mb-md">
                         <div class="text-dim text-xs mb-sm">GENERATED PROMPT</div>
                         <div class="prompt-text">{{ pipeline.prompt.prompt | upper }}</div>
@@ -162,14 +166,14 @@
             {% endif %}
         </div>
 
-        <!-- Audio Column (full height) -->
-        <div class="audio-section">
-            <div class="panel panel-full-height">
+        <!-- Row 1-2, Col 4: Audio (spans 2 rows) -->
+        <div class="pipeline-cell cell-audio">
+            <div class="panel panel-fill">
                 <div class="panel-header">
                     GENERATED AUDIO
                     <span class="text-muted float-right" id="audio-count">{{ audio_count }} FILES</span>
                 </div>
-                <div class="panel-body" id="audio-files-container">
+                <div class="panel-body panel-body-scroll" id="audio-files-container">
                     {% if audio_files %}
                         {% for audio in audio_files %}
                         <div class="audio-item" data-filename="{{ audio.filename }}" data-url="{{ audio.url }}">
@@ -178,7 +182,7 @@
                                 <span class="text-muted">{{ audio.time }}</span>
                                 <span class="audio-item-size text-dim">{{ audio.size }}</span>
                             </div>
-                            <div class="audio-item-filename text-secondary text-sm">{{ audio.filename | upper }}</div>
+                            <div class="audio-item-filename text-secondary text-sm">{{ audio.filename }}</div>
                             <div class="waveform-container">
                                 <div class="waveform" id="waveform-{{ loop.index }}"></div>
                                 <div class="waveform-controls">
@@ -194,17 +198,20 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Full Flow Visualization -->
-    <div class="panel mt-md">
-        <div class="panel-header">
-            FULL FLOW VISUALIZATION
-            <button class="reset-layout-btn" id="reset-layout-btn">RESET LAYOUT</button>
+        <!-- Row 2, Col 1-3: Full Flow Viz -->
+        <div class="pipeline-cell cell-viz">
+            <div class="panel panel-fill">
+                <div class="panel-header">
+                    FULL FLOW VISUALIZATION
+                    <button class="reset-layout-btn" id="reset-layout-btn">RESET LAYOUT</button>
+                </div>
+                <div class="panel-body viz-panel-body">
+                    <div class="derivation-graph-full" id="graph-full-flow"></div>
+                </div>
+            </div>
         </div>
-        <div class="panel-body viz-panel-body">
-            <div class="derivation-graph-full" id="graph-full-flow"></div>
-        </div>
+
     </div>
 </div>
 
