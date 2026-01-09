@@ -37,6 +37,7 @@ from lib.archetypes import ArchetypeName
 from lib.archetype_selector import NewsAnalysis, select_archetypes
 from lib.music_prompt_builder import build_prompt_from_selection
 from lib.visualizations import generate_all_visualizations
+from lib.generation_backup import backup_generation_results
 
 
 # =============================================================================
@@ -331,6 +332,11 @@ def generate_music_prompt_from_news(articles: List[Dict]) -> Tuple[Optional[str]
         output_dir=output_dir,
         date_str=date_str,
     )
+    
+    # ==========================================================================
+    # STEP 5: Backup to Dropbox (optional)
+    # ==========================================================================
+    backup_generation_results()
     
     # ==========================================================================
     # DONE
