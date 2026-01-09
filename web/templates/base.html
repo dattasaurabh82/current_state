@@ -1,2 +1,61 @@
-<!-- Base template with tabs -->
-<!-- TODO: Implement in Step 2.4 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Theme Music Player</title>
+    
+    <!-- TUI Styles -->
+    <link rel="stylesheet" href="/static/css/tui.css">
+    
+    <!-- xterm.js (for logs tab) -->
+    <link rel="stylesheet" href="/static/js/vendor/xterm.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">▶ WORLD THEME MUSIC PLAYER</div>
+            <div class="header-subtitle">news → mood → music // bathroom ambient system</div>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="tabs">
+            <a href="/news" 
+               class="tab {% if active_tab == 'news' %}active{% endif %}" 
+               data-tab="news">
+                News
+            </a>
+            <a href="/pipeline" 
+               class="tab {% if active_tab == 'pipeline' %}active{% endif %}" 
+               data-tab="pipeline">
+                Pipeline
+            </a>
+            <a href="/logs" 
+               class="tab {% if active_tab == 'logs' %}active{% endif %}" 
+               data-tab="logs">
+                Logs
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% if active_tab == 'news' %}
+                {% include 'news.html' %}
+            {% elif active_tab == 'pipeline' %}
+                {% include 'pipeline.html' %}
+            {% elif active_tab == 'logs' %}
+                {% include 'logs.html' %}
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/vendor/xterm.min.js"></script>
+    <script src="/static/js/vendor/xterm-addon-fit.min.js"></script>
+    
+    {% if active_tab == 'logs' %}
+    <script src="/static/js/logs.js"></script>
+    {% endif %}
+</body>
+</html>

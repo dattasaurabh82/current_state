@@ -1,2 +1,659 @@
-/* TUI CSS - IBM Plex Mono, Monochrome Style */
-/* TODO: Implement in Step 2.3 */
+/*
+ * TUI CSS - Terminal User Interface Styling
+ * Monochrome, IBM Plex Mono, terminal aesthetic
+ */
+
+/* =============================================================================
+FONT FACES
+============================================================================= */
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    src: url('/static/fonts/IBMPlexMono-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    src: url('/static/fonts/IBMPlexMono-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    src: url('/static/fonts/IBMPlexMono-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* =============================================================================
+CSS VARIABLES - MONOCHROME PALETTE
+============================================================================= */
+
+:root {
+    /* Background shades */
+    --bg-dark: #0a0a0a;
+    --bg-main: #121212;
+    --bg-panel: #1a1a1a;
+    --bg-hover: #252525;
+    --bg-active: #2a2a2a;
+
+    /* Text shades */
+    --text-bright: #ffffff;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-dim: #606060;
+    --text-muted: #404040;
+
+    /* Border */
+    --border-color: #333333;
+    --border-light: #444444;
+
+    /* Accent (subtle) */
+    --accent: #808080;
+    --accent-bright: #b0b0b0;
+
+    /* Status colors (muted for TUI feel) */
+    --status-error: #cc6666;
+    --status-warn: #cccc66;
+    --status-success: #66cc66;
+    --status-info: #6699cc;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Typography */
+    --font-mono: 'IBM Plex Mono', 'Consolas', 'Monaco', monospace;
+    --font-size-xs: 10px;
+    --font-size-sm: 12px;
+    --font-size-md: 14px;
+    --font-size-lg: 16px;
+    --font-size-xl: 20px;
+
+    /* Border radius (minimal for TUI) */
+    --radius-sm: 2px;
+    --radius-md: 4px;
+}
+
+/* =============================================================================
+RESET & BASE
+============================================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-md);
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================================
+LAYOUT
+============================================================================= */
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.header {
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+    padding: var(--space-sm) var(--space-md);
+    flex-shrink: 0;
+}
+
+.header-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 1px;
+}
+
+.header-subtitle {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    margin-top: var(--space-xs);
+}
+
+.main-content {
+    flex: 1;
+    overflow: auto;
+    padding: var(--space-md);
+}
+
+/* =============================================================================
+TABS
+============================================================================= */
+
+.tabs {
+    display: flex;
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.tab {
+    padding: var(--space-sm) var(--space-lg);
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s ease;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.tab:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+}
+
+.tab.active {
+    color: var(--text-bright);
+    border-bottom-color: var(--text-bright);
+    background-color: var(--bg-active);
+}
+
+/* Tab icons (optional) */
+.tab::before {
+    margin-right: var(--space-sm);
+}
+
+.tab[data-tab="news"]::before {
+    content: "▣";
+}
+
+.tab[data-tab="pipeline"]::before {
+    content: "▷";
+}
+
+.tab[data-tab="logs"]::before {
+    content: "▤";
+}
+
+/* =============================================================================
+PANELS / CARDS (TUI Box Style)
+============================================================================= */
+
+.panel {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-md);
+}
+
+.panel-header {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-dark);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.panel-header::before {
+    content: "┌─";
+    color: var(--text-muted);
+    margin-right: var(--space-sm);
+}
+
+.panel-body {
+    padding: var(--space-md);
+}
+
+.panel-footer {
+    padding: var(--space-sm) var(--space-md);
+    border-top: 1px solid var(--border-color);
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+}
+
+/* =============================================================================
+GRID LAYOUTS
+============================================================================= */
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: var(--space-sm);
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =============================================================================
+LOG PANEL (TMUX-STYLE)
+============================================================================= */
+
+.log-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    height: calc(100vh - 120px);
+    background-color: var(--border-color);
+}
+
+.log-panel {
+    background-color: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.log-panel-header {
+    padding: var(--space-xs) var(--space-sm);
+    background-color: var(--bg-panel);
+    border-bottom: 1px solid var(--border-color);
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    flex-shrink: 0;
+}
+
+.log-panel-header.active {
+    background-color: var(--bg-active);
+    color: var(--text-secondary);
+}
+
+.log-panel-content {
+    flex: 1;
+    overflow: hidden;
+    padding: var(--space-xs);
+}
+
+/* xterm.js container */
+.log-panel-content .xterm {
+    height: 100%;
+}
+
+/* =============================================================================
+TEXT STYLES
+============================================================================= */
+
+.text-bright {
+    color: var(--text-bright);
+}
+
+.text-primary {
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-dim {
+    color: var(--text-dim);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.text-error {
+    color: var(--status-error);
+}
+
+.text-warn {
+    color: var(--status-warn);
+}
+
+.text-success {
+    color: var(--status-success);
+}
+
+.text-info {
+    color: var(--status-info);
+}
+
+.text-xs {
+    font-size: var(--font-size-xs);
+}
+
+.text-sm {
+    font-size: var(--font-size-sm);
+}
+
+.text-md {
+    font-size: var(--font-size-md);
+}
+
+.text-lg {
+    font-size: var(--font-size-lg);
+}
+
+.text-xl {
+    font-size: var(--font-size-xl);
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
+.text-medium {
+    font-weight: 500;
+}
+
+.text-mono {
+    font-family: var(--font-mono);
+}
+
+.text-upper {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* =============================================================================
+NEWS CARDS
+============================================================================= */
+
+.news-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+
+.news-card-source {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+}
+
+.news-card-title {
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.news-card-meta {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-sm);
+}
+
+/* =============================================================================
+PIPELINE VISUALIZATION
+============================================================================= */
+
+.pipeline-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.pipeline-step:last-child {
+    border-bottom: none;
+}
+
+.pipeline-step-number {
+    width: 32px;
+    height: 32px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-right: var(--space-md);
+}
+
+.pipeline-step-content {
+    flex: 1;
+}
+
+.pipeline-step-title {
+    font-weight: 500;
+    color: var(--text-bright);
+    margin-bottom: var(--space-xs);
+}
+
+.pipeline-step-data {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* =============================================================================
+DATA DISPLAY
+============================================================================= */
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+    border-bottom: 1px dotted var(--border-color);
+}
+
+.data-row:last-child {
+    border-bottom: none;
+}
+
+.data-label {
+    color: var(--text-dim);
+    font-size: var(--font-size-sm);
+}
+
+.data-value {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+}
+
+/* =============================================================================
+PROGRESS / METERS
+============================================================================= */
+
+.meter {
+    height: 8px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    background-color: var(--text-secondary);
+    transition: width 0.3s ease;
+}
+
+.meter-fill.positive {
+    background-color: var(--status-success);
+}
+
+.meter-fill.negative {
+    background-color: var(--status-error);
+}
+
+.meter-fill.neutral {
+    background-color: var(--text-dim);
+}
+
+/* =============================================================================
+AUDIO PLAYER
+============================================================================= */
+
+.audio-player {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+}
+
+.audio-player audio {
+    width: 100%;
+    height: 32px;
+    filter: grayscale(100%) contrast(0.8);
+}
+
+/* =============================================================================
+UTILITIES
+============================================================================= */
+
+.mt-sm {
+    margin-top: var(--space-sm);
+}
+
+.mt-md {
+    margin-top: var(--space-md);
+}
+
+.mt-lg {
+    margin-top: var(--space-lg);
+}
+
+.mb-sm {
+    margin-bottom: var(--space-sm);
+}
+
+.mb-md {
+    margin-bottom: var(--space-md);
+}
+
+.mb-lg {
+    margin-bottom: var(--space-lg);
+}
+
+.p-sm {
+    padding: var(--space-sm);
+}
+
+.p-md {
+    padding: var(--space-md);
+}
+
+.p-lg {
+    padding: var(--space-lg);
+}
+
+.hidden {
+    display: none;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-sm {
+    gap: var(--space-sm);
+}
+
+.gap-md {
+    gap: var(--space-md);
+}
+
+/* =============================================================================
+SCROLLBAR (TUI Style)
+============================================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-light);
+}
+
+/* =============================================================================
+ANIMATIONS (Subtle)
+============================================================================= */
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.cursor-blink::after {
+    content: "█";
+    animation: blink 1s step-end infinite;
+    color: var(--text-dim);
+}
