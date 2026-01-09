@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-01-09T18:51:48.302090",
+  "source_file": "/Users/saurabhdatta/Documents/Projects/world_theme_music_player/tests/music_gen_study/test_data/news_positive.json",
+  "headline_count": 8,
+  "analysis": {
+    "emotional_valence": 0.7,
+    "tension_level": 0.2,
+    "hope_factor": 0.8,
+    "energy_level": "high",
+    "dominant_themes": [
+      "environment",
+      "science",
+      "politics"
+    ],
+    "summary": "A highly positive day with significant breakthroughs in climate, health, and energy."
+  }
+}

@@ -129,30 +129,10 @@ flowchart LR
 
 ### Approach: Single LLM + Rule-Based Pipeline
 
-```mermaid
-flowchart TB
-    subgraph "1 LLM Call"
-        A[News Headlines] --> B[Llama 3 70B]
-        B --> C[Structured Analysis JSON]
-    end
-    
-    subgraph "Rule-Based Pipeline"
-        C --> D[Archetype Selector]
-        D --> E[Prompt Builder]
-        T[Theme Textures] --> E
-        V[Daily Variation] --> E
-    end
-    
-    E --> F[MusicGen Prompt]
-    F --> G[MusicGen API]
-    
-    subgraph "Debug Output"
-        C --> H[mood_radar.svg]
-        D --> I[archetype_wheel.svg]
-        E --> J[prompt_dna.svg]
-        E --> K[pipeline_results.json]
-    end
-```
+> [!Tip]
+> APPROACH FINALLY USED
+
+![alt text](../assets/ApproachSummaryFlow.png)
 
 **Benefits:**
 1. **Single LLM call** - Only the analysis step uses LLM
@@ -166,45 +146,7 @@ flowchart TB
 
 ## Pipeline Overview
 
-```mermaid
-flowchart TB
-    subgraph Input
-        N[News API] --> H[20 Headlines]
-    end
-    
-    subgraph "Step 1: LLM Analysis"
-        H --> LLM[Llama 3 70B]
-        LLM --> A[Structured Analysis]
-    end
-    
-    subgraph "Step 2: Archetype Selection"
-        A --> S{Score All 6 Archetypes}
-        S --> P[Primary Archetype]
-        S --> SEC[Secondary Archetype?]
-    end
-    
-    subgraph "Step 3: Prompt Building"
-        P --> PB[Prompt Builder]
-        SEC --> PB
-        TH[Dominant Themes] --> TX[Theme Textures]
-        TX --> PB
-        DT[Today's Date] --> DV[Daily Variation]
-        DV --> PB
-        PB --> PR[Final Prompt]
-    end
-    
-    subgraph "Step 4: Generation"
-        PR --> MG[MusicGen API]
-        MG --> WAV[Audio File]
-    end
-    
-    subgraph "Debug Outputs"
-        A --> V1[mood_radar.svg]
-        S --> V2[archetype_wheel.svg]
-        PB --> V3[prompt_dna.svg]
-        PB --> JSON[pipeline_results.json]
-    end
-```
+![alt text](../assets/PipelineOverview.png)
 
 ---
 
@@ -244,6 +186,63 @@ flowchart TB
 - Temperature: `0.3` (low for consistent structured output)
 - Max tokens: `500`
 - Format: Llama 3 chat template with system prompt
+
+**Example Outputs**
+
+```txt
+Found 8 headlines
+⠦ Calling LLM for news analysis...
+
+╭───────────────────────────────────────────────────────────────── Input Headlines ──────────────────────────────────────────────────────────────────╮
+│ - Historic climate agreement signed by 150 nations, pledging carbon neutrality by 2040 (Source: Reuters)                                           │
+│ - New cancer treatment shows 90% success rate in clinical trials (Source: BBC)                                                                     │
+│ - Global poverty rates drop to historic low, UN reports (Source: AP News)                                                                          │
+│ - Renewable energy now powers 60% of European homes (Source: The Guardian)                                                                         │
+│ - Peace talks succeed: Historic ceasefire agreement ends 20-year conflict (Source: CNN)                                                            │
+│ - Global unemployment falls to lowest level in decades (Source: Bloomberg)                                                                         │
+│ - Scientists achieve fusion energy breakthrough, sustainable power within reach (Source: Nature)                                                   │
+│ - Malaria cases drop 50% in Africa following vaccine rollout (Source: WHO)                                                                         │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+                  News Mood Analysis
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Metric            ┃ Value ┃ Visual                  ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Emotional Valence │ +0.70 │ [          |========  ] │
+│ Tension Level     │ 0.20  │ [====                ]  │
+│ Hope Factor       │ 0.80  │ [================    ]  │
+│ Energy Level      │ HIGH  │                         │
+└───────────────────┴───────┴─────────────────────────┘
+╭───────────────────────────────────────────────────────────────── Dominant Themes ──────────────────────────────────────────────────────────────────╮
+│ environment, science, politics                                                                                                                     │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────── Summary ──────────────────────────────────────────────────────────────────────╮
+│ A highly positive day marked by significant breakthroughs in climate, health, and energy.                                                          │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+```
+
+```json
+{
+  "timestamp": "2026-01-09T18:51:48.302090",
+  "source_file": "news_positive.json",
+  "headline_count": 8,
+  "analysis": {
+    "emotional_valence": 0.7,
+    "tension_level": 0.2,
+    "hope_factor": 0.8,
+    "energy_level": "high",
+    "dominant_themes": [
+      "environment",
+      "science",
+      "politics"
+    ],
+    "summary": "A highly positive day with significant breakthroughs in climate, health, and energy."
+  }
+}
+```
+
+![alt text](../generation_results/visualizations/mood_radar.svg)
+
 
 ### Step 2: Archetype Selection
 
@@ -303,6 +302,114 @@ melancholic_beauty → [gentle_tension, reflective_calm]
 cautious_hope      → [tranquil_optimism, gentle_tension, serene_resilience]
 serene_resilience  → [cautious_hope, reflective_calm, tranquil_optimism]
 ```
+
+**Example Outputs**
+
+```txt
+╭────────────────────────────────────────────────────────────────── Input Analysis ──────────────────────────────────────────────────────────────────╮
+│ Valence: +0.70  |  Tension: 0.20  |  Hope: 0.80  |  Energy: HIGH                                                                                   │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+                                            Archetype Scores
+┏━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━┓
+┃ Rank ┃ Archetype          ┃ Score ┃ Bar                  ┃     V ┃     T ┃     H ┃     E ┃   Status   ┃
+┡━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━┩
+│ 1    │ Tranquil Optimism  │ 0.922 │ [=============  ]    │  0.94 │  1.00 │  1.00 │  0.60 │  PRIMARY   │
+│ 2    │ Serene Resilience  │ 0.689 │ [==========     ]    │  0.37 │  0.64 │  0.89 │  1.00 │ SECONDARY  │
+│ 3    │ Reflective Calm    │ 0.513 │ [=======        ]    │  0.21 │  1.00 │  0.37 │  0.60 │ compatible │
+│ 4    │ Cautious Hope      │ 0.437 │ [======         ]    │  0.21 │  0.37 │  0.64 │  0.60 │ compatible │
+│ 5    │ Gentle Tension     │ 0.248 │ [===            ]    │  0.02 │  0.17 │  0.17 │  1.00 │     --     │
+│ 6    │ Melancholic Beauty │ 0.201 │ [===            ]    │  0.00 │  0.37 │  0.06 │  0.60 │     --     │
+└──────┴────────────────────┴───────┴──────────────────────┴───────┴───────┴───────┴───────┴────────────┘
+V=Valence T=Tension H=Hope E=Energy
+╭───────────────────────────────────────────────────────────────── Selection Result ─────────────────────────────────────────────────────────────────╮
+│ Primary: Tranquil Optimism                                                                                                                         │
+│   Genre: ambient electronic                                                                                                                        │
+│   Score: 0.922                                                                                                                                     │
+│                                                                                                                                                    │
+│ Secondary: Serene Resilience                                                                                                                       │
+│   Genre: ambient post-rock                                                                                                                         │
+│   Score: 0.689                                                                                                                                     │
+│   Blend: 57% / 43%                                                                                                                                 │
+│                                                                                                                                                    │
+│ Intensity Level: LOW                                                                                                                               │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+```json
+{
+  "primary": "tranquil_optimism",
+  "primary_score": 0.922,
+  "secondary": "serene_resilience",
+  "secondary_score": 0.689,
+  "intensity_level": "low",
+  "blend_ratio": 0.57,
+  "all_scores": [
+    {
+      "archetype": "tranquil_optimism",
+      "score": 0.922,
+      "components": {
+        "valence": 0.939,
+        "tension": 1.0,
+        "hope": 1.0,
+        "energy": 0.6
+      }
+    },
+    {
+      "archetype": "serene_resilience",
+      "score": 0.689,
+      "components": {
+        "valence": 0.368,
+        "tension": 0.641,
+        "hope": 0.895,
+        "energy": 1.0
+      }
+    },
+    {
+      "archetype": "reflective_calm",
+      "score": 0.513,
+      "components": {
+        "valence": 0.21,
+        "tension": 1.0,
+        "hope": 0.368,
+        "energy": 0.6
+      }
+    },
+    {
+      "archetype": "cautious_hope",
+      "score": 0.437,
+      "components": {
+        "valence": 0.21,
+        "tension": 0.368,
+        "hope": 0.641,
+        "energy": 0.6
+      }
+    },
+    {
+      "archetype": "gentle_tension",
+      "score": 0.248,
+      "components": {
+        "valence": 0.018,
+        "tension": 0.169,
+        "hope": 0.169,
+        "energy": 1.0
+      }
+    },
+    {
+      "archetype": "melancholic_beauty",
+      "score": 0.201,
+      "components": {
+        "valence": 0.001,
+        "tension": 0.368,
+        "hope": 0.062,
+        "energy": 0.6
+      }
+    }
+  ]
+}
+```
+
+![alt text](../generation_results/visualizations/archetype_wheel.svg)
+
 
 ### Step 3: Prompt Building
 
