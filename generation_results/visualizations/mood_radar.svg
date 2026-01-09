@@ -36,13 +36,13 @@
   <text x="375.0" y="200.0" text-anchor="middle" class="label">Tension</text>
   <text x="200.0" y="375.0" text-anchor="middle" class="label">Valence</text>
   <text x="25.0" y="200.00000000000003" text-anchor="middle" class="label">Energy</text>
-  <polygon points="200.0,140.0 248.0,200.0 200.0,266.0 120.8,200.0" fill="url(#primaryGradient)" fill-opacity="0.3" stroke="#6366f1" stroke-width="2" filter="url(#glow)"/>
-  <circle cx="200.0" cy="140.0" r="6" fill="#6366f1" stroke="#1e1e2e" stroke-width="2"/>
-  <circle cx="248.0" cy="200.0" r="6" fill="#6366f1" stroke="#1e1e2e" stroke-width="2"/>
+  <polygon points="200.0,152.0 272.0,200.0 200.0,266.0 120.8,200.0" fill="url(#primaryGradient)" fill-opacity="0.3" stroke="#6366f1" stroke-width="2" filter="url(#glow)"/>
+  <circle cx="200.0" cy="152.0" r="6" fill="#6366f1" stroke="#1e1e2e" stroke-width="2"/>
+  <circle cx="272.0" cy="200.0" r="6" fill="#6366f1" stroke="#1e1e2e" stroke-width="2"/>
   <circle cx="200.0" cy="266.0" r="6" fill="#6366f1" stroke="#1e1e2e" stroke-width="2"/>
   <circle cx="120.8" cy="200.0" r="6" fill="#6366f1" stroke="#1e1e2e" stroke-width="2"/>
-  <text x="200.0" y="165.0" text-anchor="middle" dominant-baseline="middle" class="value small">0.50</text>
-  <text x="223.0" y="200.0" text-anchor="middle" dominant-baseline="middle" class="value small">0.40</text>
+  <text x="200.0" y="177.0" text-anchor="middle" dominant-baseline="middle" class="value small">0.40</text>
+  <text x="247.0" y="200.0" text-anchor="middle" dominant-baseline="middle" class="value small">0.60</text>
   <text x="200.0" y="241.0" text-anchor="middle" dominant-baseline="middle" class="value small">+0.10</text>
   <text x="145.8" y="200.0" text-anchor="middle" dominant-baseline="middle" class="value small">MEDIUM</text>
   <text x="200" y="380" text-anchor="middle" class="label dim">Overall: Balanced</text>

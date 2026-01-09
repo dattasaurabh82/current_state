@@ -4,74 +4,126 @@
         "articles": [
             {
                 "source": {
-                    "id": "usa-today",
-                    "name": "USA Today"
+                    "id": null,
+                    "name": "Thefly.com"
                 },
-                "author": "Alyssa Barbieri, Bears Wire",
-                "title": "Good news, bad news from Bears' final injury report of wild-card round",
-                "description": "The Bears released their final injury report ahead of their wild-card game against the Packers. Here's the good news and bad news.",
-                "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/01/08/bears-vs-packers-good-bad-news-from-final-wild-card-injury-report/88084094007/",
-                "urlToImage": "https://s.yimg.com/ny/api/res/1.2/xfMKheRdpT52tilodIOslQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD02NzU7Y2Y9d2VicA--/https://media.zenfs.com/en/chicago_bears_wire_usa_today_sports_articles_533/53618c77eddf4c33d05352db1f2899ee",
-                "publishedAt": "2026-01-08T19:37:18Z",
-                "content": "The Chicago Bears (11-6) shared their final injury report ahead of a wild-card matchup against the Green Bay Packers (9-7-1), where there were notable injuries and updates on both sides.\r\nFor the Bea… [+5024 chars]"
+                "author": null,
+                "title": "Erasca Inc trading resumes",
+                "description": "See the rest of the story here.\n\nthefly.com provides the latest financial news as it breaks. Known as a leader in market intelligence, The Fly's real-time, streaming news feed keeps individual investors, professional money managers, active traders, and corpor…",
+                "url": "https://thefly.com/permalinks/entry.php/id4267602/ERAS-Erasca-Inc-trading-resumes",
+                "urlToImage": "https://thefly.com/images/meta/hotstocks.jpg",
+                "publishedAt": "2026-01-08T20:47:45Z",
+                "content": "Earnings calls, analyst events, roadshows and more"
+            },
+            {
+                "source": {
+                    "id": "fox-news",
+                    "name": "Fox News"
+                },
+                "author": null,
+                "title": "Elon Musk responds to a former MSNBC host calling for 2028 Democrats to prosecute him",
+                "description": "Tesla founder Elon Musk called out ex-MSNBC host Mehdi Hasan after he said the next Democratic president should prosecute Musk as part of an accountability platform.",
+                "url": "https://www.foxnews.com/media/elon-musk-responds-former-msnbc-host-calling-2028-democrats-prosecute-him",
+                "urlToImage": "https://static.foxnews.com/foxnews.com/content/uploads/2025/09/elon-musk.jpg",
+                "publishedAt": "2026-01-08T20:47:31Z",
+                "content": "Tesla founder Elon Musk called out former MSNBC host Mehdi Hasan on Wednesday after Hasan suggested that any future Democratic president or presidential candidate should run on a platform of prosecut… [+2618 chars]"
             },
             {
                 "source": {
                     "id": null,
-                    "name": "Bleeding Cool News"
+                    "name": "Crikey"
                 },
-                "author": "Ray Flook",
-                "title": "High Potential S02E09 Preview, S02E10: \"Grounded\" Overview Released",
-                "description": "While we continue to decide if we agree with Morgan's (Kaitlin Olson) decision during the midseason return of ABC and Showrunner Todd Harthan's High Potential, you're getting a chance to check out what's ahead for the next two episodes. Along with an overview…",
-                "url": "https://bleedingcool.com/tv/high-potential-s02e09-preview-s02e10-grounded-overview-released/",
-                "urlToImage": "https://bleedingcool.com/wp-content/uploads/2026/01/177436_0337_Group_V5-2.jpg",
-                "publishedAt": "2026-01-08T19:37:03Z",
-                "content": "Posted in: ABC, TV | Tagged: high potential\r\nCheck out the trailer for ABC's Kaitlin Olson-starring High Potential S02E09: \"Under the Rug\" and the overview for S02E10: \"Grounded.\"\r\nArticle Summary\r\n<… [+2642 chars]"
+                "author": "Rich James",
+                "title": "Bondi royal commission to go ahead",
+                "description": "Anthony Albanese has confirmed a royal commission will be held into antisemitism and social cohesion after weeks of pressure following the Bondi terror attack. And in the US, protesters have taken to the streets following the fatal shooting of a 37-year-old w…",
+                "url": "http://www.crikey.com.au/2026/01/09/bondi-royal-commission-goes-ahead-albanese-relents/",
+                "urlToImage": "https://www.crikey.com.au/wp-content/uploads/sites/3/2026/01/20260108165922485344-original.jpg?quality=70&w=1024",
+                "publishedAt": "2026-01-08T20:47:03Z",
+                "content": "Crikey is an independent Australian source for news, investigations, analysis and opinion focusing on politics, media, economics, health, international affairs, the climate, business, society and cul… [+4 chars]"
+            },
+            {
+                "source": {
+                    "id": "abc-news",
+                    "name": "ABC News"
+                },
+                "author": "MARÍA VERZA Associated Press",
+                "title": "Mexico boasts sharp decline in homicides, but analysts urge caution",
+                "description": "The Mexican government reports a sharp decline in homicide rates, claiming its security strategy is working",
+                "url": "https://abcnews.go.com/International/wireStory/mexico-boasts-sharp-decline-homicides-analysts-urge-caution-129033364",
+                "urlToImage": "https://i.abcnewsfe.com/a/68ca5cec-55e5-4225-ad95-60fc1999b4cf/wirestory_bafeb371339789bea1f533e2410acfc3_16x9.jpg?w=1600",
+                "publishedAt": "2026-01-08T20:46:15Z",
+                "content": "MEXICO CITY -- The Mexican government boasted Thursday a sharp decline in homicide rates, presenting the figures as evidence that its security strategy is working, while analysts cautioned that the n… [+2793 chars]"
             },
             {
                 "source": {
                     "id": null,
-                    "name": "Time Out"
+                    "name": "Raw Story"
                 },
-                "author": "Primary Author: Michael Juliano",
-                "title": "How to buy tickets for the L.A. 2028 Olympics in January 2026",
-                "description": "Or, at least, register for a chance to purchase a ticket drop for L.A.’s 2028 Summer Olympics.",
-                "url": "https://www.timeout.com/los-angeles/news/la28-just-announced-when-2028-olympics-ticket-go-on-sale-heres-how-you-can-get-them-locals-presale-010826",
-                "urlToImage": "https://media.timeout.com/images/106320309/image.jpg",
-                "publishedAt": "2026-01-08T19:37:00Z",
-                "content": "First announced back in September—during a week where we thought the Coachella lineup would be the major SoCal event news—organizing committee LA28 has shared even more info about the detail that Ang… [+4280 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Boston Herald"
-                },
-                "author": "Andrew Callahan, Doug Kyed",
-                "title": "Patriots return key starter at Thursday practice before Wild Card playoff game",
-                "description": "The Patriots got good news at practice today.",
-                "url": "https://www.bostonherald.com/2026/01/08/patriots-return-key-starter-at-thursday-practice-before-wild-card-playoff-game/",
-                "urlToImage": "https://www.bostonherald.com/wp-content/uploads/2025/11/PATRIOTSPRACTICEWEDNESDAYms09.jpg?w=1024&h=634",
-                "publishedAt": "2026-01-08T19:36:51Z",
-                "content": "FOXBORO — Patriots right tackle Morgan Moses returned to practice Thursday after sitting out Wednesday with an illness.\r\nOutside linebacker Anfernee Jennings also took the field after being absent, w… [+509 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "New York Post"
-                },
-                "author": "Emily Crane",
-                "title": "The Democrats who have been arrested or detained over anti-ICE aggression",
-                "description": "A slew of Democrats have been dramatically arrested for trying to block ICE agents or wreak havoc at protests ever since the Trump administration started cracking down on illegal immigrants across the country.",
-                "url": "https://nypost.com/2026/01/08/us-news/democrats-who-have-been-arrested-or-detained-over-anti-ice-aggression/",
-                "urlToImage": "https://nypost.com/wp-content/uploads/sites/2/2026/01/118506276.jpg?quality=75&strip=all&w=1200",
-                "publishedAt": "2026-01-08T19:36:28Z",
-                "content": "A slew of Democrats have been dramatically arrested for allegedly trying to block ICE agents or wreak havoc at protests ever since the Trump administration started cracking down on illegal immigrants… [+4801 chars]"
+                "author": "David Edwards",
+                "title": "'Big defection against Trump': Senate GOP leader agrees to hang January 6 plaque",
+                "description": "Sen. Thom Tillis (R-NC) announced that Senate Majority Leader John Thune (R-SD) had agreed to hang a plaque honoring the officers who protected the U.S. Capitol during the riot on Jan. 6, 2021.Speaking on the Senate floor on Thursday, Tillis joined with Sen. …",
+                "url": "https://www.rawstory.com/january-6-plaque/",
+                "urlToImage": "https://www.rawstory.com/media-library/thom-tillis.jpg?id=62697261&width=1200&height=600&coordinates=0%2C40%2C0%2C40",
+                "publishedAt": "2026-01-08T20:46:14Z",
+                "content": "Sen. Thom Tillis (R-NC) announced that Senate Majority Leader John Thune (R-SD) had agreed to hang a plaque honoring the officers who protected the U.S. Capitol during the riot on Jan. 6, 2021.\r\nSpea… [+671 chars]"
             }
         ]
     },
     "German_Speaking": {
         "language": "de",
         "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "DIE WELT"
+                },
+                "author": "Julius Fitzke,Robert Tannenberg",
+                "title": "„Sie begründen eine ‚Kriegsachse‘“ – Russland erklärt ausländische Truppen zu „legitimen Zielen“",
+                "description": "Markus Söder und Friedrich Merz äußern sich, ob eine Teilnahme der Bundeswehr an einer Ukraine-Friedensmission in Betracht gezogen werden kann. Der Wintereinbruch hat Folgen für die Front. Großbritannien gibt derweil neue Waffenlieferungen an die Ukraine beka…",
+                "url": "https://www.welt.de/politik/ausland/article695b502cfb77630dac277a28/ukraine-krieg-sie-begruenden-eine-kriegsachse-russland-erklaert-auslaendische-truppen-zu-legitimen-zielen-liveticker.html",
+                "urlToImage": "https://images.welt.de/695b502cfb77630dac277a28/882fb8c40e34148ebc730674cd3d68ed/ci16x9-w1200/apdpa-32b85000357a5111-jpg",
+                "publishedAt": "2026-01-08T20:14:00Z",
+                "content": "Markus Söder und Friedrich Merz äußern sich zu einer eventuellen Teilnahme der Bundeswehr an einer Ukraine-Friedensmission. Der Wintereinbruch hat Folgen für die Front. Russland wendet sich derweil m… [+18823 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Süddeutsche Zeitung"
+                },
+                "author": "Süddeutsche Zeitung",
+                "title": "Unwetterwarnung für Bayern: DWD warnt vor Glatteis, Schnee und Regen - Schulausfälle in Ostbayern",
+                "description": "Schülerinnen und Schüler in der Oberpfalz werden am Freitag allenfalls Online-Unterricht haben. Was Autofahrer und Fußgänger in Bayern erwartet – und wo es besonders gefährlich wird.",
+                "url": "https://www.sueddeutsche.de/bayern/bayern-oberpfalz-wetter-unwetter-warnung-vorhersage-frost-glatteis-regen-li.3364930",
+                "urlToImage": "https://www.sueddeutsche.de/2026/01/08/c141bae2-857f-48ad-a065-dc6f2dbb9da1.jpg?q=60&fm=webp&width=1200&rect=0%2C209%2C4000%2C2250",
+                "publishedAt": "2026-01-08T19:55:00Z",
+                "content": "Der Winter hat Bayern mit Eis und Schnee fest im Griff. Schwierige Wetterverhältnisse werden vor allem in der kommenden Nacht und am Freitag erwartet. Der Deutsche Wetterdienst (DWD) rechnet dann in … [+5351 chars]"
+            },
+            {
+                "source": {
+                    "id": "focus",
+                    "name": "Focus"
+                },
+                "author": "Lena Lackermeier",
+                "title": "50 Schafe stürmten Penny-Filiale – Discounter reagiert mit \"Danach\"-Video",
+                "description": "In Burgsinn stürmten 50 Schafe eine Penny-Filiale und blockierten die Gänge. Der Discounter reagierte auf Instagram humorvoll auf den Zwischenfall. So soll ein Video zeigen, \"was danach geschah\".",
+                "url": "https://www.focus.de/panorama/50-schafe-stuermten-penny-filiale-discounter-reagiert-mit-danach-video_8230b5fa-d994-4485-8f84-842c8cd4ea66.html",
+                "urlToImage": "https://quadro.burda-forward.de/ctf/d1ef23d7-44ff-4385-a9cd-0fa66232668e.317e11c6-f56d-49e3-9cad-20dfa75d1810.jpg?im=RegionOfInterestCrop%3D%281200%2C630%29%2CregionOfInterest%3D%28958%2C503%29&hash=a4418474dd1595a9228439ff4c680b0b0b43f4fc77e69daeeab919a6faa2e00a",
+                "publishedAt": "2026-01-08T19:51:41Z",
+                "content": "Längst legendär ist der Clip, der 50 Schafe zeigt, wie sie eine Penny-Filiale im unterfränkischen Burgsinn stürmen. Der Clip wurde am Wochenende vielfach in den Medien geteilt und sorgte für ein groß… [+1775 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "N-tv.de"
+                },
+                "author": "n-tv NACHRICHTEN",
+                "title": "Nach US-Verfolgungsjagd: Bericht: Beschlagnahmter Öltanker gehört russischer Firma von der Krim",
+                "description": "Laut den USA versucht vor zwei Wochen ein Öltanker in der Karibik, den Sanktionen zu entgehen. Schließlich wird der Frachter im Nordatlantik von US-Streitkräften gestoppt und geentert. Nun scheint auch seine Herkunft geklärt.",
+                "url": "https://www.n-tv.de/politik/Bericht-Beschlagnahmter-Oeltanker-gehoert-russischer-Firma-von-der-Krim-id30219000.html",
+                "urlToImage": "https://www.n-tv.de/img/30219129/1767898355/Img_16_9/1200/A-U-S-Coast-Guard-official-looks-through-binoculars-at-the-ship-Marinera-Ex-Bella-1-in-this-handout-image-released-January-7-2026-US-EUROPEAN-COMMAND-via-X-Handout-via-REUTERS-THIS-IMAGE-HAS-BEEN-SUPPLIED-BY-A-THIRD-PARTY-MANDATORY-CREDIT-Verification-lines-Reuters-was-not-able-to-independently-verify-the-location-or-the-date-when-the-photos-were-taken-But-a-U-S-official-told-Reuters-the-United-States-had-pursued-the-tanker-for-more-than-two-weeks-across-the-Atlantic-Searches-for-the-images-found-they-had-not-appeared-online-before-The-identity-of-the-oil-tanker-was-confirmed-by-the-structures-on-the-deck-and-bridge-which-matched-file-imagery.jpg",
+                "publishedAt": "2026-01-08T19:47:58Z",
+                "content": "Im Visier der US-Küstenwache: Der Öltanker \"Marinera\", ehemals \"Bella 1\". (Foto: via REUTERS)\r\nLaut den USA versucht vor zwei Wochen ein Öltanker in der Karibik, den Sanktionen zu entgehen. Schließli… [+3512 chars]"
+            },
             {
                 "source": {
                     "id": null,
@@ -84,64 +136,38 @@
                 "urlToImage": "https://www.basicthinking.de/blog/wp-content/uploads/2026/01/langsamsten-finanzaemter.jpg",
                 "publishedAt": "2026-01-08T19:30:39Z",
                 "content": "Wer auf seine Steuererstattung wartet, braucht bei manchen Behörden einen besonders langen Atem. Ein aktueller Bericht zeigt auf, welche Finanzämter sich am meisten Zeit lassen.\r\nAuch wenn man nicht … [+1977 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Giga"
-                },
-                "author": "Julia Palmer",
-                "title": "Namen wie aus Star Wars: So wendet ihr George Lucas' Technik selbst an",
-                "description": "George Lucas hatte ein klares System für starke Sci-Fi-Namen. Wir zeigen, was dahintersteckt und wie ihr mit unserem Sci-Fi-Namensgenerator eigene Weltraumnamen findet.",
-                "url": "https://www.giga.de/games/namen-wie-aus-star-wars-so-wendet-ihr-george-lucas-technik-selbst-an--01KDSQCX6WG286NN4RDP5JCMHZ",
-                "urlToImage": "https://static.giga.de/c5/c5/dd/27244078ada8ce2561f0bc02fe_cmUgMTkyMCAxMDgwA2M1MjQ3ZGM1ZmNm.png",
-                "publishedAt": "2026-01-08T19:24:02Z",
-                "content": "George Lucas hatte ein klares System für starke Sci-Fi-Namen. Wir zeigen, was dahintersteckt und wie ihr mit unserem Sci-Fi-Namensgenerator eigene Weltraumnamen findet.\r\nUnser Sci-Fi-Namensgenerator:… [+3491 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "DIE WELT"
-                },
-                "author": "WELT",
-                "title": "„Tod der Islamischen Republik“, skandieren Demonstranten – Mullah-Regime schaltet Internet ab",
-                "description": "Seit elf Tagen erschüttern Demonstrationen den Iran, 38 Personen kamen bislang ums Leben. Am Abend ziehen im ganzen Land Tausende abermals auf die Straßen. Die Regierung in Teheran ergreift drastische Maßnahmen.",
-                "url": "https://www.welt.de/politik/ausland/article695ff9054d1d5f581eeb04b0/iran-tod-der-islamischen-republik-skandieren-demonstranten-mullah-regime-schaltet-internet-ab.html",
-                "urlToImage": "https://images.welt.de/695ff9054d1d5f581eeb04b0/db4c1f7ad33c33d54fe3c11732917c20/ci16x9-w1200/2026-01-08t100445z-375841080-rc2ywiay78nj-rtrmadp-3-iran-economy-protests-jpg",
-                "publishedAt": "2026-01-08T18:56:32Z",
-                "content": "Seit elf Tagen erschüttern Demonstrationen den Iran, 38 Personen kamen bislang ums Leben. Am Abend ziehen im ganzen Land Tausende abermals auf die Straßen. Die Regierung in Teheran ergreift drastisch… [+3473 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "DIE WELT"
-                },
-                "author": "WELT",
-                "title": "„Tod dem Diktator“, skandieren Demonstranten – Trump droht Mullah-Regime mit „harter Bestrafung“",
-                "description": "Seit elf Tagen erschüttern Demonstrationen den Iran, 38 Personen kamen bislang ums Leben. Am Abend ziehen im ganzen Land Tausende abermals auf die Straßen. Die Regierung in Teheran ergreift drastische Maßnahmen. Der US-Präsident schaltet sich ein.",
-                "url": "https://www.welt.de/politik/ausland/article695ff9054d1d5f581eeb04b0/iran-tod-dem-diktator-skandieren-demonstranten-trump-droht-mullah-regime-mit-harter-bestrafung.html",
-                "urlToImage": "https://images.welt.de/695ff9054d1d5f581eeb04b0/db4c1f7ad33c33d54fe3c11732917c20/ci16x9-w1200/2026-01-08t100445z-375841080-rc2ywiay78nj-rtrmadp-3-iran-economy-protests-jpg",
-                "publishedAt": "2026-01-08T18:56:32Z",
-                "content": "Seit elf Tagen erschüttern Demonstrationen den Iran, 38 Personen kamen bislang ums Leben. Am Abend ziehen im ganzen Land Tausende abermals auf die Straßen. Die Regierung in Teheran ergreift drastisch… [+4039 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Faz.net"
-                },
-                "author": "Oliver Kühn",
-                "title": "Operation in Venezuela: Als Trump fürchtete, ein neuer Jimmy Carter zu werden",
-                "description": "Der Erfolg der Operation „Absolute Resolve“ in Venezuela hing für einen Moment wohl von einem einzigen Hubschrauber ab. Donald Trump fühlte sich dadurch an ein Fiasko erinnert.",
-                "url": "https://www.faz.net/aktuell/politik/usa-unter-trump/operation-absolute-resolve-trump-fuerchtete-carters-schicksal-110815864.html",
-                "urlToImage": "https://media0.faz.net/image/w1200h627/ad278827eccc/w3000h1567x0y216o/012026/1.10815863/nicol-s-maduro-in.webp",
-                "publishedAt": "2026-01-08T18:46:28Z",
-                "content": "Als Donald Trump in den frühen Morgenstunden des 3. Januar auf die Bildschirme vor sich starrte, kam ihm Jimmy Carter in den Sinn. So zumindest erzählte er es nun der New York Times (NYT). Der amerik… [+5753 chars]"
             }
         ]
     },
     "French_Speaking": {
         "language": "fr",
         "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "Frandroid"
+                },
+                "author": "Omar Belkaab",
+                "title": "Le Samsung Galaxy S26 Ultra n’est pas encore là, mais les coques de protection sont déjà prêtes",
+                "description": "Le Samsung Galaxy S26 Ultra n'est pas encore officialisé, mais on a déjà vu des coques de protection prêtes pour le smartphone, au CES 2026. Coque de",
+                "url": "https://www.frandroid.com/marques/samsung/2936111_le-samsung-galaxy-s26-ultra-nest-pas-encore-la-mais-les-coques-de-protection-sont-deja-pretes",
+                "urlToImage": "https://c0.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2026/01/coque-samsung-galaxy-s26-ultra.jpg?resize=1600,900&key=17934b88&watermark",
+                "publishedAt": "2026-01-08T20:26:44Z",
+                "content": "Le Samsung Galaxy S26 Ultra n’est pas encore officialisé, mais on a déjà vu des coques de protection prêtes pour le smartphone, au CES 2026.\r\nCoque de Samsung Galaxy S26 Ultra // Source : Frandroid\r\n… [+1613 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "P-nintendo.com"
+                },
+                "author": "Xavier",
+                "title": "News - Ventes de la Switch 2 : un lancement historique rattrapé par un Noël plus timide (Switch 2)",
+                "description": "Finance et chiffres de venteMalgré un lancement record, la Nintendo Switch 2 a connu un Noël plus calme que la Switch originale, avec des reculs notables aux États-Unis, en France et au Royaume-Uni. C'est ce que révèlent des chiffres vus sur le Net aujourd'hu…",
+                "url": "https://www.p-nintendo.com/news/ventes-de-la-switch-2-un-lancement-historique-rattrape-par-un-noel-plus-timide-262879",
+                "urlToImage": "https://images.p-nintendo.com/cover/67ed2ad6c34ad.jpg?v=69600ae958d8d",
+                "publishedAt": "2026-01-08T19:50:00Z",
+                "content": "Après un lancement qualifié dhistorique, la Nintendo Switch 2 a marqué un léger temps darrêt durant les fêtes de fin dannée. Plusieurs rapports relayés par la presse spécialisée évoquent des ventes d… [+4760 chars]"
+            },
             {
                 "source": {
                     "id": null,
@@ -180,38 +206,38 @@
                 "urlToImage": "https://www.journaldugeek.com/app/uploads/2026/01/Donald-Trump-1600x900.jpg",
                 "publishedAt": "2026-01-08T18:03:52Z",
                 "content": "La grande purge continue : après avoir sabré comme un sagouin dans le budget de la NASA et avoir placé son pote Isaacman aux rênes de la NASA, Donald Trump perpétue le massacre. Plus hostile que jama… [+4624 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Journal du geek"
-                },
-                "author": "Gregori Pujol",
-                "title": "Si vous êtes allergique, ce boitier peut vous sauver la vie !",
-                "description": "La startup française Allergen Alert a présenté au CES un dispositif qui pourrait bien changer le quotidien de millions de personnes allergiques ou intolérantes. Son mini laboratoire de poche promet de détecter la présence d’allergènes ou de gluten, directemen…",
-                "url": "https://www.journaldugeek.com/2026/01/08/si-vous-etes-allergique-ce-boitier-peut-vous-sauver-la-vie/",
-                "urlToImage": "https://www.journaldugeek.com/app/uploads/2026/01/HP-1-2026-01-06T120407.012-1600x900.jpeg",
-                "publishedAt": "2026-01-08T17:45:18Z",
-                "content": "Selon les chiffres avancés par Allergen Alert, 250 millions de personnes dans le monde vivent aujourdhui avec des allergies alimentaires, dont près de 33 millions aux États-Unis. Dans certains pays, … [+3504 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Journal du geek"
-                },
-                "author": "Julie Hay",
-                "title": "The Pitt : la série d’HBO Max est déjà fixée sur son avenir",
-                "description": "La plateforme vient de renouveler la série The Pitt. Avant même la diffusion de la seconde salve d'épisodes, la chaîne américaine officialise la sortie d'une saison 3.",
-                "url": "https://www.journaldugeek.com/2026/01/08/the-pitt-la-serie-dhbo-max-est-deja-fixee-sur-son-avenir/",
-                "urlToImage": "https://www.journaldugeek.com/app/uploads/2026/01/the-pitt-saison-3-officielle-1600x900.jpg",
-                "publishedAt": "2026-01-08T17:34:46Z",
-                "content": "Cette fois c’est sûr, vous ne pourrez plus passer à côté. Même si les séries médicales vous ennuient, même si vous redoutez de vous investir dans une production qui n’aura jamais de fin. The Pitt, ac… [+2272 chars]"
             }
         ]
     },
     "Spanish_Speaking": {
         "language": "es",
         "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "Forbes.com.mx"
+                },
+                "author": "Forbes México Staff",
+                "title": "Venezuela: devaluación crónica erosiona salario mínimo hasta niveles simbólicos",
+                "description": "Forbes México.\n Venezuela: devaluación crónica erosiona salario mínimo hasta niveles simbólicos\n\nEl Gobierno responsabiliza la caída de la capacidad de compra a las sanciones de Estados Unidos.\nVenezuela: devaluación crónica erosiona salario mínimo hasta nive…",
+                "url": "https://forbes.com.mx/venezuela-devaluacion-cronica-erosiona-salario-minimo-hasta-niveles-simbolicos/",
+                "urlToImage": "https://cdn.forbes.com.mx/2026/01/venezuela-1.webp",
+                "publishedAt": "2026-01-08T20:42:21Z",
+                "content": "El salario mínimo en Venezuela, fijado en 130 bolívares mensuales desde hace casi cuatro años, equivale a unos 40 centavos de dólar al cambio oficial de hoy, un nivel que evidencia el colapso del pod… [+2967 chars]"
+            },
+            {
+                "source": {
+                    "id": "la-nacion",
+                    "name": "La Nacion"
+                },
+                "author": "LA NACION",
+                "title": "Reactivar el TPS: el pedido de los venezolanos en Chicago ante la caída de Maduro",
+                "description": "¿Habrá nuevo TPS para venezolanos? Crece la incertidumbre en Chicago tras la caída de Maduro. Analizamos el futuro migratorio y qué pasará con este beneficio.",
+                "url": "https://www.lanacion.com.ar/estados-unidos/illinois/reactivar-el-tps-el-pedido-de-los-venezolanos-en-chicago-ante-la-caida-de-maduro-nid08012026/",
+                "urlToImage": "https://resizer.glanacion.com/resizer/v2/algunos-venezolanos-en-eeuu-han-manifestado-HY4EEJGB6NG3FOYTV4LCCEULOE.jpg?auth=20ad1d042d435cfe2eaaf2784e0589228df4ca7df3a0c773e2ed0103ee51b4c3&width=1200&quality=70&smart=false&height=800",
+                "publishedAt": "2026-01-08T20:11:48Z",
+                "content": "El Estatus de Protección Temporal (TPS, por sus siglas en inglés) terminó para cientos de miles de venezolanos en 2025, salvo algunas excepciones. Al darse a conocer la captura de Nicolás Maduro se a… [+3351 chars]"
+            },
             {
                 "source": {
                     "id": null,
@@ -250,32 +276,6 @@
                 "urlToImage": "https://generacionxbox.com/wp-content/uploads/2023/07/mandos-xbox-generacionxbox-1024x576.jpg",
                 "publishedAt": "2026-01-08T19:02:23Z",
                 "content": "Las rebajas actuales sí marcan la diferencia y dejan algunos de los mejores precios del año.\r\nMás historias en la categoría Ofertas de Xbox\r\n<table><tr><td>No te pierdas nada y ¡Síguenos en Google Ne… [+2109 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Generación Xbox"
-                },
-                "author": "Adrián Fuentes",
-                "title": "Xbox calienta enero con Fable: el juego mostrará “mucho más” en el Developer Direct",
-                "description": "Playground Games prepara el primer vistazo en profundidad al esperado RPG de Xbox.",
-                "url": "https://generacionxbox.com/xbox-calienta-enero-con-fable-el-juego-mostrara-mucho-mas-en-el-developer-direct/",
-                "urlToImage": "https://generacionxbox.com/wp-content/uploads/2023/06/fable-generacionxbox-1-1024x576.jpg",
-                "publishedAt": "2026-01-08T18:47:56Z",
-                "content": "Playground Games prepara el primer vistazo en profundidad al esperado RPG de Xbox.\r\nMás historias en la categoría Noticias\r\n<table><tr><td>No te pierdas nada y ¡Síguenos en Google News! </td></tr>\r\n<… [+1592 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Generación Xbox"
-                },
-                "author": "Adrián Fuentes",
-                "title": "El Xbox Developer Direct 2026 esconde un cuarto juego sorpresa",
-                "description": "Un conocido filtrador apunta a un anuncio no revelado para el evento del 22 de enero.",
-                "url": "https://generacionxbox.com/el-xbox-developer-direct-2026-esconde-un-cuarto-juego-sorpresa/",
-                "urlToImage": "https://generacionxbox.com/wp-content/uploads/2025/12/que-podemos-esperar-del-xbox-developer-direct-de-enero-el-evento-que-marcara-el-rumbo-de-xbox-en-2026-1024x683.png",
-                "publishedAt": "2026-01-08T18:40:15Z",
-                "content": "Un conocido filtrador apunta a un anuncio no revelado para el evento del 22 de enero.\r\nMás historias en la categoría Noticias\r\n<table><tr><td>No te pierdas nada y ¡Síguenos en Google News! </td></tr>… [+1837 chars]"
             }
         ]
     }
