@@ -18,6 +18,7 @@ from fastapi.responses import HTMLResponse
 
 # Import route modules
 from web.routes.news import get_news_context
+from web.routes.logs import router as logs_router
 
 # Paths
 WEB_DIR = Path(__file__).parent
@@ -34,6 +35,9 @@ app = FastAPI(
 
 # Mount static files
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+# Include routers
+app.include_router(logs_router)
 
 # Templates
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
