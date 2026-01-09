@@ -3,7 +3,6 @@
 ## ToDo
 
 - WIP: Main README Docu ... 🟠
-- WIP: All code base cleanup - System provisioning docu and tooling .... 🟠
 - Web ui Monitor 🟠
 - Setup script 🔴
 - Along-side drop box do a freesound.org upload ... 
