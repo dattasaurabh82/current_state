@@ -9,6 +9,29 @@
 </div>
 {% else %}
 
+<!-- Derivation Visualization (Collapsible) -->
+<div class="derivation-section mb-md">
+    <div class="derivation-header" id="derivation-toggle">
+        <span class="derivation-toggle-icon">▶</span>
+        <span class="derivation-title">How It Works: Derivation Flow</span>
+        <span class="text-dim text-sm">(click to expand)</span>
+    </div>
+    <div class="derivation-content" id="derivation-content" style="display: none;">
+        <div class="derivation-graphs">
+            <!-- Viz 1: Metrics → Archetype Matching -->
+            <div class="derivation-graph-container">
+                <div class="derivation-graph-title">Metric → Archetype Matching</div>
+                <div class="derivation-graph" id="graph-metric-matching"></div>
+            </div>
+            <!-- Viz 2: Archetype → Prompt Assembly -->
+            <div class="derivation-graph-container">
+                <div class="derivation-graph-title">Archetype → Prompt Assembly</div>
+                <div class="derivation-graph" id="graph-prompt-assembly"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="pipeline-layout">
     <!-- Left Column: Pipeline Info -->
     <div class="pipeline-info">

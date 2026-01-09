@@ -5,11 +5,11 @@
 - WIP: Main README Docu ... 🟠
 - WIP: All code base cleanup - System provisioning docu and tooling .... 🟠
 - Web ui Monitor 🟠
-- Setup script 
+- Setup script 🔴
 - Along-side drop box do a freesound.org upload ... 
 - Other region of news 
 
-- Hardware Update Steps: 
+- Hardware Update Steps: 🔴
   - Speaker Switch switcher 
   - Update circuit 
   - Place new order for SLA prints 

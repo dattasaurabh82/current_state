@@ -5,6 +5,7 @@ Loads pipeline results and audio files for display.
 """
 
 import json
+import sys
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any
@@ -19,6 +20,10 @@ WEB_DIR = Path(__file__).parent.parent
 PROJECT_ROOT = WEB_DIR.parent
 GENERATION_RESULTS_DIR = PROJECT_ROOT / "generation_results"
 MUSIC_DIR = PROJECT_ROOT / "music_generated"
+
+# Add project root to path for imports
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def load_pipeline_results() -> Dict[str, Any]:
@@ -101,6 +106,103 @@ def get_pipeline_context() -> Dict[str, Any]:
     }
 
 
+def get_derivation_data() -> Dict[str, Any]:
+    """Get enriched derivation data for visualization."""
+    from lib.archetypes import ARCHETYPES, ArchetypeName, COMPATIBILITY_MATRIX
+    from lib.archetype_selector import ARCHETYPE_PROFILES
+    
+    pipeline = load_pipeline_results()
+    
+    if "error" in pipeline:
+        return {"error": pipeline["error"]}
+    
+    # Extract input metrics
+    analysis = pipeline.get("analysis", {})
+    input_metrics = {
+        "valence": analysis.get("emotional_valence", 0),
+        "tension": analysis.get("tension_level", 0),
+        "hope": analysis.get("hope_factor", 0),
+        "energy": analysis.get("energy_level", "medium"),
+    }
+    
+    # Scoring weights (from archetype_selector.py)
+    scoring_weights = {
+        "valence": 0.30,
+        "tension": 0.25,
+        "hope": 0.30,
+        "energy": 0.15,
+    }
+    
+    # Build archetype profiles with definitions
+    archetypes_data = {}
+    for name in ArchetypeName:
+        profile = ARCHETYPE_PROFILES[name]
+        descriptor = ARCHETYPES[name]
+        
+        archetypes_data[name.value] = {
+            "name": name.value,
+            "display_name": name.value.replace("_", " ").title(),
+            # Profile (ideal values)
+            "profile": {
+                "valence_center": profile.valence_center,
+                "valence_tolerance": profile.valence_tolerance,
+                "tension_center": profile.tension_center,
+                "tension_tolerance": profile.tension_tolerance,
+                "hope_center": profile.hope_center,
+                "hope_tolerance": profile.hope_tolerance,
+                "preferred_energy": profile.preferred_energy,
+            },
+            # Music descriptor
+            "descriptor": {
+                "genre": descriptor.genre,
+                "instruments": descriptor.instruments,
+                "mood_musical": descriptor.mood_musical,
+                "mood_emotional": descriptor.mood_emotional,
+                "tempo_bpm": descriptor.tempo_bpm,
+                "tempo_value": descriptor.tempo_value,
+                "technical": descriptor.technical,
+            },
+            # Compatible archetypes for blending
+            "compatible_with": [a.value for a in COMPATIBILITY_MATRIX.get(name, [])],
+        }
+    
+    # Selection results (from pipeline)
+    selection = pipeline.get("selection", {})
+    primary = selection.get("primary")
+    secondary = selection.get("secondary")
+    blend_ratio = selection.get("blend_ratio")
+    
+    # All scores with component breakdown
+    all_scores = selection.get("all_scores", [])
+    
+    # Prompt components (what was actually used)
+    prompt_data = pipeline.get("prompt", {})
+    prompt_components = prompt_data.get("components", {})
+    
+    return {
+        "input_metrics": input_metrics,
+        "scoring_weights": scoring_weights,
+        "archetypes": archetypes_data,
+        "selection": {
+            "primary": primary,
+            "secondary": secondary,
+            "blend_ratio": blend_ratio,
+            "all_scores": all_scores,
+        },
+        "prompt": {
+            "final_prompt": prompt_data.get("prompt", ""),
+            "components": {
+                "genre": prompt_components.get("genre"),
+                "instruments": prompt_components.get("base_instruments", []),
+                "moods": prompt_components.get("base_moods", []),
+                "tempo": prompt_components.get("tempo_final"),
+                "intensity": prompt_components.get("intensity_level"),
+            },
+        },
+        "date": pipeline.get("date"),
+    }
+
+
 # =============================================================================
 # API ROUTES
 # =============================================================================
@@ -119,6 +221,12 @@ async def api_audio_files():
         "count": len(get_audio_files()),
         "timestamp": datetime.now().isoformat(),
     })
+
+
+@router.get("/api/derivation")
+async def api_derivation():
+    """API endpoint for derivation visualization data."""
+    return JSONResponse(get_derivation_data())
 
 
 @router.get("/audio/{filename}")
