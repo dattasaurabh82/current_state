@@ -1,48 +1,58 @@
 /**
  * Derivation Visualization - Full Flow
  * 
- * Single unified canvas showing:
- * METRICS → ARCHETYPES → PROMPT ASSEMBLY (3 layers) → FINAL PROMPT
- *                              ↑                ↑
- *                           THEMES          DATE SEED
+ * Complete flow:
+ * NEWS SCRAPING → STRUCTURED OUTPUT → METRICS → ARCHETYPES → PROMPT ASSEMBLY → FINAL PROMPT
+ *                                                                ↑              ↑
+ *                                                             THEMES        DATE SEED
  */
 
 document.addEventListener('DOMContentLoaded', function() {
     
     // =============================================================================
-    // COLORS
+    // DRACULA COLOR PALETTE
     // =============================================================================
     
     const COLORS = {
-        bg: '#0a0a0a',
-        node: '#1a1a1a',
-        nodeBorder: '#333333',
-        nodeHighlight: '#444444',
-        text: '#e0e0e0',
-        textDim: '#808080',
-        edge: '#404040',
+        // Background
+        bg: '#282a36',
+        bgDark: '#1e1f29',
+        bgLight: '#343746',
         
-        // Metric colors
-        valence: '#66cc66',
-        tension: '#cc6666',
-        hope: '#6699cc',
-        energy: '#cccc66',
+        // Text
+        text: '#f8f8f2',
+        textDim: '#6272a4',
         
-        // Archetype colors
-        primary: '#ffffff',
-        secondary: '#a0a0a0',
-        inactive: '#505050',
+        // Dracula accent colors
+        cyan: '#8be9fd',
+        green: '#50fa7b',
+        orange: '#ffb86c',
+        pink: '#ff79c6',
+        purple: '#bd93f9',
+        red: '#ff5555',
+        yellow: '#f1fa8c',
         
-        // Layer colors
-        structure: '#8888cc',
-        color: '#cc8888',
-        variety: '#88cc88',
+        // Node backgrounds
+        nodeBg: '#21222c',
+        nodeHighlight: '#44475a',
         
-        // Other
-        themes: '#cc88cc',
-        dateSeed: '#88cccc',
-        finalPrompt: '#cccc88',
+        // Edges
+        edge: '#44475a',
+        edgeHighlight: '#6272a4',
     };
+    
+    // =============================================================================
+    // SHARED SETTINGS
+    // =============================================================================
+    
+    const NODE_WIDTH = 140;
+    const NODE_FONT = { 
+        color: COLORS.text, 
+        size: 10, 
+        face: 'IBM Plex Mono, monospace',
+        multi: 'html',
+    };
+    const EDGE_SMOOTH = { type: 'cubicBezier', roundness: 0.4 };
     
     // =============================================================================
     // NETWORK INSTANCE & POSITIONS
@@ -50,6 +60,51 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let network = null;
     let initialPositions = {};
+    
+    // =============================================================================
+    // HELPER: Create node
+    // =============================================================================
+    
+    function createNode(id, label, x, y, borderColor, options = {}) {
+        const node = {
+            id,
+            label,
+            x,
+            y,
+            shape: 'box',
+            color: { 
+                background: COLORS.nodeBg, 
+                border: borderColor, 
+                highlight: { background: COLORS.nodeHighlight, border: borderColor },
+                hover: { background: COLORS.nodeHighlight, border: borderColor },
+            },
+            font: { ...NODE_FONT, align: options.align || 'center' },
+            borderWidth: 1,
+            widthConstraint: { minimum: NODE_WIDTH, maximum: NODE_WIDTH },
+            margin: 10,
+            ...options,
+        };
+        
+        initialPositions[id] = { x, y };
+        return node;
+    }
+    
+    // =============================================================================
+    // HELPER: Create edge
+    // =============================================================================
+    
+    function createEdge(from, to, color, options = {}) {
+        return {
+            from,
+            to,
+            width: options.width || 1.5,
+            color: { color, opacity: options.opacity || 0.7, highlight: color, hover: color },
+            smooth: EDGE_SMOOTH,
+            arrows: options.arrows ? { to: { enabled: true, scaleFactor: 0.4 } } : undefined,
+            dashes: options.dashes || false,
+            ...options,
+        };
+    }
     
     // =============================================================================
     // FETCH DATA & BUILD
@@ -83,53 +138,100 @@ document.addEventListener('DOMContentLoaded', function() {
         const nodes = [];
         const edges = [];
         
+        // Data extraction
+        const news = data.news || {};
+        const summary = data.summary || '';
         const metrics = data.input_metrics || {};
         const selection = data.selection || {};
         const allScores = selection.all_scores || [];
-        const archetypes = data.archetypes || {};
         const prompt = data.prompt || {};
         const components = prompt.components || {};
+        const themes = data.themes || [];
+        const dateSeed = data.date || '2026-01-09';
         
         const primary = selection.primary;
         const secondary = selection.secondary;
         
         // X positions for columns
         const X = {
-            metrics: -500,
-            archetypes: -200,
-            themes: 50,
-            layers: 250,
-            finalPrompt: 500,
+            news: -650,
+            structured: -480,
+            metrics: -310,
+            archetypes: -100,
+            middle: 100,
+            layers: 280,
+            finalPrompt: 480,
         };
         
         // ---------------------------------------------------------------------
-        // COLUMN 1: METRICS
+        // COLUMN 0: NEWS SCRAPING
+        // ---------------------------------------------------------------------
+        
+        const articleCount = news.total_articles || 0;
+        const regions = (news.regions || []).join(', ');
+        const newsLabel = `NEWS SCRAPING\n\n${articleCount} ARTICLES\n${(news.regions || []).length} REGIONS`;
+        
+        // Build tooltip with sample headlines
+        let newsTooltip = `<b>NEWS SCRAPING</b>\n`;
+        newsTooltip += `━━━━━━━━━━━━━━━━━━━━\n`;
+        newsTooltip += `Total: ${articleCount} articles\n`;
+        newsTooltip += `Regions: ${regions}\n\n`;
+        newsTooltip += `<b>SAMPLE HEADLINES:</b>\n`;
+        (news.sample_headlines || []).slice(0, 5).forEach(h => {
+            newsTooltip += `• ${h.title}\n  [${h.source}]\n`;
+        });
+        
+        nodes.push(createNode('news_scraping', newsLabel, X.news, 0, COLORS.cyan, {
+            title: newsTooltip,
+        }));
+        
+        // ---------------------------------------------------------------------
+        // COLUMN 1: STRUCTURED OUTPUT
+        // ---------------------------------------------------------------------
+        
+        const structuredLabel = `STRUCTURED OUTPUT\n\nVAL: ${metrics.valence >= 0 ? '+' : ''}${(metrics.valence || 0).toFixed(2)}\nTEN: ${(metrics.tension || 0).toFixed(2)}\nHOP: ${(metrics.hope || 0).toFixed(2)}\nENE: ${(metrics.energy || 'MED').toString().toUpperCase().slice(0, 3)}`;
+        
+        let structuredTooltip = `<b>STRUCTURED OUTPUT</b>\n`;
+        structuredTooltip += `━━━━━━━━━━━━━━━━━━━━\n`;
+        structuredTooltip += `Emotional Valence: ${(metrics.valence || 0).toFixed(3)}\n`;
+        structuredTooltip += `Tension Level: ${(metrics.tension || 0).toFixed(3)}\n`;
+        structuredTooltip += `Hope Factor: ${(metrics.hope || 0).toFixed(3)}\n`;
+        structuredTooltip += `Energy Level: ${metrics.energy || 'medium'}\n\n`;
+        structuredTooltip += `<b>THEMES:</b> ${themes.join(', ')}\n\n`;
+        structuredTooltip += `<b>SUMMARY:</b>\n${summary}`;
+        
+        nodes.push(createNode('structured_output', structuredLabel, X.structured, 0, COLORS.purple, {
+            title: structuredTooltip,
+        }));
+        
+        // Edge: News → Structured
+        edges.push(createEdge('news_scraping', 'structured_output', COLORS.cyan, { arrows: true }));
+        
+        // ---------------------------------------------------------------------
+        // COLUMN 2: METRICS
         // ---------------------------------------------------------------------
         
         const metricDefs = [
-            { id: 'metric_valence', label: `VALENCE\n${metrics.valence >= 0 ? '+' : ''}${(metrics.valence || 0).toFixed(2)}`, color: COLORS.valence, y: -120 },
-            { id: 'metric_tension', label: `TENSION\n${(metrics.tension || 0).toFixed(2)}`, color: COLORS.tension, y: -40 },
-            { id: 'metric_hope', label: `HOPE\n${(metrics.hope || 0).toFixed(2)}`, color: COLORS.hope, y: 40 },
-            { id: 'metric_energy', label: `ENERGY\n${(metrics.energy || 'MEDIUM').toUpperCase()}`, color: COLORS.energy, y: 120 },
+            { id: 'metric_valence', label: `VALENCE\n${metrics.valence >= 0 ? '+' : ''}${(metrics.valence || 0).toFixed(2)}`, color: COLORS.green, y: -100 },
+            { id: 'metric_tension', label: `TENSION\n${(metrics.tension || 0).toFixed(2)}`, color: COLORS.red, y: -33 },
+            { id: 'metric_hope', label: `HOPE\n${(metrics.hope || 0).toFixed(2)}`, color: COLORS.cyan, y: 33 },
+            { id: 'metric_energy', label: `ENERGY\n${(metrics.energy || 'MEDIUM').toString().toUpperCase()}`, color: COLORS.yellow, y: 100 },
         ];
         
         metricDefs.forEach(m => {
-            nodes.push({
-                id: m.id,
-                label: m.label,
-                x: X.metrics,
-                y: m.y,
-                shape: 'box',
-                color: { background: COLORS.node, border: m.color, highlight: { background: COLORS.nodeHighlight, border: m.color } },
-                font: { color: COLORS.text, size: 11, face: 'IBM Plex Mono, monospace', multi: 'html' },
-                borderWidth: 2,
-                widthConstraint: { minimum: 100, maximum: 100 },
-            });
-            initialPositions[m.id] = { x: X.metrics, y: m.y };
+            nodes.push(createNode(m.id, m.label, X.metrics, m.y, m.color));
+        });
+        
+        // Edges: Structured → Metrics
+        metricDefs.forEach(m => {
+            edges.push(createEdge('structured_output', m.id, COLORS.purple, { 
+                arrows: true,
+                opacity: 0.5,
+            }));
         });
         
         // ---------------------------------------------------------------------
-        // COLUMN 2: ARCHETYPES
+        // COLUMN 3: ARCHETYPES
         // ---------------------------------------------------------------------
         
         const archetypeYStart = -150;
@@ -139,19 +241,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const isPrimary = item.archetype === primary;
             const isSecondary = item.archetype === secondary;
             
-            let borderColor = COLORS.inactive;
-            let borderWidth = 1;
-            let fontColor = COLORS.textDim;
-            
-            if (isPrimary) {
-                borderColor = COLORS.primary;
-                borderWidth = 3;
-                fontColor = COLORS.text;
-            } else if (isSecondary) {
-                borderColor = COLORS.secondary;
-                borderWidth = 2;
-                fontColor = COLORS.text;
-            }
+            let borderColor = COLORS.textDim;
+            if (isPrimary) borderColor = COLORS.pink;
+            else if (isSecondary) borderColor = COLORS.orange;
             
             const displayName = item.archetype.replace(/_/g, ' ').toUpperCase();
             const scorePercent = Math.round(item.score * 100);
@@ -159,258 +251,178 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const y = archetypeYStart + (i * archetypeYStep);
             
-            nodes.push({
-                id: `arch_${item.archetype}`,
-                label: `${displayName}${marker}\n${scorePercent}%`,
-                x: X.archetypes,
-                y: y,
-                shape: 'box',
-                color: { background: COLORS.node, border: borderColor, highlight: { background: COLORS.nodeHighlight, border: borderColor } },
-                font: { color: fontColor, size: 10, face: 'IBM Plex Mono, monospace', multi: 'html' },
-                borderWidth: borderWidth,
-                widthConstraint: { minimum: 130, maximum: 130 },
-            });
-            initialPositions[`arch_${item.archetype}`] = { x: X.archetypes, y: y };
-            
-            // Edges: Metrics → This Archetype
+            // Tooltip with score breakdown
             const comps = item.components || {};
+            let archTooltip = `<b>${displayName}</b>\n`;
+            archTooltip += `━━━━━━━━━━━━━━━━━━━━\n`;
+            archTooltip += `Total Score: ${(item.score * 100).toFixed(1)}%\n\n`;
+            archTooltip += `<b>COMPONENT SCORES:</b>\n`;
+            archTooltip += `• Valence: ${((comps.valence || 0) * 100).toFixed(0)}%\n`;
+            archTooltip += `• Tension: ${((comps.tension || 0) * 100).toFixed(0)}%\n`;
+            archTooltip += `• Hope: ${((comps.hope || 0) * 100).toFixed(0)}%\n`;
+            archTooltip += `• Energy: ${((comps.energy || 0) * 100).toFixed(0)}%\n`;
             
-            if (comps.valence !== undefined) {
-                edges.push({
-                    from: 'metric_valence', to: `arch_${item.archetype}`,
-                    width: Math.max(0.5, comps.valence * 2.5),
-                    color: { color: COLORS.valence, opacity: 0.2 + comps.valence * 0.4 },
-                    smooth: { type: 'cubicBezier', roundness: 0.3 },
-                });
+            nodes.push(createNode(
+                `arch_${item.archetype}`,
+                `${displayName}${marker}\n${scorePercent}%`,
+                X.archetypes,
+                y,
+                borderColor,
+                { 
+                    title: archTooltip,
+                    font: { 
+                        ...NODE_FONT, 
+                        color: isPrimary || isSecondary ? COLORS.text : COLORS.textDim,
+                    },
+                }
+            ));
+            
+            // Edges: Metrics → Archetype (weighted by component scores)
+            if (comps.valence !== undefined && comps.valence > 0.3) {
+                edges.push(createEdge('metric_valence', `arch_${item.archetype}`, COLORS.green, {
+                    opacity: 0.2 + comps.valence * 0.4,
+                }));
             }
-            if (comps.tension !== undefined) {
-                edges.push({
-                    from: 'metric_tension', to: `arch_${item.archetype}`,
-                    width: Math.max(0.5, comps.tension * 2.5),
-                    color: { color: COLORS.tension, opacity: 0.2 + comps.tension * 0.4 },
-                    smooth: { type: 'cubicBezier', roundness: 0.3 },
-                });
+            if (comps.tension !== undefined && comps.tension > 0.3) {
+                edges.push(createEdge('metric_tension', `arch_${item.archetype}`, COLORS.red, {
+                    opacity: 0.2 + comps.tension * 0.4,
+                }));
             }
-            if (comps.hope !== undefined) {
-                edges.push({
-                    from: 'metric_hope', to: `arch_${item.archetype}`,
-                    width: Math.max(0.5, comps.hope * 2.5),
-                    color: { color: COLORS.hope, opacity: 0.2 + comps.hope * 0.4 },
-                    smooth: { type: 'cubicBezier', roundness: 0.3 },
-                });
+            if (comps.hope !== undefined && comps.hope > 0.3) {
+                edges.push(createEdge('metric_hope', `arch_${item.archetype}`, COLORS.cyan, {
+                    opacity: 0.2 + comps.hope * 0.4,
+                }));
             }
-            if (comps.energy !== undefined) {
-                edges.push({
-                    from: 'metric_energy', to: `arch_${item.archetype}`,
-                    width: Math.max(0.5, comps.energy * 2.5),
-                    color: { color: COLORS.energy, opacity: 0.2 + comps.energy * 0.4 },
-                    smooth: { type: 'cubicBezier', roundness: 0.3 },
-                });
+            if (comps.energy !== undefined && comps.energy > 0.3) {
+                edges.push(createEdge('metric_energy', `arch_${item.archetype}`, COLORS.yellow, {
+                    opacity: 0.2 + comps.energy * 0.4,
+                }));
             }
         });
         
         // ---------------------------------------------------------------------
-        // COLUMN 3 TOP: THEMES
+        // COLUMN 4 TOP: THEMES
         // ---------------------------------------------------------------------
         
-        // Get themes from API data
-        let themesList = data.themes || components.source_themes || ['POLITICS', 'ECONOMY', 'TECHNOLOGY'];
+        const themesLabel = `THEMES\n\n• ${themes.map(t => t.toUpperCase()).join('\n• ')}`;
         
-        if (!themesList || themesList.length === 0) {
-            themesList = ['POLITICS', 'ECONOMY', 'TECHNOLOGY'];
-        }
-        
-        const themesLabel = `THEMES\n• ${themesList.map(t => t.toUpperCase()).join('\n• ')}`;
-        
-        nodes.push({
-            id: 'themes',
-            label: themesLabel,
-            x: X.themes,
-            y: -140,
-            shape: 'box',
-            color: { background: COLORS.node, border: COLORS.themes, highlight: { background: COLORS.nodeHighlight, border: COLORS.themes } },
-            font: { color: COLORS.text, size: 10, face: 'IBM Plex Mono, monospace', multi: 'html', align: 'left' },
-            borderWidth: 2,
-            widthConstraint: { minimum: 120, maximum: 120 },
-        });
-        initialPositions['themes'] = { x: X.themes, y: -140 };
+        nodes.push(createNode('themes', themesLabel, X.middle, -100, COLORS.pink, {
+            align: 'left',
+            title: `<b>DOMINANT THEMES</b>\n━━━━━━━━━━━━━━━━━━━━\nExtracted from news analysis:\n• ${themes.join('\n• ')}`,
+        }));
         
         // ---------------------------------------------------------------------
-        // COLUMN 3 BOTTOM: DATE SEED
+        // COLUMN 4 BOTTOM: DATE SEED
         // ---------------------------------------------------------------------
         
-        const dateSeed = data.date || '2026-01-09';
         const instrumentVariant = components.instrument_variant ?? 0;
+        const dateSeedLabel = `DATE SEED\n\n${dateSeed}\nVARIANT: ${instrumentVariant}`;
         
-        nodes.push({
-            id: 'date_seed',
-            label: `DATE SEED\n${dateSeed}\nVARIANT: ${instrumentVariant}`,
-            x: X.themes,
-            y: 140,
-            shape: 'box',
-            color: { background: COLORS.node, border: COLORS.dateSeed, highlight: { background: COLORS.nodeHighlight, border: COLORS.dateSeed } },
-            font: { color: COLORS.text, size: 10, face: 'IBM Plex Mono, monospace', multi: 'html' },
-            borderWidth: 2,
-            widthConstraint: { minimum: 120, maximum: 120 },
-        });
-        initialPositions['date_seed'] = { x: X.themes, y: 140 };
+        nodes.push(createNode('date_seed', dateSeedLabel, X.middle, 100, COLORS.orange, {
+            title: `<b>DATE SEED</b>\n━━━━━━━━━━━━━━━━━━━━\nDate: ${dateSeed}\nInstrument Variant: ${instrumentVariant}\n\nUsed for reproducible\nrandomization in prompt\ngeneration.`,
+        }));
         
         // ---------------------------------------------------------------------
-        // COLUMN 4: PROMPT ASSEMBLY LAYERS
+        // COLUMN 5: PROMPT ASSEMBLY LAYERS
         // ---------------------------------------------------------------------
         
-        // Layer 1: STRUCTURE (from Archetypes)
+        // Layer 1: STRUCTURE
         const genre = (components.genre || 'AMBIENT').toUpperCase();
         const instruments = (components.instruments || []).map(i => i.toUpperCase()).slice(0, 3);
         const moods = (components.moods || []).map(m => m.toUpperCase()).slice(0, 3);
         const tempo = components.tempo || 70;
         
-        const layer1Label = `LAYER 1: STRUCTURE\n(FROM ARCHETYPES)\n\n• GENRE: ${genre}\n• INSTR: ${instruments.join(', ')}\n• MOODS: ${moods.join(', ')}\n• TEMPO: ${tempo} BPM`;
+        const layer1Label = `LAYER 1: STRUCTURE\n\nGENRE: ${genre}\nTEMPO: ${tempo} BPM`;
         
-        nodes.push({
-            id: 'layer_structure',
-            label: layer1Label,
-            x: X.layers,
-            y: -120,
-            shape: 'box',
-            color: { background: COLORS.node, border: COLORS.structure, highlight: { background: COLORS.nodeHighlight, border: COLORS.structure } },
-            font: { color: COLORS.text, size: 9, face: 'IBM Plex Mono, monospace', multi: 'html', align: 'left' },
-            borderWidth: 2,
-            widthConstraint: { minimum: 180, maximum: 180 },
-        });
-        initialPositions['layer_structure'] = { x: X.layers, y: -120 };
+        let layer1Tooltip = `<b>LAYER 1: STRUCTURE</b>\n`;
+        layer1Tooltip += `(From Archetypes)\n`;
+        layer1Tooltip += `━━━━━━━━━━━━━━━━━━━━\n`;
+        layer1Tooltip += `Genre: ${genre}\n`;
+        layer1Tooltip += `Instruments: ${instruments.join(', ')}\n`;
+        layer1Tooltip += `Moods: ${moods.join(', ')}\n`;
+        layer1Tooltip += `Tempo: ${tempo} BPM`;
         
-        // Layer 2: COLOR (from Theme Textures)
-        const texTimbre = (components.texture_timbre || ['WOVEN', 'CLEAN']).map(t => t.toUpperCase());
-        const texMovement = (components.texture_movement || ['SEQUENCED']).map(t => t.toUpperCase());
-        const texHarmonic = (components.texture_harmonic || ['AMBIGUOUS']).map(t => t.toUpperCase());
+        nodes.push(createNode('layer_structure', layer1Label, X.layers, -100, COLORS.purple, {
+            title: layer1Tooltip,
+            align: 'left',
+        }));
         
-        const layer2Label = `LAYER 2: COLOR\n(FROM THEME TEXTURES)\n\n• TIMBRE: ${texTimbre.join(', ')}\n• MOVEMENT: ${texMovement.join(', ')}\n• HARMONIC: ${texHarmonic.join(', ')}`;
+        // Layer 2: COLOR
+        const texTimbre = (components.texture_timbre || []).map(t => t.toUpperCase());
+        const texMovement = (components.texture_movement || []).map(t => t.toUpperCase());
+        const texHarmonic = (components.texture_harmonic || []).map(t => t.toUpperCase());
         
-        nodes.push({
-            id: 'layer_color',
-            label: layer2Label,
-            x: X.layers,
-            y: 20,
-            shape: 'box',
-            color: { background: COLORS.node, border: COLORS.color, highlight: { background: COLORS.nodeHighlight, border: COLORS.color } },
-            font: { color: COLORS.text, size: 9, face: 'IBM Plex Mono, monospace', multi: 'html', align: 'left' },
-            borderWidth: 2,
-            widthConstraint: { minimum: 180, maximum: 180 },
-        });
-        initialPositions['layer_color'] = { x: X.layers, y: 20 };
+        const layer2Label = `LAYER 2: COLOR\n\nTIMBRE: ${texTimbre.slice(0, 2).join(', ')}\nMOVE: ${texMovement.slice(0, 1).join(', ')}`;
         
-        // Layer 3: VARIETY (from Date Seed)
-        const layer3Label = `LAYER 3: VARIETY\n(FROM DATE SEED)\n\n• INSTR VARIANT: ${instrumentVariant}\n• TEMPO ADJUST: ±3\n• SEED SELECTION`;
+        let layer2Tooltip = `<b>LAYER 2: COLOR</b>\n`;
+        layer2Tooltip += `(From Theme Textures)\n`;
+        layer2Tooltip += `━━━━━━━━━━━━━━━━━━━━\n`;
+        layer2Tooltip += `Timbre: ${texTimbre.join(', ')}\n`;
+        layer2Tooltip += `Movement: ${texMovement.join(', ')}\n`;
+        layer2Tooltip += `Harmonic: ${texHarmonic.join(', ')}`;
         
-        nodes.push({
-            id: 'layer_variety',
-            label: layer3Label,
-            x: X.layers,
-            y: 150,
-            shape: 'box',
-            color: { background: COLORS.node, border: COLORS.variety, highlight: { background: COLORS.nodeHighlight, border: COLORS.variety } },
-            font: { color: COLORS.text, size: 9, face: 'IBM Plex Mono, monospace', multi: 'html', align: 'left' },
-            borderWidth: 2,
-            widthConstraint: { minimum: 180, maximum: 180 },
-        });
-        initialPositions['layer_variety'] = { x: X.layers, y: 150 };
+        nodes.push(createNode('layer_color', layer2Label, X.layers, 0, COLORS.pink, {
+            title: layer2Tooltip,
+            align: 'left',
+        }));
+        
+        // Layer 3: VARIETY
+        const layer3Label = `LAYER 3: VARIETY\n\nVARIANT: ${instrumentVariant}\nTEMPO ADJ: ±3`;
+        
+        nodes.push(createNode('layer_variety', layer3Label, X.layers, 100, COLORS.orange, {
+            title: `<b>LAYER 3: VARIETY</b>\n(From Date Seed)\n━━━━━━━━━━━━━━━━━━━━\nInstrument Variant: ${instrumentVariant}\nTempo Adjustment: ±3 BPM\n\nAdds variation based on\ndate-seeded randomization.`,
+            align: 'left',
+        }));
         
         // ---------------------------------------------------------------------
-        // COLUMN 5: FINAL PROMPT
+        // COLUMN 6: FINAL PROMPT
         // ---------------------------------------------------------------------
         
-        const finalPromptText = (prompt.final_prompt || '').toUpperCase().slice(0, 60) + '...';
+        const finalPromptText = (prompt.final_prompt || '').toUpperCase().slice(0, 50) + '...';
+        const finalPromptLabel = `FINAL PROMPT\n\n"${finalPromptText}"`;
         
-        nodes.push({
-            id: 'final_prompt',
-            label: `FINAL PROMPT\n\n"${finalPromptText}"`,
-            x: X.finalPrompt,
-            y: 20,
-            shape: 'box',
-            color: { background: '#1a1a2e', border: COLORS.finalPrompt, highlight: { background: '#252540', border: COLORS.finalPrompt } },
-            font: { color: COLORS.text, size: 10, face: 'IBM Plex Mono, monospace', multi: 'html' },
-            borderWidth: 3,
-            widthConstraint: { minimum: 180, maximum: 180 },
-        });
-        initialPositions['final_prompt'] = { x: X.finalPrompt, y: 20 };
+        nodes.push(createNode('final_prompt', finalPromptLabel, X.finalPrompt, 0, COLORS.green, {
+            title: `<b>FINAL PROMPT</b>\n━━━━━━━━━━━━━━━━━━━━\n${prompt.final_prompt || ''}`,
+        }));
         
         // ---------------------------------------------------------------------
         // EDGES: ARCHETYPES → LAYER 1
         // ---------------------------------------------------------------------
         
         if (primary) {
-            edges.push({
-                from: `arch_${primary}`, to: 'layer_structure',
-                width: 3,
-                color: { color: COLORS.primary, opacity: 0.8 },
-                smooth: { type: 'cubicBezier', roundness: 0.2 },
-                arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-            });
+            edges.push(createEdge(`arch_${primary}`, 'layer_structure', COLORS.pink, {
+                arrows: true,
+                width: 2,
+            }));
         }
         
         if (secondary) {
-            edges.push({
-                from: `arch_${secondary}`, to: 'layer_structure',
-                width: 2,
-                color: { color: COLORS.secondary, opacity: 0.5 },
-                smooth: { type: 'cubicBezier', roundness: 0.2 },
+            edges.push(createEdge(`arch_${secondary}`, 'layer_structure', COLORS.orange, {
+                arrows: true,
                 dashes: [5, 5],
-                arrows: { to: { enabled: true, scaleFactor: 0.4 } },
-            });
+                opacity: 0.5,
+            }));
         }
         
         // ---------------------------------------------------------------------
         // EDGES: THEMES → LAYER 2
         // ---------------------------------------------------------------------
         
-        edges.push({
-            from: 'themes', to: 'layer_color',
-            width: 2,
-            color: { color: COLORS.themes, opacity: 0.7 },
-            smooth: { type: 'cubicBezier', roundness: 0.2 },
-            arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-        });
+        edges.push(createEdge('themes', 'layer_color', COLORS.pink, { arrows: true }));
         
         // ---------------------------------------------------------------------
         // EDGES: DATE SEED → LAYER 3
         // ---------------------------------------------------------------------
         
-        edges.push({
-            from: 'date_seed', to: 'layer_variety',
-            width: 2,
-            color: { color: COLORS.dateSeed, opacity: 0.7 },
-            smooth: { type: 'cubicBezier', roundness: 0.2 },
-            arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-        });
+        edges.push(createEdge('date_seed', 'layer_variety', COLORS.orange, { arrows: true }));
         
         // ---------------------------------------------------------------------
         // EDGES: ALL LAYERS → FINAL PROMPT
         // ---------------------------------------------------------------------
         
-        edges.push({
-            from: 'layer_structure', to: 'final_prompt',
-            width: 2,
-            color: { color: COLORS.structure, opacity: 0.6 },
-            smooth: { type: 'cubicBezier', roundness: 0.3 },
-            arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-        });
-        
-        edges.push({
-            from: 'layer_color', to: 'final_prompt',
-            width: 2,
-            color: { color: COLORS.color, opacity: 0.6 },
-            smooth: { type: 'cubicBezier', roundness: 0.3 },
-            arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-        });
-        
-        edges.push({
-            from: 'layer_variety', to: 'final_prompt',
-            width: 2,
-            color: { color: COLORS.variety, opacity: 0.6 },
-            smooth: { type: 'cubicBezier', roundness: 0.3 },
-            arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-        });
+        edges.push(createEdge('layer_structure', 'final_prompt', COLORS.purple, { arrows: true }));
+        edges.push(createEdge('layer_color', 'final_prompt', COLORS.pink, { arrows: true }));
+        edges.push(createEdge('layer_variety', 'final_prompt', COLORS.orange, { arrows: true }));
         
         // ---------------------------------------------------------------------
         // CREATE NETWORK
@@ -423,17 +435,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 dragView: true,
                 zoomView: true,
                 hover: true,
-                tooltipDelay: 100,
+                tooltipDelay: 200,
                 selectConnectedEdges: true,
+                navigationButtons: false,
+                keyboard: {
+                    enabled: true,
+                    speed: { x: 10, y: 10, zoom: 0.02 },
+                    bindToWindow: false,
+                },
             },
             nodes: {
-                margin: 10,
                 shadow: {
                     enabled: true,
-                    color: 'rgba(0,0,0,0.3)',
-                    size: 5,
-                    x: 2,
-                    y: 2,
+                    color: 'rgba(0,0,0,0.5)',
+                    size: 8,
+                    x: 3,
+                    y: 3,
                 },
             },
             edges: {
@@ -443,9 +460,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         network = new vis.Network(container, { nodes, edges }, options);
         
+        // Enable focus on container for keyboard nav
+        container.tabIndex = 0;
+        
         // Fit to view after drawing
         network.once('afterDrawing', () => {
-            network.fit({ animation: { duration: 300, easingFunction: 'easeInOutQuad' } });
+            network.fit({ 
+                animation: { duration: 300, easingFunction: 'easeInOutQuad' },
+            });
         });
         
         // Setup reset button
@@ -480,7 +502,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // INIT
     // =============================================================================
     
-    // Initialize the graph
     initFullFlowGraph();
     
 });

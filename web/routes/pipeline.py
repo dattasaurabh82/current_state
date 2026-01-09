@@ -116,7 +116,57 @@ def get_derivation_data() -> Dict[str, Any]:
     if "error" in pipeline:
         return {"error": pipeline["error"]}
     
-    # Extract input metrics
+    # Get date for news file lookup
+    pipeline_date = pipeline.get("date", datetime.now().strftime("%Y-%m-%d"))
+    
+    # ---------------------------------------------------------------------
+    # NEWS SCRAPING DATA
+    # ---------------------------------------------------------------------
+    news_data = {}
+    news_file = PROJECT_ROOT / f"news_data_{pipeline_date}.json"
+    
+    if news_file.exists():
+        try:
+            with open(news_file, "r", encoding="utf-8") as f:
+                raw_news = json.load(f)
+            
+            # Count articles and extract sources
+            total_articles = 0
+            sources = set()
+            sample_headlines = []
+            regions = []
+            
+            for region_key, region_data in raw_news.items():
+                if isinstance(region_data, dict) and "articles" in region_data:
+                    articles = region_data.get("articles", [])
+                    total_articles += len(articles)
+                    regions.append(region_key)
+                    
+                    for article in articles[:5]:  # Sample first 5 per region
+                        source = article.get("source", {}).get("name", "Unknown")
+                        sources.add(source)
+                        
+                        if len(sample_headlines) < 10:
+                            sample_headlines.append({
+                                "title": article.get("title", "")[:80],
+                                "source": source,
+                            })
+            
+            news_data = {
+                "total_articles": total_articles,
+                "regions": regions,
+                "sources": list(sources)[:15],  # Top 15 sources
+                "sample_headlines": sample_headlines,
+                "file": f"news_data_{pipeline_date}.json",
+            }
+        except Exception as e:
+            news_data = {"error": str(e)}
+    else:
+        news_data = {"error": "News file not found"}
+    
+    # ---------------------------------------------------------------------
+    # INPUT METRICS (Structured Output)
+    # ---------------------------------------------------------------------
     analysis = pipeline.get("analysis", {})
     input_metrics = {
         "valence": analysis.get("emotional_valence", 0),
@@ -124,6 +174,9 @@ def get_derivation_data() -> Dict[str, Any]:
         "hope": analysis.get("hope_factor", 0),
         "energy": analysis.get("energy_level", "medium"),
     }
+    
+    # Summary text for tooltip
+    summary_text = analysis.get("summary", "")
     
     # Scoring weights (from archetype_selector.py)
     scoring_weights = {
@@ -180,6 +233,8 @@ def get_derivation_data() -> Dict[str, Any]:
     prompt_components = prompt_data.get("components", {})
     
     return {
+        "news": news_data,
+        "summary": summary_text,
         "input_metrics": input_metrics,
         "scoring_weights": scoring_weights,
         "archetypes": archetypes_data,

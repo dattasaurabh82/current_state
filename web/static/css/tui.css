@@ -923,6 +923,9 @@ ANIMATIONS (Subtle)
     color: var(--text-bright);
     line-height: 1.6;
     font-style: italic;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .prompt-components {
@@ -1238,6 +1241,7 @@ audio::-webkit-media-controls-time-remaining-display {
 /* Full flow viz */
 .viz-panel-body {
     padding: 0;
+    position: relative;
 }
 
 .derivation-graph-full {
@@ -1245,11 +1249,23 @@ audio::-webkit-media-controls-time-remaining-display {
     width: 100%;
     min-height: 300px;
     background-color: var(--bg-dark);
+    cursor: grab;
 }
 
-/* Reset layout button */
+.derivation-graph-full:active {
+    cursor: grabbing;
+}
+
+/* Ensure vis-network canvas is interactive */
+.derivation-graph-full canvas {
+    outline: none;
+}
+
+/* Reset layout button - bottom right */
 .reset-layout-btn {
-    float: right;
+    position: absolute;
+    bottom: var(--space-sm);
+    right: var(--space-sm);
     padding: var(--space-xs) var(--space-sm);
     font-size: var(--font-size-xs);
     font-family: var(--font-mono);
@@ -1261,6 +1277,7 @@ audio::-webkit-media-controls-time-remaining-display {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: all 0.15s ease;
+    z-index: 10;
 }
 
 .reset-layout-btn:hover {
