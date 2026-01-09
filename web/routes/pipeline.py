@@ -197,8 +197,14 @@ def get_derivation_data() -> Dict[str, Any]:
                 "moods": prompt_components.get("base_moods", []),
                 "tempo": prompt_components.get("tempo_final"),
                 "intensity": prompt_components.get("intensity_level"),
+                "instrument_variant": prompt_components.get("instrument_variant", 0),
+                "texture_timbre": prompt_components.get("texture_timbre", []),
+                "texture_movement": prompt_components.get("texture_movement", []),
+                "texture_harmonic": prompt_components.get("texture_harmonic", []),
+                "source_themes": prompt_components.get("source_themes", []),
             },
         },
+        "themes": analysis.get("dominant_themes", []),
         "date": pipeline.get("date"),
     }
 

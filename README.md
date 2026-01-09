@@ -11,6 +11,7 @@
 - Hardware Update Steps: 🔴
   - Speaker Switch switcher 
   - Update circuit 
+    - Also add an extra (3D) side Fan for PI
   - Place new order for SLA prints 
   - Print PLA locally 
   - Assemble new one ... 
