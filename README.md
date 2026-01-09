@@ -2,28 +2,19 @@
 
 ## ToDo
 
-### Low
-
-- ~~Music Gen Pipeline docu~~ ✅
 - WIP: Main README Docu ... 🟠
 - WIP: All code base cleanup - System provisioning docu and tooling .... 🟠
-- Web ui Monitor 🔴
-- Setup script 🔴
-- Along-side drop box do a freesound.org upload ... 🔴
-- ~~SfX with music~~
-- Other region of news 🔴
-- ~~Business logic of operation ... (radar trigger)~~ ✅
-- ~~Improve music prompt gen algo~~ ✅
-- ~~Currently happy with the implementation~~
-- ~~Send cancel to other agent calls~~
-- ~~slow down track for 30 sec to make it feel longer [post processing]~~
+- Web ui Monitor 🟠
+- Setup script 
+- Along-side drop box do a freesound.org upload ... 
+- Other region of news 
 
-- Hardware Update Steps: 🔴
-  - Speaker Switch switcher 🔴
-  - Update circuit 🔴
-  - Place new order for SLA prints 🔴
-  - Print PLA locally 🔴
-  - Assemble new one ... 🔴
+- Hardware Update Steps: 
+  - Speaker Switch switcher 
+  - Update circuit 
+  - Place new order for SLA prints 
+  - Print PLA locally 
+  - Assemble new one ... 
 ---
 
 ## Project structure
