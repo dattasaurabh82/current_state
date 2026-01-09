@@ -1,12 +1,252 @@
 <!-- Tab 2: Pipeline Visualization -->
+
+{% if pipeline.error %}
 <div class="panel">
-    <div class="panel-header">Pipeline Visualization</div>
+    <div class="panel-header">Error</div>
     <div class="panel-body">
-        <p class="text-secondary">
-            Step-by-step breakdown of the last generation run.
-        </p>
-        <p class="text-dim mt-md text-sm">
-            // TODO: Load from generation_results/pipeline_results.json
-        </p>
+        <p class="text-error">{{ pipeline.error }}</p>
     </div>
 </div>
+{% else %}
+
+<div class="pipeline-layout">
+    <!-- Left Column: Pipeline Info -->
+    <div class="pipeline-info">
+        
+        <!-- Header Info -->
+        <div class="pipeline-header-bar mb-md">
+            <span class="text-dim text-sm">LAST RUN:</span>
+            <span class="text-secondary">{{ pipeline.timestamp_display or pipeline.timestamp or 'N/A' }}</span>
+            <span class="text-dim text-sm ml-md">│</span>
+            <span class="text-dim text-sm">DATE:</span>
+            <span class="text-secondary">{{ pipeline.date or 'N/A' }}</span>
+        </div>
+
+        <!-- Analysis Summary -->
+        {% if pipeline.analysis %}
+        <div class="panel mb-md">
+            <div class="panel-header">Step 1: LLM Analysis</div>
+            <div class="panel-body">
+                <p class="text-secondary mb-md">{{ pipeline.analysis.summary or 'No summary available' }}</p>
+                
+                <!-- Dominant Themes -->
+                {% if pipeline.analysis.dominant_themes %}
+                <div class="data-row">
+                    <span class="data-label">Themes</span>
+                    <span class="data-value">
+                        {% for theme in pipeline.analysis.dominant_themes %}
+                        <span class="tag">{{ theme }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+                {% endif %}
+                
+                <!-- Metrics -->
+                <div class="metrics-grid mt-md">
+                    <div class="metric-item">
+                        <div class="metric-label">Valence</div>
+                        <div class="metric-bar-container">
+                            <div class="metric-bar {% if pipeline.analysis.emotional_valence >= 0 %}positive{% else %}negative{% endif %}" 
+                                 style="width: {{ ((pipeline.analysis.emotional_valence + 1) / 2 * 100)|round }}%"></div>
+                        </div>
+                        <div class="metric-value">{{ '%+.2f'|format(pipeline.analysis.emotional_valence) }}</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Tension</div>
+                        <div class="metric-bar-container">
+                            <div class="metric-bar neutral" style="width: {{ (pipeline.analysis.tension_level * 100)|round }}%"></div>
+                        </div>
+                        <div class="metric-value">{{ '%.2f'|format(pipeline.analysis.tension_level) }}</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Hope</div>
+                        <div class="metric-bar-container">
+                            <div class="metric-bar positive" style="width: {{ (pipeline.analysis.hope_factor * 100)|round }}%"></div>
+                        </div>
+                        <div class="metric-value">{{ '%.2f'|format(pipeline.analysis.hope_factor) }}</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Energy</div>
+                        <div class="metric-bar-container">
+                            <div class="metric-bar neutral" style="width: {% if pipeline.analysis.energy_level == 'high' %}100{% elif pipeline.analysis.energy_level == 'medium' %}66{% else %}33{% endif %}%"></div>
+                        </div>
+                        <div class="metric-value">{{ pipeline.analysis.energy_level }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Archetype Selection -->
+        {% if pipeline.selection %}
+        <div class="panel mb-md">
+            <div class="panel-header">Step 2: Archetype Selection</div>
+            <div class="panel-body">
+                <!-- Primary & Secondary -->
+                <div class="archetype-selected mb-md">
+                    <div class="archetype-primary">
+                        <span class="text-dim text-xs">PRIMARY</span>
+                        <div class="archetype-name text-bright">{{ pipeline.selection.primary|replace('_', ' ')|title }}</div>
+                        <div class="archetype-score">{{ '%.1f'|format(pipeline.selection.primary_score * 100) }}%</div>
+                    </div>
+                    <div class="archetype-blend">
+                        <span class="text-muted">{{ pipeline.selection.blend_ratio|round(2) * 100 |int }}%</span>
+                        <span class="text-dim">/</span>
+                        <span class="text-muted">{{ (1 - pipeline.selection.blend_ratio)|round(2) * 100 |int }}%</span>
+                    </div>
+                    <div class="archetype-secondary">
+                        <span class="text-dim text-xs">SECONDARY</span>
+                        <div class="archetype-name text-secondary">{{ pipeline.selection.secondary|replace('_', ' ')|title }}</div>
+                        <div class="archetype-score">{{ '%.1f'|format(pipeline.selection.secondary_score * 100) }}%</div>
+                    </div>
+                </div>
+                
+                <!-- All Scores -->
+                {% if pipeline.selection.all_scores %}
+                <div class="archetype-scores">
+                    {% for item in pipeline.selection.all_scores %}
+                    <div class="archetype-score-row">
+                        <span class="archetype-score-name {% if item.archetype == pipeline.selection.primary %}text-bright{% elif item.archetype == pipeline.selection.secondary %}text-secondary{% else %}text-dim{% endif %}">
+                            {{ item.archetype|replace('_', ' ') }}
+                        </span>
+                        <div class="archetype-score-bar-container">
+                            <div class="archetype-score-bar" style="width: {{ (item.score * 100)|round }}%"></div>
+                        </div>
+                        <span class="archetype-score-value">{{ '%.0f'|format(item.score * 100) }}%</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Prompt Building -->
+        {% if pipeline.prompt %}
+        <div class="panel mb-md">
+            <div class="panel-header">Step 3: Prompt Building</div>
+            <div class="panel-body">
+                <!-- Generated Prompt -->
+                <div class="prompt-display mb-md">
+                    <div class="text-dim text-xs mb-sm">GENERATED PROMPT</div>
+                    <div class="prompt-text">{{ pipeline.prompt.prompt }}</div>
+                </div>
+                
+                <!-- Components -->
+                {% if pipeline.prompt.components %}
+                <div class="prompt-components">
+                    <div class="data-row">
+                        <span class="data-label">Genre</span>
+                        <span class="data-value">{{ pipeline.prompt.components.genre }}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Tempo</span>
+                        <span class="data-value">{{ pipeline.prompt.components.tempo_final }} BPM</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Instruments</span>
+                        <span class="data-value">{{ pipeline.prompt.components.base_instruments|join(', ') }}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Moods</span>
+                        <span class="data-value">{{ pipeline.prompt.components.base_moods|join(', ') }}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Intensity</span>
+                        <span class="data-value">{{ pipeline.prompt.components.intensity_level }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Right Column: Audio Files -->
+    <div class="audio-section">
+        <div class="panel">
+            <div class="panel-header">
+                Generated Audio
+                <span class="text-muted float-right" id="audio-count">{{ audio_count }} files</span>
+            </div>
+            <div class="panel-body" id="audio-files-container">
+                {% if audio_files %}
+                    {% for audio in audio_files %}
+                    <div class="audio-item" data-filename="{{ audio.filename }}">
+                        <div class="audio-item-header">
+                            <span class="audio-item-date">{{ audio.date }}</span>
+                            <span class="text-muted">{{ audio.time }}</span>
+                            <span class="audio-item-size text-dim">{{ audio.size }}</span>
+                        </div>
+                        <div class="audio-item-filename text-secondary text-sm">{{ audio.filename }}</div>
+                        <audio controls preload="none" class="audio-player-element">
+                            <source src="{{ audio.url }}" type="audio/wav">
+                        </audio>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-dim">No audio files found</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Polling script for real-time audio updates -->
+<script>
+(function() {
+    let lastAudioCount = {{ audio_count }};
+    
+    async function pollAudioFiles() {
+        try {
+            const response = await fetch('/api/audio-files');
+            const data = await response.json();
+            
+            // Update count
+            document.getElementById('audio-count').textContent = data.count + ' files';
+            
+            // If count changed, refresh the list
+            if (data.count !== lastAudioCount) {
+                lastAudioCount = data.count;
+                updateAudioList(data.files);
+            }
+        } catch (e) {
+            console.error('[Pipeline] Error polling audio files:', e);
+        }
+    }
+    
+    function updateAudioList(files) {
+        const container = document.getElementById('audio-files-container');
+        
+        if (files.length === 0) {
+            container.innerHTML = '<p class="text-dim">No audio files found</p>';
+            return;
+        }
+        
+        let html = '';
+        files.forEach(audio => {
+            html += `
+                <div class="audio-item" data-filename="${audio.filename}">
+                    <div class="audio-item-header">
+                        <span class="audio-item-date">${audio.date}</span>
+                        <span class="text-muted">${audio.time}</span>
+                        <span class="audio-item-size text-dim">${audio.size}</span>
+                    </div>
+                    <div class="audio-item-filename text-secondary text-sm">${audio.filename}</div>
+                    <audio controls preload="none" class="audio-player-element">
+                        <source src="${audio.url}" type="audio/wav">
+                    </audio>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+    
+    // Poll every 5 seconds
+    setInterval(pollAudioFiles, 5000);
+})();
+</script>
+
+{% endif %}

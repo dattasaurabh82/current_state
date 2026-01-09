@@ -729,3 +729,247 @@ ANIMATIONS (Subtle)
     animation: blink 1s step-end infinite;
     color: var(--text-dim);
 }
+
+/* =============================================================================
+   PIPELINE VISUALIZATION
+   ============================================================================= */
+
+/* Layout */
+.pipeline-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--space-md);
+    height: 100%;
+}
+
+@media (max-width: 1100px) {
+    .pipeline-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pipeline-info {
+    overflow-y: auto;
+}
+
+.audio-section {
+    overflow-y: auto;
+}
+
+/* Header bar */
+.pipeline-header-bar {
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+/* Tags */
+.tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin-right: var(--space-xs);
+    margin-bottom: var(--space-xs);
+}
+
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+}
+
+@media (max-width: 600px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.metric-label {
+    width: 60px;
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    text-transform: uppercase;
+}
+
+.metric-bar-container {
+    flex: 1;
+    height: 8px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.metric-bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.metric-bar.positive {
+    background-color: var(--status-success);
+}
+
+.metric-bar.negative {
+    background-color: var(--status-error);
+}
+
+.metric-bar.neutral {
+    background-color: var(--text-dim);
+}
+
+.metric-value {
+    width: 50px;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+/* Archetype Selection */
+.archetype-selected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+.archetype-primary,
+.archetype-secondary {
+    text-align: center;
+}
+
+.archetype-name {
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    margin: var(--space-xs) 0;
+}
+
+.archetype-score {
+    font-size: var(--font-size-sm);
+    color: var(--text-dim);
+}
+
+.archetype-blend {
+    font-size: var(--font-size-lg);
+    color: var(--text-muted);
+}
+
+/* Archetype Scores List */
+.archetype-scores {
+    margin-top: var(--space-md);
+}
+
+.archetype-score-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+}
+
+.archetype-score-name {
+    width: 140px;
+    font-size: var(--font-size-sm);
+    text-transform: capitalize;
+}
+
+.archetype-score-bar-container {
+    flex: 1;
+    height: 6px;
+    background-color: var(--bg-dark);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.archetype-score-bar {
+    height: 100%;
+    background-color: var(--text-secondary);
+}
+
+.archetype-score-value {
+    width: 40px;
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    text-align: right;
+}
+
+/* Prompt Display */
+.prompt-display {
+    padding: var(--space-md);
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+.prompt-text {
+    font-size: var(--font-size-md);
+    color: var(--text-bright);
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.prompt-components {
+    margin-top: var(--space-md);
+}
+
+/* Audio Items */
+.audio-item {
+    padding: var(--space-md);
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.audio-item-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.audio-item-date {
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.audio-item-size {
+    margin-left: auto;
+}
+
+.audio-item-filename {
+    margin-bottom: var(--space-sm);
+    word-break: break-all;
+}
+
+.audio-player-element {
+    width: 100%;
+    height: 36px;
+    filter: grayscale(100%) brightness(0.8) contrast(1.2);
+}
+
+.audio-player-element::-webkit-media-controls-panel {
+    background-color: var(--bg-panel);
+}
+
+/* Responsive audio section */
+@media (max-width: 1100px) {
+    .audio-section {
+        max-height: 400px;
+    }
+}

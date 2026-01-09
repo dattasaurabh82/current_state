@@ -18,6 +18,7 @@ from fastapi.responses import HTMLResponse
 
 # Import route modules
 from web.routes.news import get_news_context
+from web.routes.pipeline import router as pipeline_router, get_pipeline_context
 from web.routes.logs import router as logs_router
 
 # Paths
@@ -37,6 +38,7 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # Include routers
+app.include_router(pipeline_router)
 app.include_router(logs_router)
 
 # Templates
@@ -72,9 +74,13 @@ async def news_tab(request: Request):
 @app.get("/pipeline", response_class=HTMLResponse)
 async def pipeline_tab(request: Request):
     """Tab 2: Pipeline Visualization."""
+    pipeline_data = get_pipeline_context()
     return templates.TemplateResponse("base.html", {
         "request": request,
         "active_tab": "pipeline",
+        "pipeline": pipeline_data.get("pipeline", {}),
+        "audio_files": pipeline_data.get("audio_files", []),
+        "audio_count": pipeline_data.get("audio_count", 0),
     })
 
 
