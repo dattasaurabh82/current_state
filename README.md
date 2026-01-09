@@ -4,21 +4,22 @@
 
 ### Low
 
-- WIP: Docu ...
-- WIP: All code base cleanup - System provisioning docu and tooling ....
-- maybe web ui
-- SfX with music
+- WIP: Docu ... 🟠
+- WIP: All code base cleanup - System provisioning docu and tooling .... 🟠
+- maybe web ui 🔴
+- ~~SfX with music~~
 - Other region of news 
 
 ### High
 
 - ~~Business logic of operation ... (radar trigger)~~ ✅
-- Improve music prompt gen algo
+- ~~Improve music prompt gen algo~~ ✅
 
 ### Backlog
 
 - ~~How often and how long silent audio player plays~~
-  - silent audio to keep the channel active did not work ... so implement HW sol to trigger Audio On on FREKVENS
+  - ~~Silent audio to keep the channel active did not work ...~~ ✅
+    - so implement HW sol to trigger Audio On on FREKVENS 🟠
 - ~~Currently happy with the implementation~~
 - ~~Send cancel to other agent calls~~
 - ~~slow down track for 30 sec to make it feel longer [post processing]~~
