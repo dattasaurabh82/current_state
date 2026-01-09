@@ -16,6 +16,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
+# Import route modules
+from web.routes.news import get_news_context
+
 # Paths
 WEB_DIR = Path(__file__).parent
 STATIC_DIR = WEB_DIR / "static"
@@ -43,18 +46,22 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     """Redirect to news tab (default)."""
+    news_data = get_news_context()
     return templates.TemplateResponse("base.html", {
         "request": request,
         "active_tab": "news",
+        "news": news_data,
     })
 
 
 @app.get("/news", response_class=HTMLResponse)
 async def news_tab(request: Request):
     """Tab 1: News Bulletin."""
+    news_data = get_news_context()
     return templates.TemplateResponse("base.html", {
         "request": request,
         "active_tab": "news",
+        "news": news_data,
     })
 
 

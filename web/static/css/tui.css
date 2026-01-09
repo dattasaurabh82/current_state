@@ -398,6 +398,57 @@ TEXT STYLES
 NEWS CARDS
 ============================================================================= */
 
+/* News Header Bar */
+.news-header {
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+.news-header .ml-md {
+    margin-left: var(--space-md);
+}
+
+/* News Article Styling */
+.news-article {
+    padding: var(--space-sm) 0;
+}
+
+.news-article-source {
+    font-size: var(--font-size-xs);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+}
+
+.news-article-title {
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.news-article-description {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-top: var(--space-xs);
+    line-height: 1.5;
+}
+
+.news-divider {
+    border-bottom: 1px dashed var(--border-color);
+    margin: var(--space-sm) 0;
+}
+
+/* Float utility */
+.float-right {
+    float: right;
+}
+
+/* Legacy news-card styles (kept for compatibility) */
 .news-card {
     background-color: var(--bg-panel);
     border: 1px solid var(--border-color);

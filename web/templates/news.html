@@ -1,12 +1,57 @@
 <!-- Tab 1: News Bulletin -->
+
+{% if news.error %}
 <div class="panel">
-    <div class="panel-header">News Bulletin</div>
+    <div class="panel-header">Error</div>
     <div class="panel-body">
-        <p class="text-secondary">
-            News data will be loaded dynamically from generation results.
-        </p>
-        <p class="text-dim mt-md text-sm">
-            // TODO: Load from generation_results/news.json
-        </p>
+        <p class="text-error">{{ news.error }}</p>
     </div>
 </div>
+{% else %}
+
+<!-- Header with date -->
+<div class="news-header mb-md">
+    <span class="text-dim text-sm">NEWS DATA:</span>
+    <span class="text-secondary">{{ news.file }}</span>
+    <span class="text-dim text-sm ml-md">│</span>
+    <span class="text-dim text-sm">DATE:</span>
+    <span class="text-secondary">{{ news.date }}</span>
+    <span class="text-dim text-sm ml-md">│</span>
+    <span class="text-dim text-sm">REGIONS:</span>
+    <span class="text-secondary">{{ news.regions | length }}</span>
+</div>
+
+<!-- Region panels -->
+{% for region in news.regions %}
+<div class="panel mb-md">
+    <div class="panel-header">
+        {{ region.name }} 
+        <span class="text-dim">[{{ region.language }}]</span>
+        <span class="text-muted float-right">{{ region.count }} articles</span>
+    </div>
+    <div class="panel-body">
+        {% for article in region.articles %}
+        <div class="news-article {% if not loop.last %}mb-md{% endif %}">
+            <div class="news-article-source">
+                {{ article.source.name or 'Unknown' }}
+                <span class="text-muted">·</span>
+                <span class="text-muted">{{ article.publishedAt[:10] if article.publishedAt else '' }}</span>
+            </div>
+            <div class="news-article-title">
+                {{ article.title }}
+            </div>
+            {% if article.description %}
+            <div class="news-article-description">
+                {{ article.description[:200] }}{% if article.description|length > 200 %}...{% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% if not loop.last %}
+        <div class="news-divider"></div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+{% endif %}
