@@ -95,9 +95,12 @@
                             <div class="archetype-score">{{ '%.1f'|format(pipeline.selection.primary_score * 100) }}%</div>
                         </div>
                         <div class="archetype-blend">
-                            <span class="text-muted">{{ pipeline.selection.blend_ratio|round(2) * 100 |int }}%</span>
-                            <span class="text-dim">/</span>
-                            <span class="text-muted">{{ (1 - pipeline.selection.blend_ratio)|round(2) * 100 |int }}%</span>
+                            <span class="text-dim text-xs">BLEND RATIO</span>
+                            <div>
+                                <span class="text-muted">{{ pipeline.selection.blend_ratio|round(2) * 100 |int }}%</span>
+                                <span class="text-dim">/</span>
+                                <span class="text-muted">{{ (1 - pipeline.selection.blend_ratio)|round(2) * 100 |int }}%</span>
+                            </div>
                         </div>
                         <div class="archetype-secondary">
                             <span class="text-dim text-xs">SECONDARY</span>

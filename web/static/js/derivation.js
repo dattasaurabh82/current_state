@@ -94,15 +94,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // =============================================================================
     
     function createEdge(from, to, color, options = {}) {
+        const { arrows, dashes, width, opacity, ...rest } = options;
         return {
             from,
             to,
-            width: options.width || 1.5,
-            color: { color, opacity: options.opacity || 0.7, highlight: color, hover: color },
+            width: width || 1.5,
+            color: { color, opacity: opacity || 0.7, highlight: color, hover: color },
             smooth: EDGE_SMOOTH,
-            arrows: options.arrows ? { to: { enabled: true, scaleFactor: 0.4 } } : undefined,
-            dashes: options.dashes || false,
-            ...options,
+            arrows: arrows ? { to: { enabled: true, scaleFactor: 0.4 } } : undefined,
+            dashes: dashes || false,
+            ...rest,
         };
     }
     
