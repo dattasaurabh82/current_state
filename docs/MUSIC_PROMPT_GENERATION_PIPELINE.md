@@ -701,23 +701,17 @@ Debugging a multi-step pipeline requires understanding what happened at each ste
 
 #### 1. Mood Radar (`mood_radar.svg`)
 
+![alt text](../generation_results/visualizations/mood_radar.svg)
+
 4-axis radar chart showing the LLM analysis dimensions:
 - Hope (top)
 - Tension (right)
 - Valence (bottom)
 - Energy (left)
 
-```
-        Hope
-          |
-          |
-  Energy--+--Tension
-          |
-          |
-       Valence
-```
-
 #### 2. Archetype Wheel (`archetype_wheel.svg`)
+
+![alt text](../generation_results/visualizations/archetype_wheel.svg)
 
 Circular visualization showing all 6 archetypes with:
 - Score represented by segment size
@@ -726,6 +720,8 @@ Circular visualization showing all 6 archetypes with:
 - Compatibility indicators
 
 #### 3. Prompt DNA (`prompt_dna.svg`)
+
+![alt text](../generation_results/visualizations/prompt_dna.svg)
 
 Three-column breakdown showing:
 - **STRUCTURE**: Archetype, genre, tempo, intensity
