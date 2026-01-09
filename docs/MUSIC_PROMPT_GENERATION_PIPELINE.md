@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **World Theme Music Player** generates ambient music that reflects the mood of daily world news. This document explains the complete pipeline from news headlines to MusicGen prompts, the architectural decisions, and why this approach was chosen.
+The **World Theme Music Player** generates ambient music that reflects the mood of daily world news. This document explains the complete pipeline from news headlines to MusicGen prompts, the architectural decisions from news -> music gen prompt generation method, and why this approach was chosen.
 
 ---
 
@@ -35,8 +35,7 @@ MusicGen is Meta's open-source text-to-music generation model, released as part 
 **Key characteristics:**
 - Generates 30-second audio clips
 - Understands musical terminology (genres, instruments, moods, tempo)
-- Works via Replicate API in our implementation
-- Model: `meta/musicgen` (we use the stereo variant)
+- We are using it Works via Replicate API in our implementation (Model: `meta/musicgen` - we use the stereo variant)
 
 ### MusicGen Prompt Research Findings
 
@@ -75,11 +74,13 @@ hopeful, restrained, slow 70 BPM, stereo"
 4. **Explicit tempo** - Always include BPM for consistency
 5. **Limited complexity** - Keep prompts focused, not overloaded
 
-The entire pipeline exists to translate *news mood* into *MusicGen-compatible vocabulary* reliably.
+The entire pipeline exists to translate *news mood* into *MusicGen-compatible vocabulary* reliably. 
 
 ---
 
 ## Problem Statement
+
+So, let's touch base on what we are trying to achieve ...
 
 **Goal:** Generate ambient, bathroom-appropriate music that emotionally reflects the day's world news.
 
@@ -90,11 +91,25 @@ The entire pipeline exists to translate *news mood* into *MusicGen-compatible vo
 - System should produce varied output day-to-day (not repetitive)
 - Pipeline should be debuggable and testable
 
+The music reflects the world's emotional temperature but modulates it for the context. Even if the world is in chaos, your bathroom shouldn't sound like a war zone. Instead:
+
+| World Mood | Should NOT Sound Like | Should Sound Like |
+| --- | --- | --- |
+| Global conflict/tension | Aggressive, chaotic | Melancholic beauty - sad but beautiful | 
+| Economic uncertainty | Anxious, frantic | Reflective calm - thoughtful, grounded |
+| Political division | Harsh, discordant| Gentle tension - subtle unease, still peaceful |
+| Positive breakthroughs | Triumphant, loud | Tranquil optimism - hopeful but soft
+| Neutral/mixed news | Generic, boring | Serene balance - balanced, flowing | 
+| And ... | So ... | On ... |
+
 ---
 
 ## Architecture Evolution
 
-### Previous Approach: Two-Agent LLM System
+### Considered Approach: Two-Agent LLM System
+
+> [!Warning]
+> NOT USED
 
 ```mermaid
 flowchart LR
@@ -112,7 +127,7 @@ flowchart LR
 4. **Inconsistent quality** - LLM might generate prompts with vocabulary MusicGen doesn't understand
 5. **No testability** - Can't unit test LLM output
 
-### New Approach: Single LLM + Rule-Based Pipeline
+### Approach: Single LLM + Rule-Based Pipeline
 
 ```mermaid
 flowchart TB
