@@ -285,6 +285,27 @@ LOG PANEL (TMUX-STYLE)
     background-color: var(--border-color);
 }
 
+/* Responsive: stack vertically on small screens */
+@media (max-width: 900px) {
+    .log-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        height: calc(100vh - 100px);
+    }
+}
+
+/* Even smaller screens */
+@media (max-width: 600px) {
+    .log-container {
+        height: auto;
+        min-height: calc(100vh - 100px);
+    }
+    
+    .log-panel {
+        min-height: 200px;
+    }
+}
+
 .log-panel {
     background-color: var(--bg-dark);
     display: flex;
