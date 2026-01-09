@@ -20,12 +20,12 @@ WEB_DIR = Path(__file__).parent.parent
 PROJECT_ROOT = WEB_DIR.parent
 LOGS_DIR = PROJECT_ROOT / "logs"
 
-# Log files configuration
+# Log files configuration (keys must match HTML element IDs)
 LOG_FILES = {
-    "panel-1": "full_cycle_btn.log",
-    "panel-2": "player_service.log",
-    "panel-3": "world_theme_music_player.log",
-    "panel-4": "backup.log",
+    "log-panel-1": "full_cycle_btn.log",
+    "log-panel-2": "player_service.log",
+    "log-panel-3": "world_theme_music_player.log",
+    "log-panel-4": "backup.log",
 }
 
 
