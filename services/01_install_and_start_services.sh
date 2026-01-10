@@ -237,12 +237,18 @@ print_info "  Generate: $CRON_GENERATE_TIME (3:00 AM)"
 
 print_header "INSTALLATION COMPLETE - STATUS REPORT"
 
+# Get status for each service
+STATUS_MUSIC=$(get_service_status music-player.service)
+STATUS_BTN=$(get_service_status full-cycle-btn.service)
+STATUS_WEB=$(get_service_status process-monitor-web.service)
+STATUS_NGINX=$(get_nginx_status)
+
 echo ""
-echo -e "╔═══════════════════════════════════════╦═══════════════════════════════════════╗"
-printf "║  %-20s %15s  ║  %-20s %15s  ║\n" "music-player" "$(get_service_status music-player.service)" "full-cycle-btn" "$(get_service_status full-cycle-btn.service)"
-echo -e "╠═══════════════════════════════════════╬═══════════════════════════════════════╣"
-printf "║  %-20s %15s  ║  %-20s %15s  ║\n" "web-dashboard" "$(get_service_status process-monitor-web.service)" "nginx" "$(get_nginx_status)"
-echo -e "╚═══════════════════════════════════════╩═══════════════════════════════════════╝"
+echo -e "╔═══════════════════════════════╦═══════════════════════════════╗"
+echo -e "║  music-player      $STATUS_MUSIC  ║  full-cycle-btn    $STATUS_BTN  ║"
+echo -e "╠═══════════════════════════════╬═══════════════════════════════╣"
+echo -e "║  web-dashboard     $STATUS_WEB  ║  nginx             $STATUS_NGINX  ║"
+echo -e "╚═══════════════════════════════╩═══════════════════════════════╝"
 echo ""
 
 print_header "ACCESS URLS"

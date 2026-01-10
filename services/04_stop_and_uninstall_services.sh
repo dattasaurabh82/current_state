@@ -214,12 +214,22 @@ fi
 
 print_header "UNINSTALLATION COMPLETE - STATUS REPORT"
 
+# Get status for each service
+STATUS_MUSIC=$(get_service_exists music-player.service)
+STATUS_BTN=$(get_service_exists full-cycle-btn.service)
+STATUS_WEB=$(get_service_exists process-monitor-web.service)
+if [ -f "$NGINX_SITES_AVAILABLE/$NGINX_CONFIG_NAME" ]; then
+    STATUS_NGINX="${YELLOW}EXISTS${NC}"
+else
+    STATUS_NGINX="${GREEN}REMOVED${NC}"
+fi
+
 echo ""
-echo -e "╔═══════════════════════════════════════╦═══════════════════════════════════════╗"
-printf "║  %-20s %15s  ║  %-20s %15s  ║\n" "music-player" "$(get_service_exists music-player.service)" "full-cycle-btn" "$(get_service_exists full-cycle-btn.service)"
-echo -e "╠═══════════════════════════════════════╬═══════════════════════════════════════╣"
-printf "║  %-20s %15s  ║  %-20s %15s  ║\n" "web-dashboard" "$(get_service_exists process-monitor-web.service)" "nginx-config" "$([ -f "$NGINX_SITES_AVAILABLE/$NGINX_CONFIG_NAME" ] && echo -e "${YELLOW}EXISTS${NC}" || echo -e "${GREEN}REMOVED${NC}")"
-echo -e "╚═══════════════════════════════════════╩═══════════════════════════════════════╝"
+echo -e "╔═══════════════════════════════╦═══════════════════════════════╗"
+echo -e "║  music-player      $STATUS_MUSIC  ║  full-cycle-btn    $STATUS_BTN  ║"
+echo -e "╠═══════════════════════════════╬═══════════════════════════════╣"
+echo -e "║  web-dashboard     $STATUS_WEB  ║  nginx-config      $STATUS_NGINX  ║"
+echo -e "╚═══════════════════════════════╩═══════════════════════════════╝"
 echo ""
 
 print_header "WHAT WAS REMOVED"
