@@ -1,7 +1,7 @@
 [project]
-name = "daily-mood-theme-song-player"
+name = "current-state"
 version = "0.1.0"
-description = "Add your description here"
+description = "An AI based NEWS → SENTIMENT → AI GENERATED MUSIC running on mmWave radar based PI"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
