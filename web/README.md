@@ -58,7 +58,7 @@ web/
 
 - Raspberry Pi with hostname `aimusicplayer`
 - avahi-daemon running (default on Raspberry Pi OS)
-- nginx installed
+- Project cloned to `/home/pi/daily_mood_theme_song_player`
 
 ### Step 1: Change Hostname (if needed)
 
@@ -73,40 +73,67 @@ sudo reboot
 
 After reboot, Pi will be accessible at `aimusicplayer.local`
 
-### Step 2: Create systemd Service
+### Step 2: Create systemd User Service
 
-Create `/etc/systemd/system/world-theme-web.service`:
+The service file is already in the repo at `services/process-monitor-web.service`.
+
+```bash
+# Copy to user systemd directory
+mkdir -p ~/.config/systemd/user
+cp services/process-monitor-web.service ~/.config/systemd/user/
+
+# Reload and enable
+systemctl --user daemon-reload
+systemctl --user enable process-monitor-web.service
+systemctl --user start process-monitor-web.service
+
+# Check status
+systemctl --user status process-monitor-web.service
+```
+
+**Service file contents** (`services/process-monitor-web.service`):
 
 ```ini
 [Unit]
-Description=World Theme Music Player Web Dashboard
+Description=Web Dashboard for full process monitor of the project AI music generation project
 After=network.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/world_theme_music_player
-Environment="PATH=/home/pi/.local/bin:/usr/bin"
-ExecStart=/home/pi/.local/bin/uv run uvicorn web.app:app --host 127.0.0.1 --port 7070
-Restart=always
+WorkingDirectory=/home/pi/daily_mood_theme_song_player
+ExecStart=/home/pi/.local/bin/uv run uvicorn web.app:app --host 0.0.0.0 --port 7070
+Restart=on-failure
 RestartSec=5
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 ```
 
-Enable and start:
+> **Note:** Use `--host 0.0.0.0` for direct LAN access, or `--host 127.0.0.1` when using nginx as reverse proxy.
+
+### Step 3: Enable Linger (for boot startup)
+
+User services only run when the user is logged in. To start on boot:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable world-theme-web
-sudo systemctl start world-theme-web
-
-# Check status
-sudo systemctl status world-theme-web
+sudo loginctl enable-linger pi
 ```
 
-### Step 3: Install and Configure nginx
+### Step 4: Verify (without nginx)
+
+From any device on the same network:
+
+```bash
+# Should resolve via mDNS
+ping aimusicplayer.local
+
+# Open in browser (note: port 7070 required without nginx)
+http://aimusicplayer.local:7070
+```
+
+### Step 5 (Optional): nginx for Port 80
+
+If you want `http://aimusicplayer.local` (no port number):
 
 ```bash
 sudo apt update
@@ -193,11 +220,11 @@ Then update the systemd service to bind to `0.0.0.0:7070` instead of `127.0.0.1:
 
 ```bash
 # Check logs
-sudo journalctl -u world-theme-web -f
+journalctl --user -u process-monitor-web.service -f
 
 # Common issues:
-# - Wrong path in WorkingDirectory
-# - uv not in PATH
+# - Wrong path in WorkingDirectory (status=200/CHDIR)
+# - uv not found at /home/pi/.local/bin/uv
 # - Port already in use
 ```
 
@@ -224,13 +251,13 @@ ip addr show  # Find Pi's IP
 
 ## Development vs Production
 
-| Aspect | Development | Production |
-|--------|-------------|------------|
-| Command | `uv run uvicorn ... --reload` | systemd service |
-| Port | 7070 (direct) | 80 (via nginx) → 7070 |
-| Host | `0.0.0.0` | `127.0.0.1` (nginx proxies) |
-| Static files | uvicorn serves | nginx serves |
-| Auto-restart | Manual | systemd `Restart=always` |
+| Aspect | Development | Production (no nginx) | Production (with nginx) |
+|--------|-------------|----------------------|-------------------------|
+| Command | `uv run uvicorn ... --reload` | systemd user service | systemd user service |
+| Port | 7070 | 7070 | 80 (nginx) → 7070 |
+| Host bind | `0.0.0.0` | `0.0.0.0` | `127.0.0.1` |
+| URL | `localhost:7070` | `aimusicplayer.local:7070` | `aimusicplayer.local` |
+| Auto-restart | Manual | `Restart=on-failure` | `Restart=on-failure` |
 
 ## Tech Stack
 
