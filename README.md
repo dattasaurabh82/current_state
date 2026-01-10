@@ -250,7 +250,7 @@ A TUI-style web interface for monitoring the pipeline from any device on your ne
 crontab -e
 
 # Add:
-0 3 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python main.py --fetch true --play false >> /home/pi/daily_mood_theme_song_player/logs/cron.log 2>&1
+0 3 * * * cd /home/pi/current_state && /home/pi/.local/bin/uv run python main.py --fetch true --play false >> /home/pi/current_state/logs/cron.log 2>&1
 ```
 
 ### Backup generated music files
@@ -259,7 +259,7 @@ crontab -e
 crontab -e
 
 # Add:
-40 2 * * * cd /home/pi/daily_mood_theme_song_player && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/daily_mood_theme_song_player/logs/backup.log 2>&1
+40 2 * * * cd /home/pi/current_state && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/current_state/logs/backup.log 2>&1
 ```
 
 **Why this order?**
