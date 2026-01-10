@@ -6,7 +6,7 @@ TUI-style web interface for monitoring:
 - Tab 2: Pipeline Visualization  
 - Tab 3: Live Logs
 
-Run: uvicorn web.app:app --reload --host 0.0.0.0 --port 8000
+Run: uv run uvicorn web.app:app --reload --host 0.0.0.0 --port 7070
 """
 
 from pathlib import Path

@@ -1,0 +1,15 @@
+[Unit]
+Description=Web Dashboard for full process monitor of the project AI music generation project
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/world_theme_music_player
+Environment="PATH=/home/pi/.local/bin:/usr/bin"
+ExecStart=/home/pi/.local/bin/uv run uvicorn web.app:app --host 127.0.0.1 --port 7070
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
