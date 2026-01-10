@@ -74,20 +74,16 @@ It's designed to look like a retro TUI (text user interface) with a Dracula colo
 
 **How it works:**
 
-1. Browser requests `/api/news`
-2. `app.py` finds today's `news_data_YYYY-MM-DD.json` file
-3. Returns JSON with headlines grouped by region
-4. `main.js` renders them with source attribution and timestamps
+1. Browser requests `/news` (page load)
+2. `app.py` calls `get_news_context()` to find today's `news_data_YYYY-MM-DD.json` file
+3. Returns rendered HTML with headlines grouped by region via Jinja2 template
 
-**File:** `web/static/js/main.js`
+**File:** `web/routes/news.py`
 
-```javascript
-// Fetches news and groups by region
-async function loadNews() {
-    const response = await fetch('/api/news');
-    const data = await response.json();
-    // Renders grouped headlines...
-}
+```python
+# Loads news data and returns context for template
+def get_news_context() -> dict:
+    return load_news_data()
 ```
 
 ### Tab 2: Pipeline Visualization
@@ -272,9 +268,9 @@ web/
     │                       #   - Responsive breakpoints
     │
     ├── js/
-    │   ├── main.js         # Core functionality
-    │   │                   #   - Tab switching
-    │   │                   #   - News loading and rendering
+    │   ├── pipeline.js     # Pipeline tab functionality
+    │   │                   #   - Audio waveform (WaveSurfer.js)
+    │   │                   #   - File polling
     │   │
     │   ├── logs.js         # Live logs functionality
     │   │                   #   - WebSocket connection
@@ -302,8 +298,10 @@ web/
 | `/news` | GET | News bulletin tab (HTML) |
 | `/pipeline` | GET | Pipeline visualization tab (HTML) |
 | `/logs` | GET | Live logs tab (HTML) |
-| `/api/news` | GET | Today's news data (JSON) |
-| `/api/derivation` | GET | Pipeline results (JSON) |
+| `/api/pipeline` | GET | Pipeline context (JSON) |
+| `/api/audio-files` | GET | Audio files list (JSON) |
+| `/api/derivation` | GET | Pipeline visualization data (JSON) |
+| `/audio/{filename}` | GET | Serve audio file |
 | `/ws/logs` | WebSocket | Live log streaming |
 | `/health` | GET | Health check |
 

@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const prompt = data.prompt || {};
         const components = prompt.components || {};
         const themes = data.themes || [];
-        const dateSeed = data.date || '2026-01-09';
+        const dateSeed = data.date || new Date().toISOString().split('T')[0];
         
         const primary = selection.primary;
         const secondary = selection.secondary;

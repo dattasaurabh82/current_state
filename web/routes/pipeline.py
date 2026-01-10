@@ -5,7 +5,6 @@ Loads pipeline results and audio files for display.
 """
 
 import json
-import sys
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any
@@ -20,10 +19,6 @@ WEB_DIR = Path(__file__).parent.parent
 PROJECT_ROOT = WEB_DIR.parent
 GENERATION_RESULTS_DIR = PROJECT_ROOT / "generation_results"
 MUSIC_DIR = PROJECT_ROOT / "music_generated"
-
-# Add project root to path for imports
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def load_pipeline_results() -> Dict[str, Any]:
@@ -108,6 +103,11 @@ def get_pipeline_context() -> Dict[str, Any]:
 
 def get_derivation_data() -> Dict[str, Any]:
     """Get enriched derivation data for visualization."""
+    # Import lib modules (need project root in path)
+    import sys
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    
     from lib.archetypes import ARCHETYPES, ArchetypeName, COMPATIBILITY_MATRIX
     from lib.archetype_selector import ARCHETYPE_PROFILES
     
@@ -277,9 +277,10 @@ async def api_pipeline():
 @router.get("/api/audio-files")
 async def api_audio_files():
     """API endpoint for audio files list (for polling)."""
+    files = get_audio_files()
     return JSONResponse({
-        "files": get_audio_files(),
-        "count": len(get_audio_files()),
+        "files": files,
+        "count": len(files),
         "timestamp": datetime.now().isoformat(),
     })
 

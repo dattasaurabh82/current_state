@@ -8,8 +8,10 @@
     <!-- TUI Styles -->
     <link rel="stylesheet" href="/static/css/tui.css">
     
-    <!-- xterm.js (for logs tab) -->
+    <!-- xterm.js (for logs tab only) -->
+    {% if active_tab == 'logs' %}
     <link rel="stylesheet" href="/static/js/vendor/xterm.css">
+    {% endif %}
 </head>
 <body>
     <div class="app-container">
@@ -51,10 +53,9 @@
     </div>
 
     <!-- Scripts -->
+    {% if active_tab == 'logs' %}
     <script src="/static/js/vendor/xterm.min.js"></script>
     <script src="/static/js/vendor/xterm-addon-fit.min.js"></script>
-    
-    {% if active_tab == 'logs' %}
     <script src="/static/js/logs.js"></script>
     {% endif %}
     

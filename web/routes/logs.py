@@ -5,9 +5,8 @@ WebSocket streaming of log files with file watching.
 """
 
 import asyncio
-import os
 from pathlib import Path
-from typing import Dict, Set
+from typing import Dict, Set, Optional
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from watchdog.observers import Observer
@@ -110,9 +109,9 @@ class ConnectionManager:
     
     def __init__(self):
         self.active_connections: Set[WebSocket] = set()
-        self.observer: Observer | None = None
-        self.handler: LogFileHandler | None = None
-        self._loop: asyncio.AbstractEventLoop | None = None
+        self.observer: Optional[Observer] = None
+        self.handler: Optional[LogFileHandler] = None
+        self._loop: Optional[asyncio.AbstractEventLoop] = None
     
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
