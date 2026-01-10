@@ -326,7 +326,7 @@ The `--reload` flag watches for file changes and auto-restarts — useful during
 
 - Raspberry Pi with hostname `aimusicplayer`
 - avahi-daemon running (default on Raspberry Pi OS)
-- Project cloned to `/home/pi/daily_mood_theme_song_player`
+- Project cloned to `/home/pi/current_state`
 
 ### Step 1: Change Hostname (if needed)
 
@@ -368,7 +368,7 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/pi/daily_mood_theme_song_player
+WorkingDirectory=/home/pi/current_state
 ExecStart=/home/pi/.local/bin/uv run uvicorn web.app:app --host 0.0.0.0 --port 7070
 Restart=on-failure
 RestartSec=5
@@ -423,7 +423,7 @@ server {
 
     # Serve static files directly (more efficient)
     location /static/ {
-        alias /home/pi/daily_mood_theme_song_player/web/static/;
+        alias /home/pi/current_state/web/static/;
         expires 7d;
         add_header Cache-Control "public, immutable";
     }
