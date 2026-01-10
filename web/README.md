@@ -140,6 +140,12 @@ sudo apt update
 sudo apt install nginx -y
 ```
 
+**Fix permissions** (nginx needs to traverse `/home/pi`):
+
+```bash
+chmod o+x /home/pi
+```
+
 Create `/etc/nginx/sites-available/world-theme`:
 
 ```nginx
@@ -149,7 +155,7 @@ server {
 
     # Serve static files directly (more efficient)
     location /static/ {
-        alias /home/pi/world_theme_music_player/web/static/;
+        alias /home/pi/daily_mood_theme_song_player/web/static/;
         expires 7d;
         add_header Cache-Control "public, immutable";
     }
@@ -215,6 +221,17 @@ Then update the systemd service to bind to `0.0.0.0:7070` instead of `127.0.0.1:
 - Is more production-ready
 
 ## Troubleshooting
+
+### Static files 403 / Permission denied
+
+```bash
+# Check nginx error log
+sudo tail -20 /var/log/nginx/error.log
+
+# If you see "Permission denied" - nginx can't traverse /home/pi
+chmod o+x /home/pi
+sudo systemctl reload nginx
+```
 
 ### Service won't start
 
