@@ -712,8 +712,7 @@ sudo loginctl enable-linger $USER
 - WIP: Main README Docu ... 🟠
 - Canvas to show in tablet landscape mode ...
 - Serial Radar detection algo improve (beam and enter and exit based)
-- Setup scripts:
-  - Main dep install scripts
+- WIP Setup scripts: Main dep install scripts 🟠
 - Other region of news
 
 - Hardware Update Steps: 
