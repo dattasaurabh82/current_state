@@ -4,11 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=pi
 WorkingDirectory=/home/pi/world_theme_music_player
-Environment="PATH=/home/pi/.local/bin:/usr/bin"
 ExecStart=/home/pi/.local/bin/uv run uvicorn web.app:app --host 127.0.0.1 --port 7070
-Restart=always
+Restart=on-failure
 RestartSec=5
 
 [Install]
