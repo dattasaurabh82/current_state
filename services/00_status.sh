@@ -200,7 +200,6 @@ if [ "$ISSUES_FOUND" = true ]; then
     print_header "QUICK FIX"
     echo ""
     echo "  Reinstall everything:"
-    echo "    ./04_stop_and_uninstall_services.sh"
     echo "    ./01_install_and_start_services.sh"
     echo ""
     
