@@ -4,61 +4,113 @@
         "articles": [
             {
                 "source": {
-                    "id": "usa-today",
-                    "name": "USA Today"
+                    "id": "techradar",
+                    "name": "TechRadar"
                 },
-                "author": "Anthony Rizzuti, Panthers Wire",
-                "title": "Panthers great Cam Newton to be be at Bank of America Stadium on Saturday",
-                "description": "The news of Cam Newton being Saturday's \"Keep Pounding\" drummer isn't officially official. But the Panthers great will be on the premises.",
-                "url": "https://pantherswire.usatoday.com/story/sports/nfl/panthers/2026/01/08/panthers-nfl-playoffs-cam-newton-tailgate/88091473007/",
-                "urlToImage": "https://s.yimg.com/ny/api/res/1.2/1IRlntqj4UBB2hvcmFt7kQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD04MDA7Y2Y9d2VicA--/https://media.zenfs.com/en/carolina_panthers_wire_usa_today_sports_articles_855/82c992745a1f13a4bbec227b10444776",
-                "publishedAt": "2026-01-08T23:43:15Z",
-                "content": "The rumor of Cam Newton being this weekend's \"Keep Pounding\" drummer isn't officially official, at least not yet. But we do know that the Carolina Panthers great will be on the premises for the franc… [+1553 chars]"
+                "author": "jasmine.valentine@futurenet.com (Jasmine Valentine) , Jasmine Valentine",
+                "title": "Has The Pitt season 2 episode 1 already let slip its biggest mystery yet? I’m convinced the answer is right under our noses",
+                "description": "I'm beside myself that The Pitt season 2 is back with episode 1, and I'm convinced I've already cracked one of the HBO Max show's biggest new mysteries.",
+                "url": "https://www.techradar.com/streaming/hbo-max/has-the-pitt-season-2-episode-1-already-let-slip-its-biggest-mystery-yet-im-convinced-the-answer-is-right-under-our-noses",
+                "urlToImage": "https://cdn.mos.cms.futurecdn.net/KX8u8Xa3dJpdHRLPx5CkmK-1920-80.jpg",
+                "publishedAt": "2026-01-09T02:00:00Z",
+                "content": "WARNING: spoilers for The Pitt season 2 episode 1 ahead. \r\nJanuary might be universally terrible, but at least we've gotThe Pitt season 2 to get us through it. New episodes of the HBO Max show are se… [+3482 chars]"
             },
             {
                 "source": {
                     "id": null,
-                    "name": "Bleeding Cool News"
+                    "name": "New Zealand Herald"
                 },
-                "author": "Gavin Sheehan",
-                "title": "League of Legends: Wild Rift Revealed Patch 7.0 Details",
-                "description": "Riot Games revealed new details today of what's coming to League of Legends: Wild Rift, as we got a better idea of what's coming in Patch 7.0. Among the new additions are the launch of Season 20, a new Spring Festival event, new champions added to the roster,…",
-                "url": "https://bleedingcool.com/games/league-of-legends-wild-rift-revealed-patch-7-0-details/",
-                "urlToImage": "https://bleedingcool.com/wp-content/uploads/2026/01/league-of-legends-wild-rift-patch-7.0-1.jpg",
-                "publishedAt": "2026-01-08T23:43:04Z",
-                "content": "Posted in: Games, League of Legends, League Of Legends: Wild Rift, Riot Games, Video Games | Tagged: League of Legends: Wild Rift\r\nLeague of Legends: Wild Rift revealed more details about Patch 7.0 c… [+4541 chars]"
-            },
-            {
-                "source": {
-                    "id": "cbs-news",
-                    "name": "CBS News"
-                },
-                "author": "CBS News",
-                "title": "New York City Mayor Zohran Mamdani marks 1 week in office",
-                "description": "Thursday marks exactly one week since Zohran Mamdani was sworn in as New York City's mayor. Jason Beeferman, New York state politics reporter for Politico, joins CBS News to dive into Mamdani's first days in office.",
-                "url": "https://www.cbsnews.com/video/new-york-city-mayor-zohran-mamdani-marks-1-week-in-office/",
-                "urlToImage": "https://assets1.cbsnewsstatic.com/hub/i/r/2026/01/08/cdbef284-0772-40ec-a8d1-7f82459f077b/thumbnail/1200x630/82fc1a17492d733b3dc2bd603d4ed063/cbsn-fusion-new-york-city-mayor-zohran-mamdani-marks-1-week-in-office-thumbnail.jpg",
-                "publishedAt": "2026-01-08T23:43:00Z",
-                "content": "Copyright ©2026 CBS Interactive Inc. All rights reserved."
+                "author": "Anne Gibson",
+                "title": "Foodstuffs (North Island) CEO Chris Quin on growth, the economy, election and Waiheke holiday",
+                "description": "'A stronger economy unlocks the health and education system we all want.'",
+                "url": "https://www.nzherald.co.nz/property/foodstuffs-north-island-ceo-chris-quin-on-growth-the-economy-election-and-waiheke-holiday/premium/P4BTYICPMZHSNEHUWINBUUOHEI/",
+                "urlToImage": "https://www.nzherald.co.nz/resizer/v2/DLD3EUSUAZBN7PQYSN6GPUFARQ.jpg?auth=67ef1d76fc53a2baee600481b9f81fc1d7c07e4e853ba1f0eefb42cb1a2dbc57&width=1200&height=675&quality=70&focal=1929%2C884&smart=false",
+                "publishedAt": "2026-01-09T02:00:00Z",
+                "content": "Attracting great talent to New Zealand and growing the great people we have is going to remain a big focus. \r\nWe think people love New Zealand for the lifestyle, the beaches, mountains, flat whites a… [+6304 chars]"
             },
             {
                 "source": {
                     "id": null,
-                    "name": "TheWrap"
+                    "name": "Allthatsinteresting.com"
                 },
-                "author": "Jacob Bryant",
-                "title": "Trump Attests ‘My Own Morality’ Is ‘Only Thing’ That Polices His Global Actions: ‘I Don’t Need International Law’",
-                "description": "\"I'm not looking to hurt people,\" the president tells the New York Times in a new interview\nThe post Trump Attests ‘My Own Morality’ Is ‘Only Thing’ That Polices His Global Actions: ‘I Don’t Need International Law’ appeared first on TheWrap.",
-                "url": "https://www.thewrap.com/media-platforms/journalism/trump-world-dominance-international-law-new-york-times-interview/",
-                "urlToImage": "https://www.thewrap.com/wp-content/uploads/2026/01/trump-photos-maduro.jpg",
-                "publishedAt": "2026-01-08T23:42:44Z",
-                "content": "Donald Trump attested in an interview on Wednesday that “my own morality” is the only thing that polices his power on the global stage — less than a week after his controversial military action in Ve… [+2287 chars]"
+                "author": "Austin Harvey",
+                "title": "The Curious Story Of Kim Ung-Yong, The South Korean Child Prodigy Who Became Known As A ‘Failed Genius’",
+                "description": "Kim Ung-yong became famous as a child for his ability to speak multiple languages and solve complex equations, but he ultimately opted for a quiet life as a university professor. \nThe post The Curious Story Of Kim Ung-Yong, The South Korean Child Prodigy Who …",
+                "url": "https://allthatsinteresting.com/kim-ung-yong",
+                "urlToImage": "https://allthatsinteresting.com/wordpress/wp-content/uploads/2026/01/kim-ung-yong-featured.jpg",
+                "publishedAt": "2026-01-09T02:00:00Z",
+                "content": "Kim Ung-yong became famous as a child for his ability to speak multiple languages and solve complex equations, but he ultimately opted for a quiet life as a university professor. \r\nWikimedia CommonsS… [+9911 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "New Zealand Herald"
+                },
+                "author": "Sandra Conchie",
+                "title": "Port of Tauranga: 18kg cocaine and meth bust adds to record haul",
+                "description": "Customs officers seize 18kg of cocaine and meth at the Port of Tauranga.",
+                "url": "https://www.nzherald.co.nz/bay-of-plenty-times/news/port-of-tauranga-18kg-cocaine-and-meth-bust-adds-to-record-haul/WLPB2JCZ35BVNAMR2MTPUW3ADU/",
+                "urlToImage": "https://www.nzherald.co.nz/resizer/v2/Q4BKXWK7MFBOLEBG666IG57TCA.jpg?auth=03facb113cb551f97aed4f9b560236e2db252837cae979944a514f8c61f5dc70&width=1200&height=675&quality=70&smart=true",
+                "publishedAt": "2026-01-09T02:00:00Z",
+                "content": "Smith said the amount of methamphetamine and cocaine would have equated to a retail street value of up to $3m and $3.5m respectively, which would now not feed the pockets of criminals.\r\nThis takes th… [+1406 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Raw Story"
+                },
+                "author": "Matthew Chapman",
+                "title": "Dem dares Fox News host to show viewers footage of ICE shooting: 'Why are you so afraid?'",
+                "description": "Rep. Seth Moulton (D-MA) confronted Fox News' Will Cain on Thursday about why the network was so reluctant to show their viewers a video of the fatal shooting by Immigration and Customs Enforcement in Minneapolis.\"Talking about [Trump border adviser Tom] Homa…",
+                "url": "https://www.rawstory.com/seth-moulton-2674863182/",
+                "urlToImage": "https://www.rawstory.com/media-library/police-tape-surrounds-a-vehicle-after-its-driver-was-shot-by-a-u-s-immigration-agent-according-to-local-and-federal-officials.jpg?id=62687453&width=1200&height=600&coordinates=0%2C167%2C0%2C167",
+                "publishedAt": "2026-01-09T01:59:17Z",
+                "content": "Rep. Seth Moulton (D-MA) confronted Fox News' Will Cain on Thursday about why the network was so reluctant to show their viewers a video of the fatal shooting by Immigration and Customs Enforcement i… [+1271 chars]"
             }
         ]
     },
     "German_Speaking": {
         "language": "de",
         "articles": [
+            {
+                "source": {
+                    "id": null,
+                    "name": "DIE WELT"
+                },
+                "author": "WELT",
+                "title": "Zwei Personen durch Schüsse von US-Beamten in Portland verletzt",
+                "description": "In Portland im US-Bundesstaat Oregon haben Beamte einer Bundesbehörde zwei Menschen durch Schüsse verletzt. Politiker vor Ort nennen als Kontext Proteste nach einem tödlichen Vorfall in Minneapolis. Sie warnen vor einer Eskalation der Lage und bitten potenzie…",
+                "url": "https://www.welt.de/politik/ausland/article6960550a4d1d5f581eeb0821/eskalations-angst-in-den-usa-zwei-personen-durch-schuesse-von-us-beamten-in-portland-verletzt.html",
+                "urlToImage": "https://images.welt.de/6960550a4d1d5f581eeb0821/248852d61e325a5bdc24e2b4de7d3a1c-master/ci16x9-w1200/gyi-2254643876-jpg",
+                "publishedAt": "2026-01-09T01:50:10Z",
+                "content": "In Portland im US-Bundesstaat Oregon haben Beamte einer Bundesbehörde zwei Menschen durch Schüsse verletzt. Politiker vor Ort nennen als Kontext Proteste nach einem tödlichen Vorfall in Minneapolis. … [+4946 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "DIE WELT"
+                },
+                "author": "WELT",
+                "title": "Zwei Personen durch Schüsse von US-Beamten verletzt – laut Regierung ein „Bandenmitglied“",
+                "description": "In Portland haben Beamte einer Bundesbehörde zwei Menschen durch Schüsse verletzt – einen Tag nach einem tödlichen Vorfall in Minneapolis. Politiker warnen vor einer Eskalation der Lage und bitten potenzielle Demonstranten um Zurückhaltung.",
+                "url": "https://www.welt.de/politik/ausland/article6960550a4d1d5f581eeb0821/usa-zwei-personen-durch-schuesse-von-us-beamten-verletzt-laut-regierung-ein-bandenmitglied.html",
+                "urlToImage": "https://images.welt.de/6960550a4d1d5f581eeb0821/d7f044786b485cf444ca1c5f502849a6-master/ci16x9-w1200/dpa-com-20090101-260109-99-116585-jpg",
+                "publishedAt": "2026-01-09T01:50:10Z",
+                "content": "In Portland haben Beamte einer Bundesbehörde zwei Menschen durch Schüsse verletzt einen Tag nach einem tödlichen Vorfall in Minneapolis. Politiker warnen vor einer Eskalation der Lage und bitten pote… [+5383 chars]"
+            },
+            {
+                "source": {
+                    "id": "der-tagesspiegel",
+                    "name": "Der Tagesspiegel"
+                },
+                "author": "Viktoria Bräuner",
+                "title": "„Kein ‚Übungsplatz‘ für militarisierte Beamte“: US-Bundesbeamte schießen auf zwei Menschen in Portland",
+                "description": "In Portland, Oregon, hat ein Grenzschutzbeamter auf das Fahrzeug eines venezolanischen Migranten geschossen. Die Opfer befinden sich im Krankenhaus, ihr Zustand ist unbekannt.",
+                "url": "https://www.tagesspiegel.de/internationales/kein-ubungsplatz-fur-militarisierte-beamte-us-bundesbeamte-schiessen-auf-zwei-menschen-in-portland-15117857.html",
+                "urlToImage": "https://www.tagesspiegel.de/images/15117858/alternates/BASE_16_9_W1400/1767920649000/us-einwanderungsbehorde-ice-portland.jpeg",
+                "publishedAt": "2026-01-09T01:23:51Z",
+                "content": "Ein Einsatz der US-Einwanderungsbehörde ICE ist offenbar erneut eskaliert: In der Stadt Portland im Bundesstaat Oregon haben Beamte einer Bundesbehörde zwei Menschen durch Schüsse verletzt. Die beide… [+3690 chars]"
+            },
             {
                 "source": {
                     "id": null,
@@ -84,45 +136,6 @@
                 "urlToImage": "https://static.kino.de/d0/c4/84/68f8ff57938e6ff4f7fa3c3d77_ZmMgNjc4NTgxZDlmZmZmIDE5MjAgMTA4MANkNDY4NTM2NGZjNw==.jpg",
                 "publishedAt": "2026-01-08T22:03:50Z",
                 "content": "Was für eine Überraschung: Dieses Jahr kommt ein neuer Jackass-Film in die Kinos. Das hat Johnny Knoxville jetzt höchstpersönlich über Instagram angekündigt.\r\nBald 24 Jahre ist es her, dass Johnny Kn… [+2664 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Pro-Linux"
-                },
-                "author": null,
-                "title": "Ausführen beliebiger Kommandos in GnuPG (Ubuntu)",
-                "description": "Kostenlose Nachrichten, Web-Support und Foren rund um Linux, OpenSource und Freie Software. Angebote wie News, Berichte, Workshops, Tipps, Links und Kalender.",
-                "url": "https://www.pro-linux.de/sicherheit/2/98027/sicherheit-ausf%C3%BChren-beliebiger-kommandos-in-gnupg.html",
-                "urlToImage": null,
-                "publishedAt": "2026-01-08T21:41:40Z",
-                "content": "--===============2646609577787734142==Content-Type: text/plain; charset=\"utf-8\"MIME-Version: 1.0Content-Transfer-Encoding: 7bit========================================================================… [+3028 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Pro-Linux"
-                },
-                "author": null,
-                "title": "Zwei Probleme in libvirt (SUSE)",
-                "description": "Kostenlose Nachrichten, Web-Support und Foren rund um Linux, OpenSource und Freie Software. Angebote wie News, Berichte, Workshops, Tipps, Links und Kalender.",
-                "url": "https://www.pro-linux.de/sicherheit/2/98025/sicherheit-zwei-probleme-in-libvirt.html",
-                "urlToImage": null,
-                "publishedAt": "2026-01-08T21:41:40Z",
-                "content": "--===============6655973551269846051==Content-Type: text/plain; charset=\"utf-8\"MIME-Version: 1.0Content-Transfer-Encoding: 7bit# Security update for libvirt\r\nAnnouncement ID: SUSE-SU-2026:0068-1 Rele… [+16347 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Pro-Linux"
-                },
-                "author": null,
-                "title": "Preisgabe von Informationen in podman (SUSE)",
-                "description": "Kostenlose Nachrichten, Web-Support und Foren rund um Linux, OpenSource und Freie Software. Angebote wie News, Berichte, Workshops, Tipps, Links und Kalender.",
-                "url": "https://www.pro-linux.de/sicherheit/2/98029/sicherheit-preisgabe-von-informationen-in-podman.html",
-                "urlToImage": null,
-                "publishedAt": "2026-01-08T21:41:40Z",
-                "content": "--===============0245021900892958347==Content-Type: text/plain; charset=\"utf-8\"MIME-Version: 1.0Content-Transfer-Encoding: 7bit# Security update for podman\r\nAnnouncement ID: SUSE-SU-2026:0067-1 Relea… [+9310 chars]"
             }
         ]
     },
@@ -202,6 +215,58 @@
             {
                 "source": {
                     "id": null,
+                    "name": "Elespanol.com"
+                },
+                "author": "Álvaro Escalonilla",
+                "title": "EEUU percibe a Cabello como \"principal saboteador\" de Delcy en Venezuela con el general Padrino como árbitro",
+                "description": "El antiguo embajador estadounidense en Caracas advierte de que \"dejar a alguien como Diosdado suelto va a provocar una complicación\". La Administración Trump ata en corto al ministro del Interior y número dos del oficialismo.\nMás información: Delcy Rodríguez …",
+                "url": "https://www.elespanol.com/mundo/america/20260109/eeuu-percibe-cabello-principal-saboteador-delcy-venezuela-general-padrino-arbitro/1003744079239_0.html",
+                "urlToImage": "https://s3.elespanol.com/2026/01/08/actualidad/1003744083188_260834364_1706x960.jpg?fmt=jpeg",
+                "publishedAt": "2026-01-09T01:54:24Z",
+                "content": "Doblarse para no quebrarse. Es la única baza que tiene en su mano Delcy Rodríguez para mantener en pie la estructura del chavismo frente a las presiones de Donald Trump, como demostró este jueves con… [+5077 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Elespanol.com"
+                },
+                "author": "Paula del Toro",
+                "title": "Agentes del ICE abren fuego contra dos venezolanos en medio de las protestas por el asesinato de una mujer",
+                "description": "El incidente ha tenido lugar en Portland (Oregon). El Departamento de Seguridad Nacional les acusa de usar su vehículo \"como arma\" contra los agentes.\nMás información: Miles de personas protestan en Mineápolis por el asesinato de una mujer por disparos de los…",
+                "url": "https://www.elespanol.com/mundo/america/eeuu/20260109/estados_unidos-portland-tiroteos-abusos_policiales-eeuu/1003744083223_0.html",
+                "urlToImage": "https://s3.elespanol.com/2026/01/09/actualidad/1003744083224_260834943_1706x960.jpg?fmt=jpeg",
+                "publishedAt": "2026-01-09T01:47:14Z",
+                "content": "Dos venezolanos resultaron heridos tras un tiroteo con agentes del ICE en Portland, Oregón, en medio de protestas por la violencia policial.\r\nEl Departamento de Seguridad Nacional afirma que uno de l… [+4893 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
+                    "name": "Expansion.com"
+                },
+                "author": "Tom Burns Marañón",
+                "title": "La 'Donroe Doctrine' y el Gran Garrote",
+                "description": "Nada más empezar el año 2026 Washington promueve entre los aliados europeos la misma indecisa confusión ante hechos consumados, como con el control de Venezuela, y los acontecimientos que están por venir, como la dominación de Groenlandia. Leer",
+                "url": "https://www.expansion.com/opinion/2026/01/09/69602ba1468aeb00308b456d.html",
+                "urlToImage": "https://e01-phantom-expansion.uecdn.es/29609e6ea3cd1c24be422dbcc74e9b84/crop/193x32/1818x1116/resize/1200/f/webp/assets/multimedia/imagenes/2026/01/08/17679116188193.jpg",
+                "publishedAt": "2026-01-09T00:42:23Z",
+                "content": "Nada más empezar el año 2026 Washington promueve entre los aliados europeos la misma indecisa confusión ante hechos consumados, como con el control de Venezuela, y los acontecimientos que están por v… [+9314 chars]"
+            },
+            {
+                "source": {
+                    "id": "rt",
+                    "name": "RT"
+                },
+                "author": "RT en Español\n , RT en Español",
+                "title": "CBS: Militar de EE.UU. que ayudó a planificar el secuestro de Maduro fue herido durante el ataque",
+                "description": "El uniformado en cuestión piloteó un helicóptero durante la agresión militar de Washington en Caracas.",
+                "url": "https://actualidad.rt.com/actualidad/581238-piloto-helicoptero-eeuu-abrio-paso",
+                "urlToImage": "https://mfes.b37m.ru/actualidad/public_images/2026.01/article/69601bf259bf5b556d790fa3.jpg",
+                "publishedAt": "2026-01-09T00:23:22Z",
+                "content": "El piloto del helicóptero MH-47 Chinook de la Fuerza Delta del Ejército de EE.UU, que se encargó de abrir paso al resto de aeronaves que invadieron Venezuela el pasado 3 de enero para bombardear y se… [+3086 chars]"
+            },
+            {
+                "source": {
+                    "id": null,
                     "name": "Merca20.com"
                 },
                 "author": "Laura Islas",
@@ -211,58 +276,6 @@
                 "urlToImage": "https://files.merca20.com/uploads/2026/01/ropa-apparel.jpg",
                 "publishedAt": "2026-01-08T23:33:15Z",
                 "content": "FOTOARTE: MERCA2.0 | CANVA\r\n\nMalas noticias: la conversación sobre precios en moda no es solo una sospecha del consumidor, ya es un tema reconocido por la propia industria. De acuerdo con datos recop… [+5744 chars]"
-            },
-            {
-                "source": {
-                    "id": "la-nacion",
-                    "name": "La Nacion"
-                },
-                "author": "LA NACION",
-                "title": "La declaración del Uscis sobre los venezolanos con TPS tras la caída de Maduro: ¿tienen que irse de EE.UU.?",
-                "description": "Tras la captura de Maduro, el gobierno de EE.UU. instó a los beneficiarios del TPS a regresar a Venezuela. Conoce la polémica por el consejo de Kristi Noem sobre el estatus de refugiado y qué opciones legales reales quedan",
-                "url": "https://www.lanacion.com.ar/estados-unidos/migraciones/la-declaracion-del-uscis-sobre-los-venezolanos-con-tps-tras-la-caida-de-maduro-tienen-que-irse-de-nid08012026/",
-                "urlToImage": "https://resizer.glanacion.com/resizer/v2/venezolanos-reunidos-en-miami-florida-durante-la-SAYOW4K7MFGWJDOV7SODOBC7PM.jpeg?auth=12a98d9e0b97bd4e6ff87e82cd10f4c44e0363a5a1e3df0653789a8dc1064694&width=1200&quality=70&smart=false&height=800",
-                "publishedAt": "2026-01-08T23:25:09Z",
-                "content": "Tras la captura de Nicolás Maduro, el gobierno de Estados Unidos instó a los venezolanos a que vuelvan a su nación de origen. En declaraciones recientes, el portavoz del Servicio de Ciudadanía e Inmi… [+4053 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "BBC News"
-                },
-                "author": "https://www.facebook.com/bbcnews",
-                "title": "El servicio de internet se corta en Irán mientras se celebran masivas protestas por todo el país",
-                "description": "Grandes multitudes de manifestantes marchaban por la capital de Irán y otras ciudades en la noche del jueves, en lo que se considera la mayor demostración de fuerza de los opositores al régimen clerical en años.",
-                "url": "https://www.bbc.com/mundo/articles/cpv74l1r2jjo",
-                "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_mundo/39ee/live/68a95880-ece5-11f0-b385-5f48925de19a.png",
-                "publishedAt": "2026-01-08T23:03:21Z",
-                "content": "Fuente de la imagen, X\r\nPie de foto, Imagen de las protestas difundida en redes sociales.\r\nInformación del artículo<ul><li><ul><li>Autor, David Gritten</li><li>Título del autor, BBC News </li></ul></… [+7915 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Montevideo.com.uy"
-                },
-                "author": "Montevideo Portal",
-                "title": "El servicio de internet en Irán es cortado mientras las protestas alcanzan punto crítico",
-                "description": "Un apagón en la conectividad fue reportado en Irán el jueves, informó el grupo de monitoreo de internet NetBlocks.",
-                "url": "https://www.montevideo.com.uy/Noticias/El-servicio-de-internet-en-Iran-es-cortado-mientras-las-protestas-alcanzan-punto-critico-uc949059",
-                "urlToImage": "https://imagenes.montevideo.com.uy/imgnoticias/202601/_W933_80/942417.jpg",
-                "publishedAt": "2026-01-08T22:56:00Z",
-                "content": "Las autoridades iraníes parecían estar cortando el acceso a internet este jueves en la capital y en otras regiones del país, mientras continúan las protestas masivas y los cánticos contra el gobierno… [+3242 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "Generación Xbox"
-                },
-                "author": "David Fernández",
-                "title": "Avowed confirma su lanzamiento en PS5 el 17 de febrero con una gran actualización para Xbox y PC",
-                "description": "El RPG de Obsidian llegará a PlayStation junto a un parche aniversario cargado de novedades.",
-                "url": "https://generacionxbox.com/avowed-confirma-su-lanzamiento-en-ps5-el-17-de-febrero-con-una-gran-actualizacion-para-xbox-y-pc/",
-                "urlToImage": "https://generacionxbox.com/wp-content/uploads/2024/01/avowed-new-generacion-xbox-1024x576.jpg",
-                "publishedAt": "2026-01-08T22:52:13Z",
-                "content": "El RPG de Obsidian llegará a PlayStation junto a un parche aniversario cargado de novedades.\r\nMás historias en la categoría Noticias\r\n<table><tr><td>No te pierdas nada y ¡Síguenos en Google News! </t… [+1404 chars]"
             }
         ]
     }
