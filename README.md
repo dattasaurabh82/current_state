@@ -74,12 +74,14 @@ The **user-triggered interactions** happen via hardware:
 
 ### Hardware
 
-![alt text](assets/curr_state.gif)
+| ASSEMBLY RENDER | PCB RENDER |
+| --- | --- |
+| ![alt text](assets/curr_state.gif) | ![alt text](assets/PCB_render.png) | 
 
 > [!NOTE]
 > Hardware details TBD — Custom HAT design documentation coming soon.
 
-TODO: Add hardware list, circuit diagram, etc.
+**TODO**: _Add hardware list, circuit diagram, etc._
 
 ---
 
