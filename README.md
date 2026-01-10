@@ -225,6 +225,23 @@ sudo loginctl enable-linger pi
 
 ---
 
+## Web Dashboard (Process Monitor)
+
+A TUI-style web interface for monitoring the pipeline from any device on your network.
+
+![alt text](assets/web-monitor-preview-2.png)
+
+**Features:**
+- **News Tab** — Today's headlines grouped by region
+- **Pipeline Tab** — Interactive visualization of news → archetypes → music prompt
+- **Logs Tab** — Live streaming logs (like `tail -f` in your browser)
+
+**Quick access:** `http://aimusicplayer.local` (with nginx) or `http://aimusicplayer.local:7070`
+
+📖 **Full documentation:** [`web/README.md`](web/README.md) — covers architecture, how each tab works, deployment options, and troubleshooting.
+
+---
+
 ## Scheduled Tasks (cron)
 
 ### Daily song generation
