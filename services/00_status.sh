@@ -133,26 +133,18 @@ fi
 echo ""
 
 # -----------------------------------------------------------------------------
-# Cron Jobs
+# Cron Job
 # -----------------------------------------------------------------------------
 
-echo -e "${BOLD}Cron Jobs${NC}"
+echo -e "${BOLD}Cron Job${NC}"
 echo ""
 
 CRON_GENERATE=$(crontab -l 2>/dev/null | grep "main.py.*--fetch.*--play" || true)
-CRON_BACKUP=$(crontab -l 2>/dev/null | grep "bkp_gen_music.py" || true)
 
 if [ -n "$CRON_GENERATE" ]; then
-    echo -e "  ${GREEN}●${NC} generate (3:00 AM)"
+    echo -e "  ${GREEN}●${NC} generate (3:00 AM daily)"
 else
     echo -e "  ${RED}●${NC} generate - not installed"
-    ISSUES_FOUND=true
-fi
-
-if [ -n "$CRON_BACKUP" ]; then
-    echo -e "  ${GREEN}●${NC} backup (2:40 AM)"
-else
-    echo -e "  ${RED}●${NC} backup - not installed"
     ISSUES_FOUND=true
 fi
 
@@ -194,6 +186,14 @@ if [ "$ISSUES_FOUND" = true ]; then
             print_error "nginx not running"
             print_dim "Try: sudo systemctl start nginx"
         fi
+    fi
+    
+    # Check cron
+    if [ -z "$CRON_GENERATE" ]; then
+        echo ""
+        echo -e "${YELLOW}Cron Job${NC}"
+        print_error "Daily generation cron job not installed"
+        print_dim "Run: ./01_install_and_start_services.sh"
     fi
     
     echo ""

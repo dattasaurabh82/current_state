@@ -5,7 +5,7 @@
 # Installs and starts all services for the World Theme Music Player:
 # - User systemd services (music-player, full-cycle-btn, process-monitor-web)
 # - nginx reverse proxy configuration
-# - Cron jobs for daily generation and backup
+# - Cron job for daily music generation
 #
 # Usage: ./01_install_and_start_services.sh
 # =============================================================================
@@ -17,7 +17,6 @@ set -e  # Exit on error
 # =============================================================================
 
 # Cron schedule (24h format)
-CRON_BACKUP_TIME="40 2"      # 2:40 AM - Backup to Dropbox
 CRON_GENERATE_TIME="0 3"     # 3:00 AM - Generate new music
 
 # Web dashboard port
@@ -195,25 +194,22 @@ sudo systemctl reload nginx
 print_success "nginx configured and started"
 
 # -----------------------------------------------------------------------------
-# Step 6: Install cron jobs
+# Step 6: Install cron job for daily generation
 # -----------------------------------------------------------------------------
 
-print_step "Installing cron jobs..."
+print_step "Installing cron job..."
 
-# Build cron entries with dynamic paths
+# Build cron entry with dynamic paths
 CRON_GENERATE="$CRON_GENERATE_TIME * * * cd $PROJECT_DIR && $UV_PATH run python main.py --fetch true --play false >> $PROJECT_DIR/logs/cron.log 2>&1"
-CRON_BACKUP="$CRON_BACKUP_TIME * * * cd $PROJECT_DIR && $UV_PATH run python tools/bkp_gen_music.py >> $PROJECT_DIR/logs/backup.log 2>&1"
 
-# Remove existing entries (if any) and add fresh ones
+# Remove existing entry (if any) and add fresh one
 (
-    crontab -l 2>/dev/null | grep -v "main.py.*--fetch.*--play" | grep -v "bkp_gen_music.py"
-    echo "$CRON_BACKUP"
+    crontab -l 2>/dev/null | grep -v "main.py.*--fetch.*--play"
     echo "$CRON_GENERATE"
 ) | crontab -
 
-print_success "Cron jobs installed"
-print_info "  Backup:   $CRON_BACKUP_TIME (2:40 AM)"
-print_info "  Generate: $CRON_GENERATE_TIME (3:00 AM)"
+print_success "Cron job installed"
+print_info "  Generate: $CRON_GENERATE_TIME (3:00 AM daily)"
 
 # =============================================================================
 # COMPLETE

@@ -5,7 +5,7 @@
 # Stops and removes all services for the World Theme Music Player:
 # - User systemd services (music-player, full-cycle-btn, process-monitor-web)
 # - nginx reverse proxy configuration (not nginx itself)
-# - Cron jobs for daily generation and backup
+# - Cron job for daily generation
 #
 # Usage: ./04_stop_and_uninstall_services.sh
 # =============================================================================
@@ -160,26 +160,25 @@ if systemctl is-active --quiet nginx 2>/dev/null; then
 fi
 
 # -----------------------------------------------------------------------------
-# Step 5: Remove cron jobs
+# Step 5: Remove cron job
 # -----------------------------------------------------------------------------
 
-print_step "Removing cron jobs..."
+print_step "Removing cron job..."
 
-# Remove lines matching our specific scripts
+# Remove line matching our generate script
 CRON_BEFORE=$(crontab -l 2>/dev/null | wc -l)
 
 crontab -l 2>/dev/null | \
     grep -v "main.py.*--fetch.*--play" | \
-    grep -v "bkp_gen_music.py" | \
     crontab - 2>/dev/null || true
 
 CRON_AFTER=$(crontab -l 2>/dev/null | wc -l)
 CRON_REMOVED=$((CRON_BEFORE - CRON_AFTER))
 
 if [ "$CRON_REMOVED" -gt 0 ]; then
-    print_success "Removed $CRON_REMOVED cron job(s)"
+    print_success "Removed cron job"
 else
-    print_info "No matching cron jobs found"
+    print_info "No matching cron job found"
 fi
 
 # =============================================================================
@@ -192,7 +191,7 @@ echo ""
 echo "  Removed:"
 echo "    • User systemd services (stopped, disabled, files deleted)"
 echo "    • nginx site configuration (config removed, nginx still running)"
-echo "    • Cron jobs (daily generation and backup)"
+echo "    • Cron job (daily generation)"
 echo ""
 echo "  NOT removed:"
 echo "    • nginx itself (may be used by other sites)"
