@@ -74,30 +74,6 @@ print_info() {
     echo -e "${CYAN}ℹ${NC} $1"
 }
 
-get_service_status() {
-    if systemctl --user is-active --quiet "$1" 2>/dev/null; then
-        echo -e "${GREEN}● ACTIVE${NC}"
-    else
-        echo -e "${RED}● STOPPED${NC}"
-    fi
-}
-
-get_nginx_status() {
-    if systemctl is-active --quiet nginx 2>/dev/null; then
-        echo -e "${GREEN}● ACTIVE${NC}"
-    else
-        echo -e "${RED}● STOPPED${NC}"
-    fi
-}
-
-get_service_exists() {
-    if [ -f "$SYSTEMD_USER_DIR/$1" ]; then
-        echo -e "${YELLOW}EXISTS${NC}"
-    else
-        echo -e "${GREEN}REMOVED${NC}"
-    fi
-}
-
 # =============================================================================
 # MAIN UNINSTALLATION
 # =============================================================================
@@ -190,8 +166,6 @@ fi
 print_step "Removing cron jobs..."
 
 # Remove lines matching our specific scripts
-# Pattern 1: main.py with --fetch and --play flags
-# Pattern 2: bkp_gen_music.py
 CRON_BEFORE=$(crontab -l 2>/dev/null | wc -l)
 
 crontab -l 2>/dev/null | \
@@ -209,44 +183,21 @@ else
 fi
 
 # =============================================================================
-# STATUS REPORT
+# COMPLETE
 # =============================================================================
 
-print_header "UNINSTALLATION COMPLETE - STATUS REPORT"
-
-# Get status for each service
-STATUS_MUSIC=$(get_service_exists music-player.service)
-STATUS_BTN=$(get_service_exists full-cycle-btn.service)
-STATUS_WEB=$(get_service_exists process-monitor-web.service)
-if [ -f "$NGINX_SITES_AVAILABLE/$NGINX_CONFIG_NAME" ]; then
-    STATUS_NGINX="${YELLOW}EXISTS${NC}"
-else
-    STATUS_NGINX="${GREEN}REMOVED${NC}"
-fi
+print_header "UNINSTALLATION COMPLETE"
 
 echo ""
-echo -e "╔═══════════════════════════════╦═══════════════════════════════╗"
-echo -e "║  music-player      $STATUS_MUSIC    ║  full-cycle-btn    $STATUS_BTN      ║"
-echo -e "╠═══════════════════════════════╬═══════════════════════════════╣"
-echo -e "║  web-dashboard     $STATUS_WEB    ║  nginx-config      $STATUS_NGINX      ║"
-echo -e "╚═══════════════════════════════╩═══════════════════════════════╝"
-echo ""
-
-print_header "WHAT WAS REMOVED"
-
-echo ""
-echo "  ✓ User systemd services (stopped, disabled, files deleted)"
-echo "  ✓ nginx site configuration (config removed, nginx still running)"
-echo "  ✓ Cron jobs (daily generation and backup)"
+echo "  Removed:"
+echo "    • User systemd services (stopped, disabled, files deleted)"
+echo "    • nginx site configuration (config removed, nginx still running)"
+echo "    • Cron jobs (daily generation and backup)"
 echo ""
 echo "  NOT removed:"
 echo "    • nginx itself (may be used by other sites)"
 echo "    • linger setting (may be used by other user services)"
 echo "    • Project files (your code is safe)"
 echo ""
-
-print_header "TO REINSTALL"
-
-echo ""
-echo "  Run: ./01_install_and_start_services.sh"
+print_info "To reinstall: ./01_install_and_start_services.sh"
 echo ""

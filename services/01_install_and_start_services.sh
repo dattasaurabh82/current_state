@@ -87,22 +87,6 @@ print_info() {
     echo -e "${CYAN}ℹ${NC} $1"
 }
 
-get_service_status() {
-    if systemctl --user is-active --quiet "$1" 2>/dev/null; then
-        echo -e "${GREEN}● ACTIVE${NC}"
-    else
-        echo -e "${RED}● INACTIVE${NC}"
-    fi
-}
-
-get_nginx_status() {
-    if systemctl is-active --quiet nginx 2>/dev/null; then
-        echo -e "${GREEN}● ACTIVE${NC}"
-    else
-        echo -e "${RED}● INACTIVE${NC}"
-    fi
-}
-
 # Replace placeholders in a file and output to stdout
 substitute_placeholders() {
     local file="$1"
@@ -232,44 +216,14 @@ print_info "  Backup:   $CRON_BACKUP_TIME (2:40 AM)"
 print_info "  Generate: $CRON_GENERATE_TIME (3:00 AM)"
 
 # =============================================================================
-# STATUS REPORT
+# COMPLETE
 # =============================================================================
 
-print_header "INSTALLATION COMPLETE - STATUS REPORT"
-
-# Get status for each service
-STATUS_MUSIC=$(get_service_status music-player.service)
-STATUS_BTN=$(get_service_status full-cycle-btn.service)
-STATUS_WEB=$(get_service_status process-monitor-web.service)
-STATUS_NGINX=$(get_nginx_status)
-
-echo ""
-echo -e "╔═══════════════════════════════╦═══════════════════════════════╗"
-echo -e "║  music-player      $STATUS_MUSIC   ║  full-cycle-btn    $STATUS_BTN    ║"
-echo -e "╠═══════════════════════════════╬═══════════════════════════════╣"
-echo -e "║  web-dashboard     $STATUS_WEB   ║  nginx             $STATUS_NGINX    ║"
-echo -e "╚═══════════════════════════════╩═══════════════════════════════╝"
-echo ""
-
-print_header "ACCESS URLS"
+print_header "INSTALLATION COMPLETE"
 
 echo ""
 print_info "Web Dashboard (via nginx):  http://${HOSTNAME}.local"
 print_info "Web Dashboard (direct):     http://${HOSTNAME}.local:${WEB_PORT}"
 echo ""
-
-print_header "USEFUL COMMANDS"
-
-echo ""
-echo "  Check service status:"
-echo "    systemctl --user status music-player.service"
-echo "    systemctl --user status full-cycle-btn.service"
-echo "    systemctl --user status process-monitor-web.service"
-echo ""
-echo "  View logs:"
-echo "    journalctl --user -u music-player.service -f"
-echo "    journalctl --user -u process-monitor-web.service -f"
-echo ""
-echo "  List cron jobs:"
-echo "    crontab -l"
+print_info "Run ./00_status.sh to check service status"
 echo ""
