@@ -472,27 +472,6 @@ http://aimusicplayer.local
 
 ---
 
-## Alternative: iptables Redirect (No nginx)
-
-If you prefer not to use nginx:
-
-```bash
-# Redirect port 80 → 7070
-sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 7070
-
-# Make persistent (install iptables-persistent)
-sudo apt install iptables-persistent
-sudo netfilter-persistent save
-```
-
-**Note:** nginx is recommended because it:
-- Serves static files more efficiently
-- Handles WebSocket upgrades properly
-- Provides better logging and error handling
-- Is more production-ready
-
----
-
 ## Troubleshooting
 
 ### Static files 403 / Permission denied
