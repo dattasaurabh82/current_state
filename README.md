@@ -92,6 +92,8 @@ You'll need accounts with these services:
 | [Replicate](https://replicate.com/account) | Run LLM + MusicGen models | Pay-per-use (~$0.01/generation) |
 | [Dropbox](https://www.dropbox.com/developers) | Backup generated music (optional) | Free |
 
+> [COMMENT] More details about what to get from each and store for later ...
+
 ---
 
 ## Installation
@@ -121,68 +123,13 @@ Tab to `<Finish>` and reboot:
 ```bash
 sudo reboot
 ```
+===================================================
 
-### Step 2: Clone & Install Dependencies
+### Step 2: Setup Project Deps
 
-```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/current_state.git
-cd current_state
+TBD - setup script stuff
 
-# Install Python dependencies
-uv sync
-```
-
-> [!TIP]
-> If `uv` is not installed, see [Manual Setup Instructions](#manual-setup-instructions) at the bottom.
-
-### Step 3: Configure Environment Variables
-
-```bash
-cp .env.template .env
-nano .env
-```
-
-Edit the following values:
-
-#### `NEWS_API_KEY`
-
-1. Create account: https://newsapi.org/account
-2. Generate API key
-3. Paste into `.env`:
-   ```
-   NEWS_API_KEY="your_key_here"
-   ```
-
-#### `REPLICATE_API_TOKEN`
-
-1. Create account: https://replicate.com/account
-2. Set up billing: https://replicate.com/account/billing
-   > Cost is minimal (~$0.01 per generation, runs once daily)
-3. Generate token: https://replicate.com/account/api-tokens
-4. Paste into `.env`:
-   ```
-   REPLICATE_API_TOKEN="your_token_here"
-   ```
-
-#### Dropbox Backup (Optional)
-
-If you want automatic cloud backup of generated music:
-
-```
-DROPBOX_CLIENT_ID="your_client_id"
-DROPBOX_CLIENT_SECRET="your_client_secret"
-DROPBOX_REFRESH_TOKEN="your_refresh_token"
-```
-
-Also enable in `settings.json`:
-```json
-{
-  "backup": {
-    "generation_results_to_dropbox": true
-  }
-}
-```
+===================================================
 
 ---
 
@@ -235,6 +182,9 @@ uv run python tests/02_test_serial_radar.py
 
 #### Radar Behavior
 
+> [COMMENT] Improve the below. Note fr all sections add meaningful descriptions like these . Ask if you are not sure 
+Radars are used to detect presence and trigger audio playback loop for 5 mins (settings.json) ... 
+
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `motionTriggeredPlaybackDurationSec` | 300 | Auto-stop after 5 minutes |
@@ -263,14 +213,16 @@ Check `music_generated/` for the output WAV file.
 # Interactive mode (keyboard controls)
 uv run python run_player.py
 
-# Daemon mode (GPIO only)
-uv run python run_player.py --daemon
-```
-
 Controls:
 - `P` — Play/Pause
 - `S` — Stop
 - `Q` — Quit
+
+
+# Daemon mode (GPIO only)
+uv run python run_player.py --daemon
+```
+> [COMMENT] What they cna dio here and what to expect -- detail;s missing
 
 ---
 
@@ -539,6 +491,70 @@ Reboot and test:
 ## License
 
 [Unlicense](LICENSE)
+
+---
+
+### Step 2: Clone & Install Dependencies
+
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/current_state.git
+cd current_state
+
+# Install Python dependencies
+uv sync
+```
+
+> [!TIP]
+> If `uv` is not installed, see [Manual Setup Instructions](#manual-setup-instructions) at the bottom.
+
+### Step 3: Configure Environment Variables
+
+```bash
+cp .env.template .env
+nano .env
+```
+
+Edit the following values:
+
+#### `NEWS_API_KEY`
+
+1. Create account: https://newsapi.org/account
+2. Generate API key
+3. Paste into `.env`:
+   ```
+   NEWS_API_KEY="your_key_here"
+   ```
+
+#### `REPLICATE_API_TOKEN`
+
+1. Create account: https://replicate.com/account
+2. Set up billing: https://replicate.com/account/billing
+   > Cost is minimal (~$0.01 per generation, runs once daily)
+3. Generate token: https://replicate.com/account/api-tokens
+4. Paste into `.env`:
+   ```
+   REPLICATE_API_TOKEN="your_token_here"
+   ```
+
+#### Dropbox Backup (Optional)
+
+If you want automatic cloud backup of generated music:
+
+```
+DROPBOX_CLIENT_ID="your_client_id"
+DROPBOX_CLIENT_SECRET="your_client_secret"
+DROPBOX_REFRESH_TOKEN="your_refresh_token"
+```
+
+Also enable in `settings.json`:
+```json
+{
+  "backup": {
+    "generation_results_to_dropbox": true
+  }
+}
+```
 
 ---
 
