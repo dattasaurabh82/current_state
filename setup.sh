@@ -5,18 +5,12 @@
 # Main setup script for World Theme Music Player
 # Installs all dependencies and configures the environment
 #
-# This script:
-# - Checks system requirements
-# - Installs system dependencies (apt packages)
-# - Installs audio dependencies
-# - Installs UV package manager
-# - Configures GPIO permissions
-# - Creates Python virtual environment
-# - Prompts for API credentials
-#
-# Usage: 
-#   curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/current_state/main/setup.sh | bash
+# Usage (first time - via curl/wget):
+#   curl -fsSL https://raw.githubusercontent.com/dattasaurabh82/current_state/main/setup.sh | bash
 #   OR
+#   wget -qO- https://raw.githubusercontent.com/dattasaurabh82/current_state/main/setup.sh | bash
+#
+# Usage (after clone - local):
 #   ./setup.sh
 #
 # =============================================================================
@@ -27,8 +21,9 @@ set -e  # Exit on error
 # CONFIGURATION
 # =============================================================================
 
-REPO_URL="https://github.com/YOUR_USERNAME/current_state.git"
+REPO_URL="https://github.com/dattasaurabh82/current_state.git"
 PROJECT_NAME="current_state"
+INSTALL_DIR="$HOME/$PROJECT_NAME"
 
 # =============================================================================
 # COLORS
@@ -102,6 +97,24 @@ confirm() {
     response=${response:-$default}
     
     [[ "$response" =~ ^[Yy]$ ]]
+}
+
+# =============================================================================
+# DETECT EXECUTION CONTEXT
+# =============================================================================
+
+detect_context() {
+    # Check if we're running from within the project directory
+    if [ -f "pyproject.toml" ] && grep -q "world-theme-music-player\|current_state" "pyproject.toml" 2>/dev/null; then
+        CONTEXT="local"
+        PROJECT_DIR="$(pwd)"
+    elif [ -f "../pyproject.toml" ] && grep -q "world-theme-music-player\|current_state" "../pyproject.toml" 2>/dev/null; then
+        CONTEXT="local"
+        PROJECT_DIR="$(cd .. && pwd)"
+    else
+        CONTEXT="remote"
+        PROJECT_DIR="$INSTALL_DIR"
+    fi
 }
 
 # =============================================================================
@@ -201,26 +214,25 @@ install_uv() {
         print_step "Installing UV..."
         curl -LsSf https://astral.sh/uv/install.sh | sh
         print_success "UV installed"
-        
-        # Source the shell config to get uv in PATH
-        print_step "Adding UV to PATH..."
-        export PATH="$HOME/.local/bin:$PATH"
-        
-        # Add to shell config if not present
-        SHELL_RC="$HOME/.bashrc"
-        if [ -f "$HOME/.zshrc" ]; then
-            SHELL_RC="$HOME/.zshrc"
-        fi
-        
-        if ! grep -q 'local/bin' "$SHELL_RC" 2>/dev/null; then
-            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$SHELL_RC"
-            print_success "Added UV to $SHELL_RC"
-        fi
+    fi
+    
+    # Ensure UV is in PATH for this session
+    export PATH="$HOME/.local/bin:$PATH"
+    
+    # Add to shell config if not present
+    SHELL_RC="$HOME/.bashrc"
+    if [ -f "$HOME/.zshrc" ]; then
+        SHELL_RC="$HOME/.zshrc"
+    fi
+    
+    if ! grep -q '.local/bin' "$SHELL_RC" 2>/dev/null; then
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$SHELL_RC"
+        print_success "Added UV to $SHELL_RC"
     fi
     
     # Verify installation
-    if command -v uv &> /dev/null; then
-        print_success "UV ready: $(uv --version)"
+    if command -v uv &> /dev/null || [ -x "$HOME/.local/bin/uv" ]; then
+        print_success "UV ready: $($HOME/.local/bin/uv --version 2>/dev/null || uv --version)"
     else
         print_error "UV installation failed"
         exit 1
@@ -246,10 +258,9 @@ configure_gpio() {
 clone_or_update_repo() {
     print_header "SETTING UP PROJECT"
     
-    # Check if we're already in the project directory
-    if [ -f "pyproject.toml" ] && grep -q "world-theme-music-player" "pyproject.toml" 2>/dev/null; then
-        print_info "Already in project directory"
-        PROJECT_DIR="$(pwd)"
+    if [ "$CONTEXT" = "local" ]; then
+        print_info "Already in project directory: $PROJECT_DIR"
+        cd "$PROJECT_DIR"
         
         if confirm "Pull latest changes from git?" "y"; then
             print_step "Pulling latest changes..."
@@ -257,11 +268,11 @@ clone_or_update_repo() {
             print_success "Repository updated"
         fi
     else
-        # Check if project exists in home directory
-        if [ -d "$HOME/$PROJECT_NAME" ]; then
-            print_info "Project found at $HOME/$PROJECT_NAME"
-            cd "$HOME/$PROJECT_NAME"
-            PROJECT_DIR="$(pwd)"
+        # Remote context - need to clone
+        if [ -d "$INSTALL_DIR" ]; then
+            print_info "Project found at $INSTALL_DIR"
+            cd "$INSTALL_DIR"
+            PROJECT_DIR="$INSTALL_DIR"
             
             if confirm "Pull latest changes from git?" "y"; then
                 print_step "Pulling latest changes..."
@@ -269,12 +280,11 @@ clone_or_update_repo() {
                 print_success "Repository updated"
             fi
         else
-            print_step "Cloning repository..."
-            cd "$HOME"
-            git clone "$REPO_URL"
-            cd "$PROJECT_NAME"
-            PROJECT_DIR="$(pwd)"
-            print_success "Repository cloned to $PROJECT_DIR"
+            print_step "Cloning repository to $INSTALL_DIR..."
+            git clone "$REPO_URL" "$INSTALL_DIR"
+            cd "$INSTALL_DIR"
+            PROJECT_DIR="$INSTALL_DIR"
+            print_success "Repository cloned"
         fi
     fi
 }
@@ -282,16 +292,22 @@ clone_or_update_repo() {
 install_python_deps() {
     print_header "INSTALLING PYTHON DEPENDENCIES"
     
+    # Use full path to uv in case PATH isn't updated yet
+    UV_CMD="${HOME}/.local/bin/uv"
+    if ! [ -x "$UV_CMD" ]; then
+        UV_CMD="uv"
+    fi
+    
     print_step "Running uv sync..."
-    uv sync
+    $UV_CMD sync
     print_success "Python dependencies installed"
     
     # Check if RPi.GPIO is needed and install if missing
     if [ -f /proc/device-tree/model ]; then
         print_step "Checking RPi.GPIO..."
-        if ! uv run python -c "import RPi.GPIO" 2>/dev/null; then
+        if ! $UV_CMD run python -c "import RPi.GPIO" 2>/dev/null; then
             print_warning "RPi.GPIO not installed, attempting installation..."
-            uv pip install RPi.GPIO --break-system-packages || true
+            $UV_CMD pip install RPi.GPIO --break-system-packages || true
         else
             print_success "RPi.GPIO is available"
         fi
@@ -336,10 +352,13 @@ configure_env() {
     prompt_input "Enter NewsAPI key" NEWS_API_KEY true
     prompt_input "Enter Replicate API token" REPLICATE_API_TOKEN true
     
-    # Write .env file
+    # Write .env file (keep Dropbox placeholders)
     cat > "$ENV_FILE" << EOF
 NEWS_API_KEY="$NEWS_API_KEY"
 REPLICATE_API_TOKEN="$REPLICATE_API_TOKEN"
+DROPBOX_CLIENT_ID="YOUR_DROPBOX_CLIENT_ID_HERE"
+DROPBOX_CLIENT_SECRET="YOUR_DROPBOX_CLIENT_SECRET_HERE"
+DROPBOX_REFRESH_TOKEN="YOUR_DROPBOX_REFRESH_TOKEN_HERE"
 EOF
     
     chmod 600 "$ENV_FILE"
@@ -353,7 +372,17 @@ EOF
 main() {
     print_header "WORLD THEME MUSIC PLAYER - SETUP"
     
+    # Detect if running locally or via curl/wget
+    detect_context
+    
     echo ""
+    if [ "$CONTEXT" = "local" ]; then
+        print_info "Running in LOCAL mode (project already cloned)"
+    else
+        print_info "Running in REMOTE mode (will clone project)"
+    fi
+    echo ""
+    
     echo "  This script will install:"
     echo "    • System dependencies (build tools, libraries)"
     echo "    • Audio dependencies (PortAudio)"
@@ -390,12 +419,12 @@ main() {
     print_header "SETUP COMPLETE"
     
     echo ""
-    echo "  ${GREEN}✓${NC} System dependencies installed"
-    echo "  ${GREEN}✓${NC} Audio dependencies installed"
-    echo "  ${GREEN}✓${NC} UV package manager installed"
-    echo "  ${GREEN}✓${NC} GPIO permissions configured"
-    echo "  ${GREEN}✓${NC} Python dependencies installed"
-    echo "  ${GREEN}✓${NC} API credentials configured"
+    echo -e "  ${GREEN}✓${NC} System dependencies installed"
+    echo -e "  ${GREEN}✓${NC} Audio dependencies installed"
+    echo -e "  ${GREEN}✓${NC} UV package manager installed"
+    echo -e "  ${GREEN}✓${NC} GPIO permissions configured"
+    echo -e "  ${GREEN}✓${NC} Python dependencies installed"
+    echo -e "  ${GREEN}✓${NC} API credentials configured"
     echo ""
     
     if [ "$GPIO_CHANGED" = true ]; then
@@ -403,19 +432,26 @@ main() {
         echo ""
     fi
     
+    echo "  Project location: $PROJECT_DIR"
+    echo ""
     echo "  Next steps:"
     echo ""
-    echo "    1. Test hardware:"
+    echo "    1. ${DIM}cd $PROJECT_DIR${NC}"
+    echo ""
+    echo "    2. Test hardware:"
     echo "       ${DIM}uv run python tests/01_test_IOs.py${NC}"
     echo ""
-    echo "    2. Test full pipeline:"
+    echo "    3. Test full pipeline:"
     echo "       ${DIM}uv run python main.py --fetch true --play false${NC}"
     echo ""
-    echo "    3. Install services:"
+    echo "    4. Install services:"
     echo "       ${DIM}./services/01_install_and_start_services.sh${NC}"
     echo ""
     
     print_info "See README.md for detailed instructions"
+    echo ""
+    print_info "To re-run this setup later:"
+    echo "       ${DIM}cd $PROJECT_DIR && ./setup.sh${NC}"
 }
 
 # Run main function
