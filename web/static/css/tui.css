@@ -1215,7 +1215,7 @@ audio::-webkit-media-controls-time-remaining-display {
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .pipeline-main-grid {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto auto;
@@ -1231,10 +1231,45 @@ audio::-webkit-media-controls-time-remaining-display {
         max-height: 300px;
     }
     
-    /* Hide viz canvas on mobile */
-    .cell-viz {
+    /* Hide viz canvas on mobile/tablet portrait */
+    .cell-viz .panel-fill {
         display: none;
     }
+    
+    /* Show hint on mobile/tablet portrait */
+    .graph-hint {
+        display: flex;
+    }
+}
+
+/* =============================================================================
+   GRAPH HINT (Dracula themed)
+   ============================================================================= */
+
+.graph-hint {
+    display: none; /* Hidden by default (desktop) */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-lg) var(--space-md);
+    margin-top: var(--space-md);
+    background-color: #282a36; /* Dracula background */
+    border: 1px dashed #6272a4; /* Dracula comment */
+    border-radius: var(--radius-sm);
+    text-align: center;
+}
+
+.graph-hint-icon {
+    font-size: var(--font-size-xl);
+    color: #bd93f9; /* Dracula purple */
+}
+
+.graph-hint-text {
+    font-size: var(--font-size-sm);
+    color: #6272a4; /* Dracula comment */
+    line-height: 1.5;
+    max-width: 280px;
 }
 
 /* Metrics list (vertical) */
