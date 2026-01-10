@@ -201,3 +201,6 @@ echo "    • Project files (your code is safe)"
 echo ""
 print_info "To reinstall: ./01_install_and_start_services.sh"
 echo ""
+
+# Run status check
+"$SCRIPT_DIR/00_status.sh"

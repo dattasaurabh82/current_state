@@ -225,5 +225,6 @@ echo ""
 print_info "Web Dashboard (via nginx):  http://${HOSTNAME}.local"
 print_info "Web Dashboard (direct):     http://${HOSTNAME}.local:${WEB_PORT}"
 echo ""
-print_info "Run ./00_status.sh to check service status"
-echo ""
+
+# Run status check
+"$SCRIPT_DIR/00_status.sh"
