@@ -72,6 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
             x,
             y,
             shape: 'box',
+            shapeProperties: {
+                borderRadius: 0,
+            },
             color: { 
                 background: COLORS.nodeBg, 
                 border: borderColor, 
@@ -174,12 +177,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Build tooltip with sample headlines
         let newsTooltip = `NEWS SCRAPING\n`;
-        newsTooltip += `────────────────────\n`;
+        newsTooltip += `──────────────────────────────────────────\n`;
         newsTooltip += `Total: ${articleCount} articles\n`;
-        newsTooltip += `Regions: ${regions}\n\n`;
+        newsTooltip += `Regions: ${regions}\n`;
+        newsTooltip += `──────────────────────────────────────────\n`;
         newsTooltip += `SAMPLE HEADLINES:\n`;
-        (news.sample_headlines || []).slice(0, 5).forEach(h => {
-            newsTooltip += `• ${h.title}\n  [${h.source}]\n`;
+        (news.sample_headlines || []).slice(0, 4).forEach(h => {
+            newsTooltip += `• ${h.title.slice(0, 40)}...\n  [${h.source}]\n`;
         });
         
         nodes.push(createNode('news_scraping', newsLabel, X.news, 0, COLORS.cyan, {
@@ -193,13 +197,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const structuredLabel = `STRUCTURED OUTPUT\n\nVAL: ${metrics.valence >= 0 ? '+' : ''}${(metrics.valence || 0).toFixed(2)}\nTEN: ${(metrics.tension || 0).toFixed(2)}\nHOP: ${(metrics.hope || 0).toFixed(2)}\nENE: ${(metrics.energy || 'MED').toString().toUpperCase().slice(0, 3)}`;
         
         let structuredTooltip = `STRUCTURED OUTPUT\n`;
-        structuredTooltip += `────────────────────\n`;
-        structuredTooltip += `Emotional Valence: ${(metrics.valence || 0).toFixed(3)}\n`;
-        structuredTooltip += `Tension Level: ${(metrics.tension || 0).toFixed(3)}\n`;
-        structuredTooltip += `Hope Factor: ${(metrics.hope || 0).toFixed(3)}\n`;
-        structuredTooltip += `Energy Level: ${metrics.energy || 'medium'}\n\n`;
-        structuredTooltip += `THEMES: ${themes.join(', ')}\n\n`;
-        structuredTooltip += `SUMMARY:\n${summary}`;
+        structuredTooltip += `──────────────────────────────────────────\n`;
+        structuredTooltip += `Valence: ${(metrics.valence || 0).toFixed(2)} | Tension: ${(metrics.tension || 0).toFixed(2)}\n`;
+        structuredTooltip += `Hope: ${(metrics.hope || 0).toFixed(2)} | Energy: ${metrics.energy || 'medium'}\n`;
+        structuredTooltip += `──────────────────────────────────────────\n`;
+        structuredTooltip += `THEMES: ${themes.join(', ')}\n`;
+        structuredTooltip += `──────────────────────────────────────────\n`;
+        structuredTooltip += `${summary}`;
         
         nodes.push(createNode('structured_output', structuredLabel, X.structured, 0, COLORS.purple, {
             title: structuredTooltip,
@@ -255,13 +259,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Tooltip with score breakdown
             const comps = item.components || {};
             let archTooltip = `${displayName}\n`;
-            archTooltip += `────────────────────\n`;
-            archTooltip += `Total Score: ${(item.score * 100).toFixed(1)}%\n\n`;
-            archTooltip += `COMPONENT SCORES:\n`;
-            archTooltip += `• Valence: ${((comps.valence || 0) * 100).toFixed(0)}%\n`;
-            archTooltip += `• Tension: ${((comps.tension || 0) * 100).toFixed(0)}%\n`;
-            archTooltip += `• Hope: ${((comps.hope || 0) * 100).toFixed(0)}%\n`;
-            archTooltip += `• Energy: ${((comps.energy || 0) * 100).toFixed(0)}%\n`;
+            archTooltip += `──────────────────────────────────────────\n`;
+            archTooltip += `Total Score: ${(item.score * 100).toFixed(1)}%\n`;
+            archTooltip += `──────────────────────────────────────────\n`;
+            archTooltip += `Val: ${((comps.valence || 0) * 100).toFixed(0)}% | Ten: ${((comps.tension || 0) * 100).toFixed(0)}%\n`;
+            archTooltip += `Hop: ${((comps.hope || 0) * 100).toFixed(0)}% | Ene: ${((comps.energy || 0) * 100).toFixed(0)}%`;
             
             nodes.push(createNode(
                 `arch_${item.archetype}`,
@@ -309,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         nodes.push(createNode('themes', themesLabel, X.middle, -100, COLORS.pink, {
             align: 'left',
-            title: `DOMINANT THEMES\n────────────────────\nExtracted from news analysis:\n• ${themes.join('\n• ')}`,
+            title: `DOMINANT THEMES\n──────────────────────────────────────────\n• ${themes.join(' • ')}`,
         }));
         
         // Edge: Structured Output → Themes
@@ -323,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const dateSeedLabel = `DATE SEED\n\n${dateSeed}\nVARIANT: ${instrumentVariant}`;
         
         nodes.push(createNode('date_seed', dateSeedLabel, X.middle, 100, COLORS.orange, {
-            title: `DATE SEED\n────────────────────\nDate: ${dateSeed}\nInstrument Variant: ${instrumentVariant}\n\nUsed for reproducible\nrandomization in prompt\ngeneration.`,
+            title: `DATE SEED\n──────────────────────────────────────────\nDate: ${dateSeed} | Variant: ${instrumentVariant}\n──────────────────────────────────────────\nUsed for reproducible randomization`,
         }));
         
         // ---------------------------------------------------------------------
@@ -338,13 +340,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const layer1Label = `LAYER 1: STRUCTURE\n\nGENRE: ${genre}\nTEMPO: ${tempo} BPM`;
         
-        let layer1Tooltip = `LAYER 1: STRUCTURE\n`;
-        layer1Tooltip += `(From Archetypes)\n`;
-        layer1Tooltip += `────────────────────\n`;
-        layer1Tooltip += `Genre: ${genre}\n`;
+        let layer1Tooltip = `LAYER 1: STRUCTURE (From Archetypes)\n`;
+        layer1Tooltip += `──────────────────────────────────────────\n`;
+        layer1Tooltip += `Genre: ${genre} | Tempo: ${tempo} BPM\n`;
         layer1Tooltip += `Instruments: ${instruments.join(', ')}\n`;
-        layer1Tooltip += `Moods: ${moods.join(', ')}\n`;
-        layer1Tooltip += `Tempo: ${tempo} BPM`;
+        layer1Tooltip += `Moods: ${moods.join(', ')}`;
         
         nodes.push(createNode('layer_structure', layer1Label, X.layers, -100, COLORS.purple, {
             title: layer1Tooltip,
@@ -358,9 +358,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const layer2Label = `LAYER 2: COLOR\n\nTIMBRE: ${texTimbre.slice(0, 2).join(', ')}\nMOVE: ${texMovement.slice(0, 1).join(', ')}`;
         
-        let layer2Tooltip = `LAYER 2: COLOR\n`;
-        layer2Tooltip += `(From Theme Textures)\n`;
-        layer2Tooltip += `────────────────────\n`;
+        let layer2Tooltip = `LAYER 2: COLOR (From Themes)\n`;
+        layer2Tooltip += `──────────────────────────────────────────\n`;
         layer2Tooltip += `Timbre: ${texTimbre.join(', ')}\n`;
         layer2Tooltip += `Movement: ${texMovement.join(', ')}\n`;
         layer2Tooltip += `Harmonic: ${texHarmonic.join(', ')}`;
@@ -374,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const layer3Label = `LAYER 3: VARIETY\n\nVARIANT: ${instrumentVariant}\nTEMPO ADJ: ±3`;
         
         nodes.push(createNode('layer_variety', layer3Label, X.layers, 100, COLORS.orange, {
-            title: `LAYER 3: VARIETY\n(From Date Seed)\n────────────────────\nInstrument Variant: ${instrumentVariant}\nTempo Adjustment: ±3 BPM\n\nAdds variation based on\ndate-seeded randomization.`,
+            title: `LAYER 3: VARIETY (From Date Seed)\n──────────────────────────────────────────\nVariant: ${instrumentVariant} | Tempo Adj: ±3 BPM`,
             align: 'left',
         }));
         
@@ -386,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const finalPromptLabel = `FINAL PROMPT\n\n"${finalPromptText}"`;
         
         nodes.push(createNode('final_prompt', finalPromptLabel, X.finalPrompt, 0, COLORS.green, {
-            title: `FINAL PROMPT\n────────────────────\n${prompt.final_prompt || ''}`,
+            title: `FINAL PROMPT\n──────────────────────────────────────────\n${(prompt.final_prompt || '').slice(0, 150)}...`,
         }));
         
         // ---------------------------------------------------------------------

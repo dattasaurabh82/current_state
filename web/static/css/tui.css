@@ -1265,7 +1265,9 @@ audio::-webkit-media-controls-time-remaining-display {
     height: 100%;
     width: 100%;
     min-height: 300px;
-    background-color: var(--bg-dark);
+    background-color: #0a0a0a;
+    background-image: radial-gradient(circle, #333 1px, transparent 1px);
+    background-size: 20px 20px;
     cursor: grab;
 }
 
@@ -1319,16 +1321,14 @@ audio::-webkit-media-controls-time-remaining-display {
 
 .vis-tooltip {
     background-color: rgba(0, 0, 0, 0.95) !important;
-    border: none !important;
-    border-left: 2px solid rgba(255, 255, 255, 0.6) !important;
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
-    padding: var(--space-md) var(--space-lg) !important;
+    border: 1px dashed rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 !important;
+    padding: var(--space-sm) var(--space-md) !important;
     font-family: var(--font-mono) !important;
     font-size: var(--font-size-xs) !important;
     color: var(--text-primary) !important;
     white-space: pre-line !important;
-    max-width: 350px !important;
-    line-height: 1.7 !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
-    letter-spacing: 0.3px !important;
+    max-width: 320px !important;
+    line-height: 1.4 !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7) !important;
 }
