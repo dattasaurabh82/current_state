@@ -1,28 +1,489 @@
-# README
+# World Theme Music Player
 
-## ToDo
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](LICENSE)
+[![Platform: Raspberry Pi](https://img.shields.io/badge/platform-Raspberry%20Pi-c51a4a.svg)](https://www.raspberrypi.org/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
-- WIP: Main README Docu ... 🟠
-- Serial Radar detection algo improve (beam and enter and exit based)
-- Setup script 
-- Along-side drop box do a freesound.org upload ... 
-- Other region of news
+> **An AI-powered ambient music generator that transforms daily world news into mood-based soundscapes.**
 
-- Hardware Update Steps: 
-  - Speaker Switch switcher 
-  - Update circuit 
-    - Also add an extra (3D) side Fan for PI
-  - Place new order for SLA prints 
-  - Print PLA locally 
-  - Assemble new one ... 
+![HW Image]() TBD
 
-**Future**:
-- More archetypes
-- embedding models if needed
-- data viz after a period of time on the world sentiment shifts
+How does it look like?
+
+![Hero Image](assets/web-monitor-preview-2.png) 
+
+Monitor Web dashboard
+
+The system fetches news headlines from multiple regions, analyzes their emotional tone using an LLM, selects musical archetypes, and generates unique ambient music — all running autonomously on a Raspberry Pi.
+
 ---
 
-## Project structure
+## Table of Contents
+
+- [How It Works](#how-it-works)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Hardware Testing](#hardware-testing)
+- [Services Installation](#services-installation)
+- [WiFi Manager](#wifi-manager)
+- [Web Dashboard](#web-dashboard)
+- [Configuration Reference](#configuration-reference)
+- [Hardware Setup](#hardware-setup)
+- [Project Structure](#project-structure)
+- [License](#license)
+
+---
+
+## How It Works
+
+```mermaid
+flowchart LR
+    subgraph Fetch
+        A[NewsAPI] --> B[Headlines<br/>EN/DE/FR/ES]
+    end
+    
+    subgraph Analyze
+        B --> C[Llama 3 70B<br/>via Replicate]
+        C --> D[Mood Metrics<br/>valence/tension/hope/energy]
+    end
+    
+    subgraph Generate
+        D --> E[Archetype<br/>Selection]
+        E --> F[Prompt<br/>Builder]
+        F --> G[MusicGen<br/>via Replicate]
+    end
+    
+    subgraph Play
+        G --> H[30s WAV]
+        H --> I[Pi Speaker]
+    end
+```
+
+### Pipeline Stages
+
+| Stage | Module | Description |
+|-------|--------|-------------|
+| **1. Fetch** | `lib/news_fetcher.py` | Fetches headlines from NewsAPI in 4 languages |
+| **2. Analyze** | `lib/llm_analyzer.py` | LLM extracts emotional dimensions: valence (-1 to +1), tension, hope, energy |
+| **3. Select** | `lib/archetype_selector.py` | Rule-based scoring matches mood to 6 musical archetypes |
+| **4. Build** | `lib/music_prompt_builder.py` | Constructs MusicGen prompt with structure + color + daily variety |
+| **5. Generate** | `lib/music_generator.py` | Calls MusicGen stereo-melody-large via Replicate |
+| **6. Process** | `lib/music_post_processor.py` | Applies fade-in/fade-out |
+| **7. Play** | `lib/hardware_player.py` | GPIO buttons, LED feedback, radar motion detection |
+
+---
+
+## Prerequisites
+
+### Hardware
+
+> [!NOTE]
+> Hardware details TBD — Custom HAT design documentation coming soon.
+
+<!-- TODO: Add hardware list, circuit diagram, BOM -->
+
+### API Accounts
+
+You'll need accounts with these services:
+
+| Service | Purpose | Cost |
+|---------|---------|------|
+| [NewsAPI](https://newsapi.org/account) | Fetch world news headlines | Free tier available |
+| [Replicate](https://replicate.com/account) | Run LLM + MusicGen models | Pay-per-use (~$0.01/generation) |
+| [Dropbox](https://www.dropbox.com/developers) | Backup generated music (optional) | Free |
+
+---
+
+## Installation
+
+### Step 1: Set Pi Date/Time
+
+First, verify your Pi's date is correct:
+
+```bash
+date
+```
+
+If incorrect, fix via `raspi-config`:
+
+```bash
+sudo raspi-config
+```
+
+| Step | View |
+|------|------|
+| Select "Localisation Options" → ENTER | ![raspi-config step 1](assets/rpi-config-date-1.png) |
+| Select "Timezone" → ENTER | ![raspi-config step 2](assets/rpi-config-date-2.png) |
+| Select your region | ![raspi-config step 3](assets/rpi-config-date-3.png) |
+
+Tab to `<Finish>` and reboot:
+
+```bash
+sudo reboot
+```
+
+### Step 2: Clone & Install Dependencies
+
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/current_state.git
+cd current_state
+
+# Install Python dependencies
+uv sync
+```
+
+> [!TIP]
+> If `uv` is not installed, see [Manual Setup Instructions](#manual-setup-instructions) at the bottom.
+
+### Step 3: Configure Environment Variables
+
+```bash
+cp .env.template .env
+nano .env
+```
+
+Edit the following values:
+
+#### `NEWS_API_KEY`
+
+1. Create account: https://newsapi.org/account
+2. Generate API key
+3. Paste into `.env`:
+   ```
+   NEWS_API_KEY="your_key_here"
+   ```
+
+#### `REPLICATE_API_TOKEN`
+
+1. Create account: https://replicate.com/account
+2. Set up billing: https://replicate.com/account/billing
+   > Cost is minimal (~$0.01 per generation, runs once daily)
+3. Generate token: https://replicate.com/account/api-tokens
+4. Paste into `.env`:
+   ```
+   REPLICATE_API_TOKEN="your_token_here"
+   ```
+
+#### Dropbox Backup (Optional)
+
+If you want automatic cloud backup of generated music:
+
+```
+DROPBOX_CLIENT_ID="your_client_id"
+DROPBOX_CLIENT_SECRET="your_client_secret"
+DROPBOX_REFRESH_TOKEN="your_refresh_token"
+```
+
+Also enable in `settings.json`:
+```json
+{
+  "backup": {
+    "generation_results_to_dropbox": true
+  }
+}
+```
+
+---
+
+## Hardware Testing
+
+Before installing services, test each component individually.
+
+### Test GPIO Buttons & LEDs
+
+```bash
+uv run python tests/01_test_IOs.py
+```
+
+This tests:
+- Play/Pause button (GPIO 22)
+- Stop button (GPIO 27)
+- Full Cycle button (GPIO 17)
+- Player LED (GPIO 25)
+- Radar LED (GPIO 23)
+
+### Test Radar Detection
+
+First, configure your radar model in `settings.json`:
+
+```json
+{
+  "inputPins": {
+    "radarModel": "RCWL-0516",
+    "radarPin": 16,
+    "radarEnablePin": 6
+  }
+}
+```
+
+| Setting | RCWL-0516 | RD-03D |
+|---------|-----------|--------|
+| Interface | GPIO | Serial (UART) |
+| Detection | Presence | Movement (Doppler) |
+| Range config | N/A | `radarMaxRangeMeters` |
+
+Then test:
+
+```bash
+# For RCWL-0516 (GPIO-based)
+uv run python tests/02_test_event_radar.py
+
+# For RD-03D (Serial-based)
+uv run python tests/02_test_serial_radar.py
+```
+
+#### Radar Behavior
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `motionTriggeredPlaybackDurationSec` | 300 | Auto-stop after 5 minutes |
+| `cooldownAfterUserActionSec` | 60 | Ignore motion for 60s after user pause/stop |
+| `radarMaxRangeMeters` | 2.5 | Detection range (RD-03D only) |
+
+### Test Audio Output
+
+```bash
+# Play keep-alive tone
+aplay keep_audio_ch_active.wav
+```
+
+### Test Full Pipeline
+
+```bash
+# Generate music (no playback)
+uv run python main.py --fetch true --play false
+```
+
+Check `music_generated/` for the output WAV file.
+
+### Test Hardware Player
+
+```bash
+# Interactive mode (keyboard controls)
+uv run python run_player.py
+
+# Daemon mode (GPIO only)
+uv run python run_player.py --daemon
+```
+
+Controls:
+- `P` — Play/Pause
+- `S` — Stop
+- `Q` — Quit
+
+---
+
+## Services Installation
+
+Once hardware testing passes, install the services:
+
+### Check Current Status
+
+```bash
+./services/00_status.sh
+```
+
+### Install All Services
+
+```bash
+./services/01_install_and_start_services.sh
+```
+
+This installs:
+- **music-player.service** — Plays generated music, handles GPIO buttons & radar
+- **full-cycle-btn.service** — GPIO17 button triggers full news→music pipeline
+- **process-monitor-web.service** — Web dashboard on port 7070
+- **nginx** — Reverse proxy for port 80 access
+- **Cron jobs** — Daily generation (3:00 AM) and backup (2:40 AM)
+
+### Verify Installation
+
+```bash
+./services/00_status.sh
+```
+
+Expected output:
+```
+User Services
+
+  ● full-cycle-btn.service
+  ● music-player.service
+  ● process-monitor-web.service
+
+nginx
+
+  ● nginx
+  ● config installed
+
+Cron Jobs
+
+  ● generate (3:00 AM)
+  ● backup (2:40 AM)
+```
+
+### Uninstall Services
+
+```bash
+./services/04_stop_and_uninstall_services.sh
+```
+
+### Useful Commands
+
+```bash
+# Check service status
+systemctl --user status music-player.service
+
+# View logs
+journalctl --user -u music-player.service -f
+
+# List cron jobs
+crontab -l
+```
+
+---
+
+## WiFi Manager
+
+For headless WiFi configuration, install the [rpi-wifi-button](https://github.com/YOUR_USERNAME/rpi-wifi-button) project.
+
+### Configuration for This Project
+
+When installing rpi-wifi-button, use these settings:
+
+| Setting | Value |
+|---------|-------|
+| Button GPIO | **26** (NET_RESET_BTN) |
+| LED GPIO | **23** (shared with Radar LED) |
+
+### States
+
+<!-- TODO: Add screenshots/GIFs -->
+
+| State | LED Behavior | Description |
+|-------|--------------|-------------|
+| Not Connected | <!-- GIF --> | Breathing LED |
+| Reconnecting | <!-- GIF --> | Fast blink |
+| Connected | <!-- GIF --> | Solid then off |
+
+---
+
+## Web Dashboard
+
+A TUI-style web interface for monitoring the pipeline from any device on your network.
+
+![Web Dashboard](assets/web-monitor-preview-2.png)
+
+### Features
+
+| Tab | Description |
+|-----|-------------|
+| **News** | Today's headlines grouped by region |
+| **Pipeline** | Interactive visualization: news → archetypes → prompt |
+| **Logs** | Live streaming logs (like `tail -f` in browser) |
+
+### Access
+
+| Method | URL |
+|--------|-----|
+| Via nginx | `http://aimusicplayer.local` |
+| Direct | `http://aimusicplayer.local:7070` |
+
+📖 **Full documentation:** [`web/README.md`](web/README.md)
+
+---
+
+## Configuration Reference
+
+### `settings.json`
+
+```json
+{
+  "inputPins": {
+    "playPauseBtnPin": 22,
+    "stopBtnPin": 27,
+    "runFullCycleBtnPin": 17,
+    "radarEnablePin": 6,
+    "radarModel": "RCWL-0516",
+    "radarPin": 16
+  },
+  "outputPins": {
+    "playerStateLEDPin": 25,
+    "radarStateLEDPin": 23
+  },
+  "hwFeatures": {
+    "btnDebounceTimeMs": 0.05,
+    "maxLEDBrightness": 25,
+    "pauseBreathingFreq": 0.25,
+    "motionTriggeredPlaybackDurationSec": 300,
+    "cooldownAfterUserActionSec": 60
+  },
+  "music": {
+    "fadeInDurationSec": 1.5,
+    "fadeOutDurationSec": 2.0
+  },
+  "backup": {
+    "generation_results_to_dropbox": false
+  }
+}
+```
+
+### `news_config.json`
+
+```json
+{
+  "regions": {
+    "English_Speaking": { "language": "en" },
+    "German_Speaking": { "language": "de" },
+    "French_Speaking": { "language": "fr" },
+    "Spanish_Speaking": { "language": "es" }
+  }
+}
+```
+
+---
+
+## Hardware Setup
+
+### Shutdown & Wake Button (GPIO3)
+
+Enable hardware shutdown/wake using GPIO3 button.
+
+#### Step 1: Disable I2C
+
+> [!WARNING]
+> GPIO3 is shared with I2C SCL. You must disable I2C to use it for shutdown.
+
+```bash
+sudo raspi-config
+```
+
+| Step | View |
+|------|------|
+| Select *Interface Options* | ![Step 1](assets/disableI2c_step1.png) |
+| Select *I2C* | ![Step 2](assets/disableI2c_step2.png) |
+| Select *No* to disable | ![Step 3](assets/disableI2c_step3.png) |
+| *Finish* and reboot | ![Step 4](assets/disableI2c_step4.png) |
+
+#### Step 2: Enable gpio-shutdown Overlay
+
+```bash
+sudo nano /boot/firmware/config.txt
+```
+
+Add after the overlays comment section:
+
+```ini
+dtoverlay=gpio-shutdown
+```
+
+Reboot and test:
+- Press GPIO3 button → Pi shuts down
+- Press again → Pi wakes up
+
+---
+
+## Project Structure
 
 ```txt
 ├── README.md
@@ -75,33 +536,18 @@
 
 ---
 
-## Pi Setup
+## License
 
-### Setup your pi time correct to region
-
-First check your pi's current date and time 
-
-```bash
-date
-```
-
-If it is off, you can fix it via `raspi-config`
-
-```bash
-sudo raspi-config
-```
-
-| Steps | View |
-| --- | --- |
-| Select "Localisation Options" and hit ENTER | ![alt text](assets/rpi-config-date-1.png) |
-| Select "Timezone" and hit ENTER | ![alt text](assets/rpi-config-date-2.png) |
-| Select your region and follow the prompts | ![alt text](assets/rpi-config-date-3.png) |
-
-Once happy, 'tab' to `<Finish>` and restart (`sudo reboot`)
+[Unlicense](LICENSE)
 
 ---
 
-### Install Python Build Dependencies
+## Manual Setup Instructions
+
+<details>
+<summary><strong>Click to expand</strong> — For reference when creating setup.sh</summary>
+
+### Install System Dependencies
 
 ```bash
 sudo apt update -y
@@ -111,7 +557,7 @@ sudo apt install build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-de
 sudo apt install python3-dev -y
 ```
 
-### Install Audio deps
+### Install Audio Dependencies
 
 ```bash
 sudo apt-get install libportaudio2 -y
@@ -123,249 +569,80 @@ sudo apt-get install libportaudio2 -y
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### GPIO permissions
+### GPIO Permissions
 
 ```bash
 sudo usermod -a -G gpio $USER
 sudo reboot
 ```
 
----
-
-## Project setup
-
-1. git clone
-2. `uv sync`
-3. sometimes may need: `uv pip install RPi.GPIO --break-system-packages` from project dir...
-
-### Create necessary API keys and Access Tokens
+### Project Setup
 
 ```bash
-cp .env.template .env
+git clone https://github.com/YOUR_USERNAME/current_state.git
+cd current_state
+uv sync
 ```
 
-1. Update `NEWS_API_KEY`:
-   1. It is used to fetch news from various regions of the world
-   2. Create an account here: https://newsapi.org/account
-   3. Then generate an API KEY
-   4. Replace `"REPLACE_WITH_YOUR_NEWS_API_KEY_HERE_FROM"` with your NEW KEY. 
-2. Update `REPLICATE_API_TOKEN`:
-   1. We are using https://replicate.com/ to use a Open Source LLM (meta/meta-llama-3-70b-instruct) and an Open Source music gen model (meta/musicgen)
-   2. Create an account here: https://replicate.com/account
-   3. Setup billing here: https://replicate.com/account/billing (_Yes you would need a credit card but the cost is in pennies and the models only run once per day, once the system is setup and is up and running_)
-   4. And generate an API KEY here: https://replicate.com/account/api-tokens
-   5. Replace `"REPLACE_WITH_YOUR_REPLICATE_API_TOKEN_HERE"` with your NEW KEY. 
-   6. (Optional) If you are curious, you can check out and test the models (for fun), from here (https://replicate.com/meta/meta-llama-3-70b-instruct) and here (https://replicate.com/meta/musicgen) 
-3. Update Dropbox Backup: TBD
-
----
-
-## Run
-
-### Test the Song Generator
-
+If RPi.GPIO fails:
 ```bash
-uv run python main.py --fetch true --play false
+uv pip install RPi.GPIO --break-system-packages
 ```
 
-### Test the Hardware Player
+### Manual Service Installation (Legacy)
+
+If not using the install script:
 
 ```bash
-uv run python run_player.py
-```
-
-Or in daemon mode (no keyboard interaction):
-
-```bash
-uv run python run_player.py --daemon
-```
-
----
-
-## Run as Services (systemd)
-
-### Music Player Service
-
-```bash
+# Music Player
 cp services/music-player.service ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable music-player.service
 systemctl --user start music-player.service
-```
 
-Check status:
-```bash
-systemctl --user status music-player.service
-```
-
-Check logs:
-```bash
-tail -f logs/player_service.log
-```
-
-### Full Cycle Button Service
-
-```bash
+# Full Cycle Button
 cp services/full-cycle-btn.service ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable full-cycle-btn.service
 systemctl --user start full-cycle-btn.service
-```
 
-Check status:
-```bash
-systemctl --user status full-cycle-btn.service
-```
-
-### Enable Linger (services run without login)
-
-```bash
+# Enable linger
 sudo loginctl enable-linger pi
 ```
 
----
-
-## Web Dashboard (Process Monitor)
-
-A TUI-style web interface for monitoring the pipeline from any device on your network.
-
-![alt text](assets/web-monitor-preview-2.png)
-
-**Features:**
-- **News Tab** — Today's headlines grouped by region
-- **Pipeline Tab** — Interactive visualization of news → archetypes → music prompt
-- **Logs Tab** — Live streaming logs (like `tail -f` in your browser)
-
-**Quick access:** `http://aimusicplayer.local` (with nginx) or `http://aimusicplayer.local:7070`
-
-📖 **Full documentation:** [`web/README.md`](web/README.md) — covers architecture, how each tab works, deployment options, and troubleshooting.
-
----
-
-## Scheduled Tasks (cron)
-
-### Daily song generation
-
-```bash
-crontab -e
-
-# Add:
-0 3 * * * cd /home/pi/current_state && /home/pi/.local/bin/uv run python main.py --fetch true --play false >> /home/pi/current_state/logs/cron.log 2>&1
-```
-
-### Backup generated music files
+### Manual Cron Setup (Legacy)
 
 ```bash
 crontab -e
 
 # Add:
 40 2 * * * cd /home/pi/current_state && /home/pi/.local/bin/uv run python tools/bkp_gen_music.py >> /home/pi/current_state/logs/backup.log 2>&1
+0 3 * * * cd /home/pi/current_state && /home/pi/.local/bin/uv run python main.py --fetch true --play false >> /home/pi/current_state/logs/cron.log 2>&1
 ```
 
-**Why this order?**
-
-- `2:40 AM` — Backup runs: syncs existing files to Dropbox, cleans up if > `100MB`
-- `3:00 AM` — Generator runs: creates new song in clean folder
-
-This ensures all old songs are backed up before cleanup, and the new song has space.
-
-List all cron jobs:
-```bash
-crontab -l
-```
+</details>
 
 ---
 
-## Radar Configuration
+## TODO
 
-The player supports two radar models for motion-triggered playback:
+- WIP: Main README Docu ... 🟠
+- Canvas to show in tablet landscape mode ...
+- Serial Radar detection algo improve (beam and enter and exit based)
+- Setup scripts:
+  - Main dep install scripts
+- Other region of news
 
-| Setting | RCWL-0516 | RD-03D |
-|---------|-----------|--------|
-| Interface | GPIO | Serial |
-| Detection | Presence | Movement (Doppler) |
-| Range config | N/A | `radarMaxRangeMeters` |
+- Hardware Update Steps: 
+  - Speaker Switch switcher 
+  - Update circuit 
+    - Also add an extra (3D) side Fan for PI
+  - Place new order for SLA prints 
+  - Print PLA locally 
+  - Assemble new one ... 
 
-Configure in `settings.json`:
-```json
-{
-  "inputPins": {
-    "radarModel": "RCWL-0516",
-    "radarPin": 16,
-    "radarEnablePin": 6
-  },
-  "hwFeatures": {
-    "motionTriggeredPlaybackDurationSec": 1800,
-    "cooldownAfterUserActionSec": 60,
-    "radarMaxRangeMeters": 2.5,
-    "radarTargetTimeoutSec": 1.0
-  }
-}
-```
+**Future**:
+- More archetypes
+- Embedding models if needed
+- Data viz after a period of time on the world sentiment shifts
 
-**Behavior:**
-- Radar switch ON (GPIO6) → Motion triggers playback
-- Auto-stop after configured duration (default 30 min)
-- Cooldown after user pause/stop (default 60s)
-- User can always pause/stop with button or keyboard
-
----
-
-## Hardware Setup
-
-### Setup Button based shutdown and wake-up
-
-#### Disable I2C
-
->[!Warning]
-> For this step we need to disable `I2C` as we will be using `GPIO3` (based on Kernel) which is the I2C's `SCL` line using `sudo raspi-config`
-
-| Steps | View |
-| --- | --- |
-| 1. Open raspi-config & Select *Interface Options* | ![alt text](assets/disableI2c_step1.png) |
-| 2. Select I2C Option | ![alt text](assets/disableI2c_step2.png) |
-| 3. Disable it (Select *No*) | ![alt text](assets/disableI2c_step3.png) |
-| 4. Then hit *Finish* and Reboot | ![alt text](assets/disableI2c_step4.png) |
-
-### Update dtoverlay to allow button ctrl for boot management
-
-Add the following in the `/boot/firmware/config.txt`
-
-```bash
-sudo nano /boot/firmware/config.txt
-```
-
-Then, after these two lines ...
-
-```bash
-# ...
-# Additional overlays and parameters are documented
-# /boot/firmware/overlays/README
-# ...
-```
-
-Add ...
-
-```bash
-dtoverlay=gpio-shutdown
-```
-
-So it now looks like this:
-
-```bash
-# ...
-# Additional overlays and parameters are documented
-# /boot/firmware/overlays/README
-dtoverlay=gpio-shutdown
-# ...
-```
-
-Reboot & Test. 
-
-Now after pi boots, if you press the GPIO3 button, it will go to sleep and if you press again GPIO 3, it will boot back up.  
-
----
-
-## LICENSE
-
-[unlicense](LICENSE)
