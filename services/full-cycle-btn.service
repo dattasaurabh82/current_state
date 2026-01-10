@@ -4,8 +4,8 @@ After=default.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/pi/current_state
-ExecStart=/home/pi/.local/bin/uv run python run_full_cycle_btn.py
+WorkingDirectory=__PROJECT_DIR__
+ExecStart=__UV_PATH__ run python run_full_cycle_btn.py
 Restart=on-failure
 RestartSec=5
 
