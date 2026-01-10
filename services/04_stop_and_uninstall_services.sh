@@ -226,9 +226,9 @@ fi
 
 echo ""
 echo -e "╔═══════════════════════════════╦═══════════════════════════════╗"
-echo -e "║  music-player      $STATUS_MUSIC  ║  full-cycle-btn    $STATUS_BTN  ║"
+echo -e "║  music-player      $STATUS_MUSIC    ║  full-cycle-btn    $STATUS_BTN      ║"
 echo -e "╠═══════════════════════════════╬═══════════════════════════════╣"
-echo -e "║  web-dashboard     $STATUS_WEB  ║  nginx-config      $STATUS_NGINX  ║"
+echo -e "║  web-dashboard     $STATUS_WEB    ║  nginx-config      $STATUS_NGINX      ║"
 echo -e "╚═══════════════════════════════╩═══════════════════════════════╝"
 echo ""
 
