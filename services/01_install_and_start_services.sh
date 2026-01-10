@@ -43,8 +43,8 @@ NGINX_CONFIG_NAME="process-monitor-web"
 
 # Service files (relative to SCRIPT_DIR)
 SERVICE_FILES=(
-    "music-player.service"
     "full-cycle-btn.service"
+    "music-player.service"
     "process-monitor-web.service"
 )
 NGINX_TEMPLATE="process-monitor-web"
@@ -245,9 +245,9 @@ STATUS_NGINX=$(get_nginx_status)
 
 echo ""
 echo -e "╔═══════════════════════════════╦═══════════════════════════════╗"
-echo -e "║  music-player      $STATUS_MUSIC  ║  full-cycle-btn    $STATUS_BTN  ║"
+echo -e "║  music-player      $STATUS_MUSIC   ║  full-cycle-btn    $STATUS_BTN    ║"
 echo -e "╠═══════════════════════════════╬═══════════════════════════════╣"
-echo -e "║  web-dashboard     $STATUS_WEB  ║  nginx             $STATUS_NGINX  ║"
+echo -e "║  web-dashboard     $STATUS_WEB   ║  nginx             $STATUS_NGINX    ║"
 echo -e "╚═══════════════════════════════╩═══════════════════════════════╝"
 echo ""
 
