@@ -1,11 +1,11 @@
 [Unit]
-Description=Web Dashboard for full process monitor of the project AI music generation project
+Description=Web Dashboard for AI Music Generation Pipeline
 After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/pi/current_state
-ExecStart=/home/pi/.local/bin/uv run uvicorn web.app:app --host 0.0.0.0 --port 7070
+WorkingDirectory=__PROJECT_DIR__
+ExecStart=__UV_PATH__ run uvicorn web.app:app --host 0.0.0.0 --port __WEB_PORT__
 Restart=on-failure
 RestartSec=5
 
