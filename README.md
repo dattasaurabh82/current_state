@@ -4,11 +4,11 @@
 
 - WIP: Main README Docu ... 🟠
 - Serial Radar detection algo improve (beam and enter and exit based)
-- Setup script 🔴
+- Setup script 
 - Along-side drop box do a freesound.org upload ... 
 - Other region of news
 
-- Hardware Update Steps: 🔴
+- Hardware Update Steps: 
   - Speaker Switch switcher 
   - Update circuit 
     - Also add an extra (3D) side Fan for PI
