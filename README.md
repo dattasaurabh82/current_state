@@ -3,10 +3,10 @@
 ## ToDo
 
 - WIP: Main README Docu ... 🟠
-- Web ui Monitor 🟠
+- Serial Radar detection algo improve (beam and enter and exit based)
 - Setup script 🔴
 - Along-side drop box do a freesound.org upload ... 
-- Other region of news 
+- Other region of news
 
 - Hardware Update Steps: 🔴
   - Speaker Switch switcher 
