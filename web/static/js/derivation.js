@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
         red: '#ff5555',
         yellow: '#f1fa8c',
         
-        // Node backgrounds - transparent
-        nodeBg: 'transparent',
-        nodeHighlight: 'rgba(68, 71, 90, 0.5)',
+        // Node backgrounds - solid black
+        nodeBg: '#0a0a0a',
+        nodeHighlight: '#1a1a1a',
         
         // Edges
         edge: '#44475a',
@@ -311,6 +311,9 @@ document.addEventListener('DOMContentLoaded', function() {
             align: 'left',
             title: `DOMINANT THEMES\n────────────────────\nExtracted from news analysis:\n• ${themes.join('\n• ')}`,
         }));
+        
+        // Edge: Structured Output → Themes
+        edges.push(createEdge('structured_output', 'themes', COLORS.pink, { arrows: true, opacity: 0.5 }));
         
         // ---------------------------------------------------------------------
         // COLUMN 4 BOTTOM: DATE SEED

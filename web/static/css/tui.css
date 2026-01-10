@@ -1218,21 +1218,22 @@ audio::-webkit-media-controls-time-remaining-display {
 @media (max-width: 900px) {
     .pipeline-main-grid {
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto auto auto;
+        grid-template-rows: auto auto auto auto;
         grid-template-areas:
             "step1"
             "step2"
             "step3"
-            "audio"
-            "viz";
+            "audio";
+        overflow-y: auto;
     }
     
     .cell-audio {
         max-height: 300px;
     }
     
+    /* Hide viz canvas on mobile */
     .cell-viz {
-        min-height: 400px;
+        display: none;
     }
 }
 
@@ -1317,15 +1318,17 @@ audio::-webkit-media-controls-time-remaining-display {
    ============================================================================= */
 
 .vis-tooltip {
-    background-color: rgba(0, 0, 0, 0.9) !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
     border: none !important;
-    border-radius: var(--radius-sm) !important;
-    padding: var(--space-md) !important;
+    border-left: 2px solid rgba(255, 255, 255, 0.6) !important;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+    padding: var(--space-md) var(--space-lg) !important;
     font-family: var(--font-mono) !important;
     font-size: var(--font-size-xs) !important;
     color: var(--text-primary) !important;
     white-space: pre-line !important;
-    max-width: 320px !important;
-    line-height: 1.5 !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+    max-width: 350px !important;
+    line-height: 1.7 !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+    letter-spacing: 0.3px !important;
 }
