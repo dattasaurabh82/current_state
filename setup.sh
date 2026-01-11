@@ -27,6 +27,58 @@ INSTALL_DIR="$HOME/$PROJECT_NAME"
 HOSTNAME="aimusicplayer"
 
 # =============================================================================
+# BOOTSTRAP (handles curl | bash)
+# =============================================================================
+
+bootstrap_if_needed() {
+    # Check if we're running from within the repo (local mode)
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}" 2>/dev/null)" && pwd 2>/dev/null)" || script_dir=""
+    
+    # If we can't determine script_dir (piped) or key files don't exist, we need to bootstrap
+    if [ -z "$script_dir" ] || [ ! -f "$script_dir/pyproject.toml" ]; then
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  World Theme Music Player - Bootstrap Installer"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        
+        # Check for git
+        if ! command -v git &> /dev/null; then
+            echo "ERROR: git is required but not installed."
+            echo "Install with: sudo apt-get install git"
+            exit 1
+        fi
+        
+        # Check if target directory already exists
+        if [ -d "$INSTALL_DIR" ]; then
+            echo "Directory $INSTALL_DIR already exists."
+            echo "Updating and running installer..."
+            cd "$INSTALL_DIR"
+            git pull origin main || { echo "Git pull failed"; exit 1; }
+        else
+            echo "Cloning repository to $INSTALL_DIR ..."
+            git clone "$REPO_URL" "$INSTALL_DIR" || { echo "Git clone failed"; exit 1; }
+            cd "$INSTALL_DIR"
+        fi
+        
+        echo ""
+        echo "Running installer from cloned repository..."
+        echo ""
+        
+        # Execute the local setup.sh (now we're in the repo)
+        exec bash "$INSTALL_DIR/setup.sh"
+    fi
+}
+
+# Run bootstrap check first
+bootstrap_if_needed
+
+# Restore stdin for interactive prompts (only runs when executing locally after bootstrap)
+if [ -t 0 ] || [ -e /dev/tty ]; then
+    exec < /dev/tty
+fi
+
+# =============================================================================
 # COLORS
 # =============================================================================
 
@@ -117,11 +169,6 @@ detect_context() {
         PROJECT_DIR="$INSTALL_DIR"
     fi
 }
-
-# Restore stdin for interactive prompts (needed when piped via curl | bash)
-if [ -t 0 ] || [ -e /dev/tty ]; then
-    exec < /dev/tty
-fi
 
 # =============================================================================
 # SYSTEM CHECKS
