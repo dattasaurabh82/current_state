@@ -118,6 +118,11 @@ detect_context() {
     fi
 }
 
+# Restore stdin for interactive prompts (needed when piped via curl | bash)
+if [ -t 0 ] || [ -e /dev/tty ]; then
+    exec < /dev/tty
+fi
+
 # =============================================================================
 # SYSTEM CHECKS
 # =============================================================================
@@ -125,9 +130,10 @@ detect_context() {
 check_raspberry_pi() {
     print_step "Checking system..."
     
-    if [ -f /proc/device-tree/model ]; then
-        MODEL=$(cat /proc/device-tree/model)
-        if [[ "$MODEL" == *"Raspberry Pi"* ]]; then
+    # Use /proc/cpuinfo instead of /proc/device-tree/model to avoid null byte issues
+    if [ -f /proc/cpuinfo ]; then
+        if grep -q "Raspberry Pi" /proc/cpuinfo 2>/dev/null; then
+            MODEL=$(grep "Model" /proc/cpuinfo | cut -d: -f2 | xargs)
             print_success "Running on: $MODEL"
             return 0
         fi
@@ -517,7 +523,7 @@ install_python_deps() {
     print_success "Python dependencies installed"
     
     # Check if RPi.GPIO is needed and install if missing
-    if [ -f /proc/device-tree/model ]; then
+    if grep -q "Raspberry Pi" /proc/cpuinfo 2>/dev/null; then
         print_step "Checking RPi.GPIO..."
         if ! $UV_CMD run python -c "import RPi.GPIO" 2>/dev/null; then
             print_warning "RPi.GPIO not installed, attempting installation..."
