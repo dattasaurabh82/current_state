@@ -15,6 +15,10 @@
 #
 # =============================================================================
 
+# Wrap entire script in braces to ensure bash reads it completely before executing
+# This prevents "curl: (23) Failure writing output" when piped via curl | bash
+{
+
 set -e  # Exit on error
 
 # =============================================================================
@@ -758,3 +762,5 @@ main() {
 
 # Run main function
 main "$@"
+
+} # End of script wrapper - ensures bash reads entire script before executing
