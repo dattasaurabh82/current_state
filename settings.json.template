@@ -27,6 +27,6 @@
         "fadeOutDurationSec":2.0
     },
     "backup":{
-        "generation_results_to_dropbox": true
+        "generation_results_to_dropbox": false
     }
 }
