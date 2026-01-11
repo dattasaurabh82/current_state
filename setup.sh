@@ -244,6 +244,13 @@ sync_datetime() {
 configure_hostname() {
     print_header "CONFIGURING HOSTNAME"
     
+    # Fix cloud-init overwriting hostname on boot
+    if [ -d /etc/cloud/cloud.cfg.d ]; then
+        print_step "Configuring cloud-init to preserve hostname..."
+        echo "preserve_hostname: true" | sudo tee /etc/cloud/cloud.cfg.d/99_preserve_hostname.cfg > /dev/null
+        print_success "Cloud-init hostname preservation enabled"
+    fi
+    
     CURRENT_HOSTNAME=$(hostname)
     
     if [ "$CURRENT_HOSTNAME" = "$HOSTNAME" ]; then
