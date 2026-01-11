@@ -206,6 +206,15 @@ configure_hostname() {
     fi
 }
 
+configure_autologin() {
+    print_header "CONFIGURING AUTO-LOGIN"
+    
+    print_step "Enabling console auto-login..."
+    sudo raspi-config nonint do_boot_behaviour B2
+    print_success "Auto-login enabled for user: $USER"
+    REBOOT_REQUIRED=true
+}
+
 configure_interfaces() {
     print_header "CONFIGURING HARDWARE INTERFACES"
     
@@ -611,6 +620,7 @@ main() {
     echo ""
     echo "  And configure:"
     echo "    • Hostname (${HOSTNAME}.local)"
+    echo "    • Console auto-login"
     echo "    • Hardware interfaces (I2C, Serial)"
     echo "    • GPIO shutdown button (GPIO3)"
     echo "    • GPIO permissions"
@@ -638,8 +648,9 @@ main() {
     clone_or_update_repo
     install_python_deps
     
-    # Configure system (hostname, interfaces, GPIO shutdown)
+    # Configure system (hostname, autologin, interfaces, GPIO shutdown)
     configure_hostname
+    configure_autologin
     configure_interfaces
     configure_gpio_shutdown
     
@@ -663,6 +674,7 @@ main() {
     echo -e "  ${GREEN}✓${NC} GPIO permissions configured"
     echo -e "  ${GREEN}✓${NC} Python dependencies installed"
     echo -e "  ${GREEN}✓${NC} Hostname set to: ${HOSTNAME}"
+    echo -e "  ${GREEN}✓${NC} Console auto-login enabled"
     echo -e "  ${GREEN}✓${NC} I2C disabled (GPIO3 available for power button)"
     echo -e "  ${GREEN}✓${NC} Serial enabled (for RD-03D radar)"
     echo -e "  ${GREEN}✓${NC} GPIO shutdown overlay configured"

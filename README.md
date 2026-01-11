@@ -331,6 +331,7 @@ cd ~/current_state
 | **Clone Repository** | Clones project to `~/current_state` (or pulls latest if exists) |
 | **Python Dependencies** | Runs `uv sync` to install all Python packages |
 | **Hostname** | Sets hostname to `aimusicplayer` (access via `aimusicplayer.local`) |
+| **Console Auto-login** | Enables auto-login for user services to start on boot |
 | **I2C Disable** | Disables I2C to free GPIO3 for power button |
 | **Serial Enable** | Enables serial hardware for RD-03D radar, disables serial console |
 | **GPIO Shutdown** | Adds `dtoverlay=gpio-shutdown` to config.txt for power button |
