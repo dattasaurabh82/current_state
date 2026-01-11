@@ -153,6 +153,32 @@ check_internet() {
     fi
 }
 
+sync_datetime() {
+    print_header "SYNCING DATE/TIME"
+    
+    print_step "Enabling NTP time synchronization..."
+    sudo timedatectl set-ntp true
+    print_success "NTP enabled"
+    
+    print_step "Restarting time sync service..."
+    sudo systemctl restart systemd-timesyncd
+    
+    # Wait a moment for sync
+    sleep 2
+    
+    # Show current time
+    CURRENT_TIME=$(date)
+    print_success "System time: $CURRENT_TIME"
+    
+    # Verify sync status
+    if timedatectl show --property=NTPSynchronized --value | grep -q "yes"; then
+        print_success "Time synchronized with NTP server"
+    else
+        print_warning "NTP sync pending (may take a moment)"
+        print_info "Time will sync automatically in the background"
+    fi
+}
+
 # =============================================================================
 # INSTALLATION FUNCTIONS
 # =============================================================================
@@ -403,6 +429,9 @@ main() {
     check_raspberry_pi
     check_internet
     
+    # Sync time first (requires internet)
+    sync_datetime
+    
     # Run installation steps
     install_system_deps
     install_audio_deps
@@ -419,6 +448,7 @@ main() {
     print_header "SETUP COMPLETE"
     
     echo ""
+    echo -e "  ${GREEN}✓${NC} Date/time synchronized"
     echo -e "  ${GREEN}✓${NC} System dependencies installed"
     echo -e "  ${GREEN}✓${NC} Audio dependencies installed"
     echo -e "  ${GREEN}✓${NC} UV package manager installed"

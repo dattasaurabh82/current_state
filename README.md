@@ -30,13 +30,12 @@ With onboard hardware buttons, all functionalities can be triggered and controll
   - [API Accounts](#2-api-accounts)
 - [Summary of steps to take](#summary-of-steps-need-to-take-action)
   - [Step 1: Mandatory Update](#step-1-installation-and-basic-setup-mandatory-update)
-  - [Step 2: Set Pi's Date/Time](#step-2-installation-and-basic-setup-set-fix-pis-datetime)
-  - [Step 3: Configuration Reference](#step-3-installation-and-basic-setup-understand-the-configuration-reference)
-  - [Step 4: Run Setup Script](#step-4-run-setup-script)
-  - [Step 5: Hardware Testing](#step-5-hardware-testing)
-  - [Step 6: Installing WiFi Manager](#step-6-installing-wifi-manager)
-  - [Step 7: Test Full Pipeline](#step-7-test-full-pipeline)
-  - [Step 8: Services Installation](#step-8-services-installation)
+  - [Step 2: Configuration Reference](#step-2-installation-and-basic-setup-understand-the-configuration-reference)
+  - [Step 3: Run Setup Script](#step-3-run-setup-script)
+  - [Step 4: Hardware Testing](#step-4-hardware-testing)
+  - [Step 5: Installing WiFi Manager](#step-5-installing-wifi-manager)
+  - [Step 6: Test Full Pipeline](#step-6-test-full-pipeline)
+  - [Step 7: Services Installation](#step-7-services-installation)
 - [Web Dashboard](#web-dashboard)
 - [Project Structure](#project-structure)
 - [License](#license)
@@ -166,7 +165,7 @@ Before running the setup script, create accounts and gather these credentials:
 **NewsAPI notes:**
 - Uses the `/everything` endpoint to fetch recent articles
 - Free tier provides access to articles from the previous day
-- Our system makes only 4 requests daily (one per language: EN, DE, FR, ES), well under the 100/day limit
+- Once set to run autonomously, our system makes only 4 requests daily (one per language: EN, DE, FR, ES), well under the 100/day limit
 
 ---
 
@@ -192,35 +191,7 @@ After that, reboot.
 
 ---
 
-### Step 2: Installation and basic setup: Set (Fix) Pi's Date/Time
-
-First, verify your Pi's date is correct:
-
-```bash
-date
-```
-
-If incorrect, fix via `raspi-config`:
-
-```bash
-sudo raspi-config
-```
-
-| Step | View |
-|------|------|
-| Select "Localisation Options" → ENTER | ![raspi-config step 1](assets/rpi-config-date-1.png) |
-| Select "Timezone" → ENTER | ![raspi-config step 2](assets/rpi-config-date-2.png) |
-| Select your region | ![raspi-config step 3](assets/rpi-config-date-3.png) |
-
-Tab to `<Finish>` and reboot:
-
-```bash
-sudo reboot
-```
-
----
-
-### Step 3: Installation and basic setup: Understand the Configuration Reference
+### Step 2: Installation and basic setup: Understand the Configuration Reference
 
 > [!Note]
 > Familiarize yourself with the configuration files. Many of these will be prompted to you during running the helper setup script (below), but understanding them is also important later testing steps.
@@ -318,7 +289,7 @@ REPLICATE_API_TOKEN="your_replicate_token"
 
 ---
 
-### Step 4: Run Setup Script
+### Step 3: Run Setup Script
 
 The setup script automates the entire installation process.
 
@@ -348,6 +319,7 @@ cd ~/current_state
 | Step | Description |
 |------|-------------|
 | **System Check** | Verifies Raspberry Pi and internet connectivity |
+| **Date/Time Sync** | Enables NTP and syncs system clock automatically |
 | **System Dependencies** | Installs build tools, libraries (`build-essential`, `libssl-dev`, etc.) |
 | **Audio Dependencies** | Installs PortAudio (`libportaudio2`) |
 | **UV Package Manager** | Installs [UV](https://github.com/astral-sh/uv) for Python dependency management |
@@ -361,7 +333,7 @@ cd ~/current_state
 
 ---
 
-### Step 5: Hardware Testing
+### Step 4: Hardware Testing
 
 Before installing services, test each component individually to verify wiring and configuration.
 
@@ -464,14 +436,14 @@ aplay keep_audio_ch_active.wav
 
 ---
 
-### Step 6: Installing WiFi Manager
+### Step 5: Installing WiFi Manager
 
 For headless WiFi configuration without monitor/keyboard, install and configure this project:[rpi-wifi-configurator](https://github.com/dattasaurabh82/rpi-wifi-configurator).
 
 > [!IMPORTANT]
 > Install/enable/setup WiFi Manager **after** hardware testing!
 
-#### Step 6.1: Installing WiFi Manager: How it will Work
+#### Step 5.1: Installing WiFi Manager: How it will Work
 
 0. If PI, could not connect to WiFi, you will see the Status LED Blink ... or you can also remove the front panel to long press the network reset button 
 1. **Long press** the WiFi reset button (>4 sec)
@@ -489,7 +461,7 @@ For headless WiFi configuration without monitor/keyboard, install and configure 
 > [!Note]
 > You can checkout this project ([rpi-wifi-configurator](https://github.com/dattasaurabh82/rpi-wifi-configurator)) more in details to understand how it works.
 
-#### Step 6.2: Installing WiFi Manager: The actual Installation Process
+#### Step 5.2: Installing WiFi Manager: The actual Installation Process
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dattasaurabh82/rpi-wifi-configurator/main/install.sh | bash
@@ -512,7 +484,7 @@ During setup, enter these GPIO settings for this project, as below:
 | **FAST BLINK** | Quick on/off | AP mode active (ready for configuration) |
 | **SOLID → OFF** | 2 sec solid | Connection successful |
 
-#### Step 6.3: Stopping for Hardware Tests
+#### Step 5.3: Stopping for Hardware Tests
 
 If you are running hardware tests, stop the WiFi manager service to free up `GPIO 24` and `GPIO 26`
 
@@ -528,9 +500,9 @@ sudo systemctl start rpi-btn-wifi-manager.service
 
 ---
 
-### Step 7: Test Full Pipeline
+### Step 6: Test Full Pipeline
 
-#### Step 7.1: Test Full Pipeline: Generate music without playback to verify API connectivity
+#### Step 6.1: Test Full Pipeline: Generate music without playback to verify API connectivity
 
 > [!Warning]
 > For this to work properly make sure you have the `.env` file with correct settings (keys). As said before, you will be prompted to fill in the keys during installation. So there's some prep work but you can also always manually add them after you understand, from above, what is required in this `.env` file and why
@@ -546,12 +518,12 @@ uv run python main.py --fetch true --play false
 - Output music saved to `music_generated/world_theme_YYYY-MM-DD_HH-MM-SS.wav`
 - Other metadata, to be used by web-monitor (more on that later), are saved in `generation_results/`
 
-#### Step 7.2 (Optional): Test Full Pipeline: Test/Understand each part of news -> music strategy
+#### Step 6.2 (Optional): Test Full Pipeline: Test/Understand each part of news -> music strategy
 
 > [!Note]
 > You can also test individual parts to understand how the music gen prompt is created from news by following the guide  from [docs/MUSIC_PROMPT_GENERATION_PIPELINE.md](docs/MUSIC_PROMPT_GENERATION_PIPELINE.md)
 
-#### Step 7.3: Test Full Pipeline: Test Hardware Player
+#### Step 6.3: Test Full Pipeline: Test Hardware Player
 
 Interactive test with keyboard controls:
 
@@ -579,7 +551,7 @@ For daemon mode (no keyboard, GPIO buttons only):
 uv run python run_player.py --daemon
 ```
 
-#### Step 7.4: Test Full Pipeline: Re-enable WiFi Manager
+#### Step 6.4: Test Full Pipeline: Re-enable WiFi Manager
 
 After testing, restart the WiFi manager if you installed it and disable it for hardware testing, let's say:
 
@@ -599,11 +571,11 @@ sudo systemctl status rpi-btn-wifi-manager.service
 
 ---
 
-### Step 8: Services Installation
+### Step 7: Services Installation
 
 Once hardware testing passes, install the background services.
 
-#### Step 8.1: Services Installation: Check Current Status
+#### Step 7.1: Services Installation: Check Current Status
 
 ```bash
 ./services/00_status.sh
@@ -624,7 +596,7 @@ Once hardware testing passes, install the background services.
 | `process-monitor-web.service` | Web dashboard on port 7070 |
 | nginx | Reverse proxy (access dashboard on port 80) |
 
-#### Step 8.3: Services Installation: Verify Installation
+#### Step 7.3: Services Installation: Verify Installation
 
 ```bash
 ./services/00_status.sh
@@ -645,7 +617,7 @@ nginx
   ● config installed
 ```
 
-#### Step 8.4 (Good to Know): Services Installation: Uninstall Services
+#### Step 7.4 (Good to Know): Services Installation: Uninstall Services
 
 ```bash
 ./services/04_stop_and_uninstall_services.sh
@@ -773,6 +745,10 @@ A TUI-style web interface for monitoring the pipeline from any device on your ne
 │   ├── 04_stop_and_uninstall_services.sh
 │   └── *.service                # Service unit files
 │
+├── docs/                        # Documentation
+│   ├── MUSIC_PROMPT_GENERATION_PIPELINE.md
+│   └── pi-hat-schematic.pdf
+│
 ├── web/                         # Dashboard (FastAPI + WebSocket)
 ├── tests/                       # Hardware test scripts
 ├── tools/                       # Utilities
@@ -799,10 +775,36 @@ A TUI-style web interface for monitoring the pipeline from any device on your ne
 
 ---
 
-## [ARCHIVE] Manual Setup Instructions
-
 <details>
-<summary><strong>Click to expand</strong> — Reference for setup.sh development</summary>
+<summary><strong>Click to expand</strong> — Manual Setup Instructions - Reference for setup.sh development</summary>
+
+### Manual Date/Time Setup
+
+If NTP sync fails or you need to set timezone manually:
+
+First, verify your Pi's date is correct:
+
+```bash
+date
+```
+
+If incorrect, fix via `raspi-config`:
+
+```bash
+sudo raspi-config
+```
+
+| Step | View |
+|------|------|
+| Select "Localisation Options" → ENTER | ![raspi-config step 1](assets/rpi-config-date-1.png) |
+| Select "Timezone" → ENTER | ![raspi-config step 2](assets/rpi-config-date-2.png) |
+| Select your region | ![raspi-config step 3](assets/rpi-config-date-3.png) |
+
+Tab to `<Finish>` and reboot:
+
+```bash
+sudo reboot
+```
 
 ### Install System Dependencies
 
@@ -925,7 +927,6 @@ Reboot and test:
 
 - Add Dropbox backup details in readme (optional feature)
 - Serial Radar detection algo improvement (beam and enter/exit based)
-- Add more news regions
 
 - Hardware Update Steps: 
   - Speaker Switch switcher 
@@ -936,6 +937,7 @@ Reboot and test:
   - Assemble new one ... 
 
 **Future**:
+- Add more news regions
 - More archetypes
 - Embedding models if needed
 - Data viz after a period of time on the world sentiment shifts
