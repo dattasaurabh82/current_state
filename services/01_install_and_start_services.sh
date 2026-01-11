@@ -203,10 +203,11 @@ print_step "Installing cron job..."
 CRON_GENERATE="$CRON_GENERATE_TIME * * * cd $PROJECT_DIR && $UV_PATH run python main.py --fetch true --play false >> $PROJECT_DIR/logs/cron.log 2>&1"
 
 # Remove existing entry (if any) and add fresh one
-(
-    crontab -l 2>/dev/null | grep -v "main.py.*--fetch.*--play"
+# Note: || true prevents grep from failing when crontab is empty (fresh install)
+{
+    crontab -l 2>/dev/null | grep -v "main.py.*--fetch.*--play" || true
     echo "$CRON_GENERATE"
-) | crontab -
+} | crontab -
 
 print_success "Cron job installed"
 print_info "  Generate: $CRON_GENERATE_TIME (3:00 AM daily)"
