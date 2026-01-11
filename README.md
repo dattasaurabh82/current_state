@@ -78,6 +78,21 @@ The **user-triggered interactions** happen via hardware:
 | --- | --- |
 | ![alt text](assets/curr_state.gif) | ![alt text](assets/PCB_render.png) | 
 
+**Project HW Requirements**:
+
+- Raspberry pi 3A+
+- [Custom HAT]()
+- [Custom 3D prints]()
+- Nuts & Bolts
+- IKEA FREKVANS Speaker: Find them in eBay
+- Short audio cable male-male 3.5 mm
+- FingerBot
+  - Extra Custom PCB for Fingerbot (Extra & Optional)
+- [MeanWell RS-15-5 15W 5V 3A Power Supply Module](https://amzn.eu/d/2xTGYza): AC to 5V power supply (internal) for powering the PI from the daily chained power supply, coming from the speakers
+- [Rd-03D Serial mmWave RADAR](https://amzn.eu/d/4WUBDUL) 
+- [RCWL-0516 Switching mmWave RADAR](https://amzn.eu/d/39ujNUH)
+- ....
+
 > [!NOTE]
 > Hardware details TBD — Custom HAT design documentation coming soon.
 
@@ -116,9 +131,27 @@ Before running the setup script, create accounts and gather these credentials:
 
 ---
 
-## Installation
+## Summary of steps need to take action
 
-### Step 1: Set Pi Date/Time
+1. Basic setup of PI
+2. Installation of project dependencies (Interactive and understanding of requirements and configurations)
+3. Testing key individual steps before deploying various parts of the project
+4. Deployment
+
+---
+
+### Step 1: Installation and basic setup: Mandatory Update
+
+```bash
+sudo apt-get update -y
+sudo apt-get upgrade -y
+```
+
+After that, reboot. 
+
+---
+
+### Step 2: Installation and basic setup: Set (Fix) Pi's Date/Time
 
 First, verify your Pi's date is correct:
 
@@ -144,28 +177,14 @@ Tab to `<Finish>` and reboot:
 sudo reboot
 ```
 
-### Step 2: Run Setup Script
-
-> [!NOTE]
-> **TBD** — Automated setup script coming soon.
-> 
-> The script will:
-> - Install system dependencies (build tools, audio libs)
-> - Install UV package manager
-> - Clone the repository
-> - Create virtual environment
-> - Prompt for API credentials and create `.env`
-> - Configure GPIO permissions
-
-For now, see [Manual Setup Instructions](#manual-setup-instructions) at the bottom.
-
 ---
 
-## Configuration Reference
+### Step 3: Installation and basic setup: Understand the Configuration Reference
 
-Before testing hardware, familiarize yourself with the configuration files.
+> [!Note]
+> Before testing hardware, familiarize yourself with the configuration files. Many of these will be prompted to you during running the helper setup script (below), but understanding them is also important 
 
-### `settings.json`
+> In `settings.json`
 
 Controls GPIO pins, hardware behavior, and feature settings:
 
@@ -199,7 +218,10 @@ Controls GPIO pins, hardware behavior, and feature settings:
 }
 ```
 
-#### Key Settings Explained
+#### 0. Key Settings Explained `settings.json`
+
+> [!Note]
+> The setup script, if ran will update few of these values after asking you and others will remain fixed, especially Hardware ones. But you can also manually create settings file (`cp settings.json.template settings.json`) and edit some of these, if you know what you are doing 🙃. The below explanation thus aims to provide some clarity.     
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -207,10 +229,22 @@ Controls GPIO pins, hardware behavior, and feature settings:
 | `radarModel` | `RCWL-0516` | Radar type: `RCWL-0516` (GPIO) or `RD-03D` (Serial UART) |
 | `motionTriggeredPlaybackDurationSec` | 300 | How long music plays after motion detected (5 minutes) |
 | `cooldownAfterUserActionSec` | 60 | After user presses pause/stop, radar is ignored for this duration |
-| `radarMaxRangeMeters` | 2.5 | Detection range (RD-03D only) |
+| `radarMaxRangeMeters` | 2.5 | Detection range (`RD-03D` only) |
+| `radarPin` | 16 | GPIO pin to which radar `RCWL-0516` is connected. Not used by radar `RD-03D` as it operates over Serial  |
 | `maxLEDBrightness` | 25 | LED brightness (0-100) |
 
-### `news_config.json`
+**Notes on diff radars used**: ...
+
+| Radar Model | How to Identify? | Setting | Notes |
+| --- | --- | --- | --- |
+| [Rd-03D Serial mmWave RADAR](https://amzn.eu/d/4WUBDUL) | ![alt text](<assets/radar embedded RD-03D.jpg>) | `"radarEnablePin": 6` <br>`"radarModel": "RD-03D"` | You can leave `"radarPin": 16` in settings but this radar uses PI's Serial PINs and the script will ignore this setting |
+| [RCWL-0516 Switching mmWave RADAR](https://amzn.eu/d/39ujNUH) | ![alt text](<assets/radar embedded RCWL-0516.jpg>) | `"radarEnablePin": 6` <br>`"radarModel": "RCWL-0516"`<br>`"radarPin": 16` | `GPIO 16` receives HIGH or LOW based on motion detection |
+
+
+#### 1. `news_config.json`
+
+> [!Warning]
+> Do not change these
 
 Configures which language regions to fetch news from:
 
@@ -225,82 +259,50 @@ Configures which language regions to fetch news from:
 }
 ```
 
-### `.env`
+> [!Note]
+> More regions will be included in the future
 
-API credentials (created from `.env.template`):
+#### 2. `.env`
+
+API credentials:
 
 ```bash
 NEWS_API_KEY="your_newsapi_key"
 REPLICATE_API_TOKEN="your_replicate_token"
 ```
 
----
-
-## WiFi Manager
-
-For headless WiFi configuration without monitor/keyboard, install the [rpi-wifi-configurator](https://github.com/dattasaurabh82/rpi-wifi-configurator) project.
-
-> [!IMPORTANT]
-> Install WiFi Manager **before** hardware testing. The service uses GPIO 23 (shared with Radar LED), so you'll need to stop it temporarily during button/LED tests.
-
-### How It Works
-
-1. **Long press** the WiFi reset button (>4 sec)
-2. Pi creates an Access Point (`RPI_NET_SETUP`)
-3. Connect your phone/laptop to that AP
-4. Navigate to `http://10.10.1.1:4000`
-5. Enter your WiFi SSID and password
-6. Pi connects to your network
-
-### Installation
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/dattasaurabh82/rpi-wifi-configurator/main/install.sh | bash
-```
-
-During setup, enter these GPIO settings for this project:
-
-| Setting | Value | Notes |
-|---------|-------|-------|
-| Button GPIO | **26** | `NET_RESET_BTN` — dedicated WiFi reset button |
-| LED GPIO | **23** | Shared with Radar LED |
-
-### LED Status Indicators
-
-| LED State | Pattern | Meaning |
-|-----------|---------|---------|
-| **OFF** | No light | Connected to WiFi (normal operation) |
-| **SLOW BREATH** | Smooth pulse | Searching for WiFi / attempting connection |
-| **FAST BLINK** | Quick on/off | AP mode active (ready for configuration) |
-| **SOLID → OFF** | 2 sec solid | Connection successful |
-
-### Stopping for Hardware Tests
-
-Before running hardware tests, stop the WiFi manager service to free up GPIO 23:
-
-```bash
-sudo systemctl stop rpi-btn-wifi-manager.service
-```
-
-After testing, restart it:
-
-```bash
-sudo systemctl start rpi-btn-wifi-manager.service
-```
+>[!Note]
+> Will be set by setup script, if ran and here only for reference. 
+> If setup script is not ran, then copy [.env.template](.env.template) to `.env` (`cp copy .env.template copy .env`) and you can add them manually. 
 
 ---
 
-## Hardware Testing
+### Step 4: Run Setup Script
+
+> [!NOTE]
+> **TBD** — Automated setup script coming soon.
+> 
+> The script will:
+> - Install system dependencies (build tools, audio libs)
+> - Install UV package manager
+> - Clone the repository
+> - Create virtual environment
+> - Prompt for API credentials and create `.env`
+> - Configure GPIO permissions
+
+---
+
+### Step 4: Hardware Testing
 
 Before installing services, test each component individually to verify wiring and configuration.
 
 > [!NOTE]
-> If you installed the WiFi Manager, **stop it first** before testing buttons and LEDs:
+> If you installed the WiFi Manager (explained below), **stop it first** before testing buttons and LEDs:
 > ```bash
 > sudo systemctl stop rpi-btn-wifi-manager.service
 > ```
 
-### Test GPIO Buttons & LEDs
+#### Test GPIO Buttons & LEDs
 
 ```bash
 uv run python tests/01_test_IOs.py
@@ -321,47 +323,46 @@ uv run python tests/01_test_IOs.py
 | Player State LED | 25 |
 | Radar State LED | 23 |
 
-### Test Radar Detection
+#### Test Radar Detection
 
 The radar sensor enables automatic, presence-triggered playback. This is useful for installation scenarios where you want music to play when someone approaches.
-
-#### Radar Behavior
-
-When the **Radar Enable Switch** (GPIO 6) is ON:
-
-1. **Motion detected** → Music starts playing in a loop
-2. **Music plays for 5 minutes** (configurable: `motionTriggeredPlaybackDurationSec`)
-3. **No motion for 5 min** → Music auto-stops
-4. **Motion detected again** → Playback resumes
-
-**Cooldown behavior:** If a user manually presses **Pause** or **Stop**, the radar is temporarily ignored for 60 seconds (configurable: `cooldownAfterUserActionSec`). This prevents the radar from immediately restarting playback after a deliberate user action.
-
-#### Radar Models
 
 | Radar Model | Interface | Best For |
 |-------------|-----------|----------|
 | `RCWL-0516` | GPIO (digital HIGH/LOW) | Simple presence detection |
 | `RD-03D` | Serial (UART) | Distance-based detection with configurable range |
 
-Ensure your radar model is set in `settings.json`:
+> [!Warning]
+> Ensure your radar model is set correctly according to you HW setup, in `settings.json` (as explained above
 
-```json
-{
-  "inputPins": {
-    "radarModel": "RCWL-0516",
-    "radarPin": 16,
-    "radarEnablePin": 6
-  }
-}
-```
 
-Run the appropriate test:
+Run the appropriate tests:
+
+**- For `RCWL-0516` (GPIO-based)**
 
 ```bash
-# For RCWL-0516 (GPIO-based)
 uv run python tests/02_test_event_radar.py
+```
 
-# For RD-03D (Serial-based)
+**What to expect:**
+- Walk in front of the sensor
+- Console shows "Motion detected" / "Motion stopped"
+- Radar LED (GPIO 23) lights up during detection
+
+
+**- For `RD-03D` (Serial-based)**
+
+```bash
+uv run python tests/02_test_serial_radar.py
+```
+
+**What to expect:**
+- Walk in front of the sensor
+- Console shows motion waveform
+
+**- For `RD-03D` (Serial-based _but designed for outputting events_)**
+
+```bash
 uv run python tests/02_test_serial_radar.py
 ```
 
@@ -370,7 +371,19 @@ uv run python tests/02_test_serial_radar.py
 - Console shows "Motion detected" / "Motion stopped"
 - Radar LED (GPIO 23) lights up during detection
 
-### Test Audio Output
+> [!Important]
+> Later when the **Radar Enable Switch** (GPIO 6) is ON:
+> 
+> 1. **Motion detected** → Music starts playing in a loop
+> 2. **Music plays for 5 minutes** (configurable: `motionTriggeredPlaybackDurationSec`)
+> 3. **No motion for 5 min** → Music auto-stops
+> 4. **Motion detected again** → Playback resumes
+
+> [!Note]
+> **Cooldown behavior:** If a user manually presses **Pause** or **Stop**, the radar is temporarily ignored for 60 seconds (configurable: `cooldownAfterUserActionSec`). This prevents the radar from immediately restarting playback after a deliberate user action.
+
+
+#### Test Audio Output
 
 Verify the speaker/audio output is working:
 
@@ -380,9 +393,78 @@ aplay keep_audio_ch_active.wav
 
 **What to expect:** You should hear a short tone.
 
-### Test Full Pipeline
+---
 
-Generate music without playback to verify API connectivity:
+### Step 5: Installing WiFi Manager
+
+For headless WiFi configuration without monitor/keyboard, install and configure this project:[rpi-wifi-configurator](https://github.com/dattasaurabh82/rpi-wifi-configurator).
+
+> [!IMPORTANT]
+> Install/enable/setup WiFi Manager **after** hardware testing!
+
+#### Step 5.1: Installing WiFi Manager: How it will Work
+
+0. If PI, could not connect to WiFi, you will see the Status LED Blink ... or you can also remove the front panel to long press the network reset button 
+1. **Long press** the WiFi reset button (>4 sec)
+2. Pi creates an Access Point (`RPI_NET_SETUP`) (_This is Default but you can change during installation, just follow the prompts. But I would recommend not to change_)
+
+| | | | |
+| --- | --- | --- | --- |
+| ![alt text](<assets/opening fornt panel to access inners.jpg>) | ![alt text](assets/net-reset-base-img-blink-fast.jpg) | ![alt text](assets/net-reset-base-img-rst-btn-longpress.jpg) | adff |
+
+1. Connect your phone/laptop to that AP
+2. Navigate to `http://10.10.1.1:4000`
+3. Enter your WiFi SSID and password
+4. Pi connects to your network: NET Status LED breathes and then turns solid for a bit and then turns off completely.
+
+> [!Note]
+> You can checkout this project ([rpi-wifi-configurator](https://github.com/dattasaurabh82/rpi-wifi-configurator)) more in details to understand how it works.
+
+#### Step 5.2: Installing WiFi Manager: The actual Installation Process
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dattasaurabh82/rpi-wifi-configurator/main/install.sh | bash
+```
+
+> [!Important]
+During setup, enter these GPIO settings for this project, as below:
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| Button GPIO | **26** | `NET_RESET_BTN` — dedicated WiFi reset button |
+| LED GPIO | **24** | `LED_NET` - dedicated WiFI status LED  |
+
+### Network LED Status Indicators
+
+| LED State | Pattern | Meaning |
+|-----------|---------|---------|
+| **OFF** | No light | Connected to WiFi (normal operation) |
+| **SLOW BREATH** | Smooth pulse | Searching for WiFi / attempting connection |
+| **FAST BLINK** | Quick on/off | AP mode active (ready for configuration) |
+| **SOLID → OFF** | 2 sec solid | Connection successful |
+
+#### Step 5.3: Stopping for Hardware Tests
+
+If you are running hardware tests, stop the WiFi manager service to free up `GPIO 24` and `GPIO 26`
+
+```bash
+sudo systemctl stop rpi-btn-wifi-manager.service
+```
+
+After testing, you can restart it:
+
+```bash
+sudo systemctl start rpi-btn-wifi-manager.service
+```
+
+---
+
+### Step 6: Test Full Pipeline
+
+#### Step 6.1: Test Full Pipeline: Generate music without playback to verify API connectivity
+
+> [!Warning]
+> For this to work properly make sure you have the `.env` file with correct settings (keys). As said before, you will prompted to fill in the keys during installations. So there's some prep work but you can also always manually add them after you understand, from above, what is required in this `.env` file and why
 
 ```bash
 uv run python main.py --fetch true --play false
@@ -392,9 +474,15 @@ uv run python main.py --fetch true --play false
 - News headlines are fetched and cached to `news_data_YYYY-MM-DD.json`
 - LLM analyzes mood (takes ~10-20 seconds)
 - MusicGen generates audio (takes ~50-60 seconds)
-- Output saved to `music_generated/world_theme_YYYY-MM-DD_HH-MM-SS.wav`
+- Output music saved to `music_generated/world_theme_YYYY-MM-DD_HH-MM-SS.wav`
+- Other metadata, to be used by web-monitor (more on that later), are saved in `generation_results/`
 
-### Test Hardware Player
+#### Step 6.2 (Optional): Test Full Pipeline: Test/Understand each part of news -> music strategy
+
+> [!Note]
+> You can also test individual parts to understand how the music gen prompt is created from news by following the guide  from [docs/MUSIC_PROMPT_GENERATION_PIPELINE.md](docs/MUSIC_PROMPT_GENERATION_PIPELINE.md)
+
+#### Step 6.3: Test Full Pipeline: Test Hardware Player
 
 Interactive test with keyboard controls:
 
@@ -422,27 +510,37 @@ For daemon mode (no keyboard, GPIO buttons only):
 uv run python run_player.py --daemon
 ```
 
-### Re-enable WiFi Manager
+#### Step 6.4: Test Full Pipeline: Re-enable WiFi Manager
 
-After testing, restart the WiFi manager if you installed it:
+After testing, restart the WiFi manager if you installed it and disable it for hardware testing, let's say:
 
 ```bash
+# Check status
+sudo systemctl status rpi-btn-wifi-manager.service
+
+# Ctrl+c or :q + ENTER may be required ...
+
+sudo systemctl daemon reload
 sudo systemctl start rpi-btn-wifi-manager.service
+sudo systemctl status rpi-btn-wifi-manager.service
+
+# Then if you are interested in checking the logs, you can:
+# tail -F <PATH TO rpi-wifi-configurator>/logs/<LATEST LOG FILE>.log
 ```
 
 ---
 
-## Services Installation
+### Step 7 Services Installation
 
 Once hardware testing passes, install the background services.
 
-### Check Current Status
+#### Step 7.1: Services Installation: Check Current Status
 
 ```bash
 ./services/00_status.sh
 ```
 
-### Install All Services
+#### Step 7.2: Services Installation: Install All Services
 
 ```bash
 ./services/01_install_and_start_services.sh
@@ -457,7 +555,7 @@ Once hardware testing passes, install the background services.
 | `process-monitor-web.service` | Web dashboard on port 7070 |
 | nginx | Reverse proxy (access dashboard on port 80) |
 
-### Verify Installation
+#### Step 7.2: Services Installation: Verify Installation
 
 ```bash
 ./services/00_status.sh
@@ -478,13 +576,13 @@ nginx
   ● config installed
 ```
 
-### Uninstall Services
+#### Step 7.3 (Good to Know): Services Installation: Uninstall Services
 
 ```bash
 ./services/04_stop_and_uninstall_services.sh
 ```
 
-### Useful Commands
+**Useful Commands**
 
 ```bash
 # Check individual service
@@ -534,46 +632,6 @@ A TUI-style web interface for monitoring the pipeline from any device on your ne
 
 ---
 
-## Hardware Setup
-
-### Shutdown & Wake Button (GPIO3)
-
-Enable hardware shutdown/wake using a dedicated button on GPIO3.
-
-#### Step 1: Disable I2C
-
-> [!WARNING]
-> GPIO3 is shared with I2C SCL. You must disable I2C to use it for shutdown.
-
-```bash
-sudo raspi-config
-```
-
-| Step | View |
-|------|------|
-| Select *Interface Options* | ![Step 1](assets/disableI2c_step1.png) |
-| Select *I2C* | ![Step 2](assets/disableI2c_step2.png) |
-| Select *No* to disable | ![Step 3](assets/disableI2c_step3.png) |
-| *Finish* and reboot | ![Step 4](assets/disableI2c_step4.png) |
-
-#### Step 2: Enable gpio-shutdown Overlay
-
-```bash
-sudo nano /boot/firmware/config.txt
-```
-
-Add after the overlays comment section:
-
-```ini
-dtoverlay=gpio-shutdown
-```
-
-Reboot and test:
-- Press GPIO3 button → Pi shuts down
-- Press again → Pi wakes up
-
----
-
 ## Project Structure
 
 ```txt
@@ -618,9 +676,59 @@ Reboot and test:
 
 ---
 
+## Hardware Setup
+
+### Shutdown & Wake Button (GPIO3)
+
+
+Enable hardware shutdown/wake using a dedicated button on GPIO3.
+
+#### Step 1: Disable I2C
+
+> [!WARNING]
+> GPIO3 is shared with I2C SCL. You must disable I2C to use it for shutdown.
+
+```bash
+sudo raspi-config
+```
+
+| Step | View |
+|------|------|
+| Select *Interface Options* | ![Step 1](assets/disableI2c_step1.png) |
+| Select *I2C* | ![Step 2](assets/disableI2c_step2.png) |
+| Select *No* to disable | ![Step 3](assets/disableI2c_step3.png) |
+| *Finish* and reboot | ![Step 4](assets/disableI2c_step4.png) |
+
+#### Step 2: Enable gpio-shutdown Overlay
+
+```bash
+sudo nano /boot/firmware/config.txt
+```
+
+Add after the overlays comment section:
+
+```ini
+dtoverlay=gpio-shutdown
+```
+
+Reboot and test:
+- Press GPIO3 button → Pi shuts down
+- Press again → Pi wakes up
+
+---
+
 ## License
 
 [Unlicense](LICENSE)
+
+---
+
+## Additional Docs:
+
+1. [MUSIC_PROMPT_GENERATION_PIPELINE.md](docs/MUSIC_PROMPT_GENERATION_PIPELINE.md)
+2. [Tests](tests)
+3. [Web View Monitor](web/README.md)
+4. [Hardware Dev](_HW)
 
 ---
 
@@ -712,6 +820,7 @@ sudo loginctl enable-linger $USER
 ## TODO
 
 - WIP: Main README Docu ... 🟠
+  - Add drop box details in readme ...
 - Canvas to show in tablet landscape mode ...
 - Serial Radar detection algo improve (beam and enter and exit based)
 - WIP Setup scripts: Main dep install scripts 🟠
