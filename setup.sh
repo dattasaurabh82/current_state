@@ -474,7 +474,8 @@ install_system_deps() {
         liblzma-dev \
         jq \
         tree \
-        python3-dev
+        python3-dev \
+        nginx
     print_success "Build tools installed"
 }
 
@@ -671,7 +672,7 @@ main() {
     echo ""
     
     echo "  This script will install:"
-    echo "    • System dependencies (build tools, libraries)"
+    echo "    • System dependencies (build tools, libraries, nginx)"
     echo "    • Audio dependencies (PortAudio)"
     echo "    • UV package manager"
     echo "    • Python dependencies"
@@ -726,7 +727,7 @@ main() {
     echo -e "${CYAN}════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo -e "  ${GREEN}✓${NC} Date/time synchronized"
-    echo -e "  ${GREEN}✓${NC} System dependencies installed"
+    echo -e "  ${GREEN}✓${NC} System dependencies installed (incl. nginx)"
     echo -e "  ${GREEN}✓${NC} Audio dependencies installed"
     echo -e "  ${GREEN}✓${NC} UV package manager installed"
     echo -e "  ${GREEN}✓${NC} GPIO permissions configured"
