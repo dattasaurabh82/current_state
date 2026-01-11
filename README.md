@@ -223,9 +223,9 @@ sudo reboot
 ### Step 3: Installation and basic setup: Understand the Configuration Reference
 
 > [!Note]
-> Before testing hardware, familiarize yourself with the configuration files. Many of these will be prompted to you during running the helper setup script (below), but understanding them is also important 
+> Familiarize yourself with the configuration files. Many of these will be prompted to you during running the helper setup script (below), but understanding them is also important later testing steps.
 
-> In `settings.json`
+> In `settings.json` (you may only see now `settings.json.template`)
 
 Controls GPIO pins, hardware behavior, and feature settings:
 
