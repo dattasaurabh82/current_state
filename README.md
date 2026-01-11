@@ -414,7 +414,7 @@ uv run python tests/02_test_serial_radar.py
 **- For `RD-03D` (Serial-based _but designed for outputting events_)**
 
 ```bash
-uv run python tests/02_test_serial_radar.py
+uv run python tests/03_test_serial_radar_as_event.py
 ```
 
 **What to expect:**
