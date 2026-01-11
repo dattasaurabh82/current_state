@@ -24,6 +24,7 @@ set -e  # Exit on error
 REPO_URL="https://github.com/dattasaurabh82/current_state.git"
 PROJECT_NAME="current_state"
 INSTALL_DIR="$HOME/$PROJECT_NAME"
+HOSTNAME="aimusicplayer"
 
 # =============================================================================
 # COLORS
@@ -177,6 +178,193 @@ sync_datetime() {
         print_warning "NTP sync pending (may take a moment)"
         print_info "Time will sync automatically in the background"
     fi
+}
+
+# =============================================================================
+# SYSTEM CONFIGURATION FUNCTIONS
+# =============================================================================
+
+configure_hostname() {
+    print_header "CONFIGURING HOSTNAME"
+    
+    CURRENT_HOSTNAME=$(hostname)
+    
+    if [ "$CURRENT_HOSTNAME" = "$HOSTNAME" ]; then
+        print_info "Hostname already set to '$HOSTNAME'"
+    else
+        print_step "Setting hostname to '$HOSTNAME'..."
+        sudo raspi-config nonint do_hostname "$HOSTNAME"
+        print_success "Hostname set to '$HOSTNAME'"
+        print_info "After reboot, access via: ${HOSTNAME}.local"
+        REBOOT_REQUIRED=true
+    fi
+}
+
+configure_interfaces() {
+    print_header "CONFIGURING HARDWARE INTERFACES"
+    
+    # Disable I2C (frees GPIO3 for power button)
+    print_step "Disabling I2C (to free GPIO3 for power button)..."
+    sudo raspi-config nonint do_i2c 1
+    print_success "I2C disabled"
+    
+    # Enable Serial Hardware (for RD-03D radar)
+    print_step "Enabling serial hardware (for RD-03D radar)..."
+    sudo raspi-config nonint do_serial_hw 0
+    print_success "Serial hardware enabled"
+    
+    # Disable Serial Console (so it doesn't interfere with radar)
+    print_step "Disabling serial console (prevents interference with radar)..."
+    sudo raspi-config nonint do_serial_cons 1
+    print_success "Serial console disabled"
+    
+    REBOOT_REQUIRED=true
+}
+
+configure_gpio_shutdown() {
+    print_header "CONFIGURING GPIO SHUTDOWN BUTTON"
+    
+    CONFIG_FILE="/boot/firmware/config.txt"
+    OVERLAY_LINE="dtoverlay=gpio-shutdown"
+    
+    # Check if already configured
+    if grep -q "^${OVERLAY_LINE}" "$CONFIG_FILE" 2>/dev/null; then
+        print_info "GPIO shutdown overlay already configured"
+        return 0
+    fi
+    
+    print_step "Adding GPIO shutdown overlay to config.txt..."
+    
+    # CRITICAL: Must be placed BEFORE any [section] blocks like [cm4], [cm5], [all]
+    # Best location: right after "# /boot/firmware/overlays/README" comment
+    
+    # Create temp file
+    TEMP_FILE=$(mktemp)
+    
+    # Insert the overlay line after the README comment line
+    # This ensures it's in the main body, before any [section] blocks
+    awk -v overlay="$OVERLAY_LINE" '
+        /^# \/boot\/firmware\/overlays\/README/ {
+            print
+            print overlay
+            next
+        }
+        { print }
+    ' "$CONFIG_FILE" > "$TEMP_FILE"
+    
+    # Verify the insertion worked
+    if grep -q "^${OVERLAY_LINE}" "$TEMP_FILE"; then
+        sudo cp "$TEMP_FILE" "$CONFIG_FILE"
+        print_success "GPIO shutdown overlay added"
+        print_info "GPIO3 button will now shutdown/wake the Pi"
+        REBOOT_REQUIRED=true
+    else
+        # Fallback: insert after the "Additional overlays" comment
+        awk -v overlay="$OVERLAY_LINE" '
+            /^# Additional overlays and parameters/ {
+                print
+                getline
+                print
+                print overlay
+                next
+            }
+            { print }
+        ' "$CONFIG_FILE" > "$TEMP_FILE"
+        
+        if grep -q "^${OVERLAY_LINE}" "$TEMP_FILE"; then
+            sudo cp "$TEMP_FILE" "$CONFIG_FILE"
+            print_success "GPIO shutdown overlay added (fallback location)"
+            REBOOT_REQUIRED=true
+        else
+            print_error "Failed to add GPIO shutdown overlay automatically"
+            print_info "Please add manually to $CONFIG_FILE:"
+            print_info "  $OVERLAY_LINE"
+            print_info "  (Place it BEFORE any [cm4], [cm5], [all] sections)"
+        fi
+    fi
+    
+    rm -f "$TEMP_FILE"
+}
+
+configure_settings() {
+    print_header "CONFIGURING SETTINGS"
+    
+    SETTINGS_FILE="$PROJECT_DIR/settings.json"
+    SETTINGS_TEMPLATE="$PROJECT_DIR/settings.json.template"
+    
+    if [ -f "$SETTINGS_FILE" ]; then
+        print_info "settings.json already exists"
+        
+        if confirm "Reconfigure settings?"; then
+            cp "$SETTINGS_FILE" "$SETTINGS_FILE.bak"
+            print_info "Backed up existing settings to settings.json.bak"
+        else
+            print_info "Keeping existing settings.json"
+            return 0
+        fi
+    fi
+    
+    if [ ! -f "$SETTINGS_TEMPLATE" ]; then
+        print_error "settings.json.template not found"
+        return 1
+    fi
+    
+    # Copy template first
+    cp "$SETTINGS_TEMPLATE" "$SETTINGS_FILE"
+    
+    echo ""
+    print_info "Let's configure your hardware settings."
+    echo ""
+    
+    # 1. Radar Model
+    echo -e "${CYAN}?${NC} Select radar model:"
+    echo "    1) RCWL-0516 (GPIO-based, simple presence detection)"
+    echo "    2) RD-03D (Serial UART, distance-based detection)"
+    echo -ne "${CYAN}?${NC} Enter choice [1]: "
+    read radar_choice
+    radar_choice=${radar_choice:-1}
+    
+    if [ "$radar_choice" = "2" ]; then
+        RADAR_MODEL="RD-03D"
+        
+        # 2. Radar Range (only for RD-03D)
+        echo -ne "${CYAN}?${NC} Enter detection range in meters [2.5]: "
+        read radar_range
+        radar_range=${radar_range:-2.5}
+    else
+        RADAR_MODEL="RCWL-0516"
+        radar_range="2.5"  # Keep default, not used for RCWL
+    fi
+    print_success "Radar: $RADAR_MODEL"
+    
+    # 3. Motion Triggered Playback Duration
+    echo -ne "${CYAN}?${NC} Playback duration after motion detected (seconds) [300]: "
+    read playback_duration
+    playback_duration=${playback_duration:-300}
+    print_success "Playback duration: ${playback_duration}s"
+    
+    # 4. LED Brightness
+    echo -ne "${CYAN}?${NC} LED brightness (0-100) [25]: "
+    read led_brightness
+    led_brightness=${led_brightness:-25}
+    print_success "LED brightness: $led_brightness"
+    
+    echo ""
+    
+    # Update settings.json using jq
+    print_step "Saving settings..."
+    
+    jq --arg radar "$RADAR_MODEL" \
+       --argjson range "$radar_range" \
+       --argjson duration "$playback_duration" \
+       --argjson brightness "$led_brightness" \
+       '.inputPins.radarModel = $radar | 
+        .hwFeatures.radarMaxRangeMeters = $range | 
+        .hwFeatures.motionTriggeredPlaybackDurationSec = $duration | 
+        .hwFeatures.maxLEDBrightness = $brightness' \
+       "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp" && mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+    
+    print_success "Settings saved to settings.json"
 }
 
 # =============================================================================
@@ -416,8 +604,12 @@ main() {
     echo "    • Python dependencies"
     echo ""
     echo "  And configure:"
+    echo "    • Hostname (${HOSTNAME}.local)"
+    echo "    • Hardware interfaces (I2C, Serial)"
+    echo "    • GPIO shutdown button (GPIO3)"
     echo "    • GPIO permissions"
-    echo "    • API credentials (.env file)"
+    echo "    • Hardware settings (settings.json)"
+    echo "    • API credentials (.env)"
     echo ""
     
     if ! confirm "Continue with installation?" "y"; then
@@ -439,14 +631,24 @@ main() {
     configure_gpio
     clone_or_update_repo
     install_python_deps
+    
+    # Configure system (hostname, interfaces, GPIO shutdown)
+    configure_hostname
+    configure_interfaces
+    configure_gpio_shutdown
+    
+    # Configure project files
+    configure_settings
     configure_env
     
     # =============================================================================
     # COMPLETE
     # =============================================================================
     
-    print_header "SETUP COMPLETE"
-    
+    echo ""
+    echo -e "${CYAN}════════════════════════════════════════════════════════════${NC}"
+    echo -e "${BOLD}SETUP COMPLETE - REBOOT REQUIRED${NC}"
+    echo -e "${CYAN}════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo -e "  ${GREEN}✓${NC} Date/time synchronized"
     echo -e "  ${GREEN}✓${NC} System dependencies installed"
@@ -454,34 +656,39 @@ main() {
     echo -e "  ${GREEN}✓${NC} UV package manager installed"
     echo -e "  ${GREEN}✓${NC} GPIO permissions configured"
     echo -e "  ${GREEN}✓${NC} Python dependencies installed"
-    echo -e "  ${GREEN}✓${NC} API credentials configured"
+    echo -e "  ${GREEN}✓${NC} Hostname set to: ${HOSTNAME}"
+    echo -e "  ${GREEN}✓${NC} I2C disabled (GPIO3 available for power button)"
+    echo -e "  ${GREEN}✓${NC} Serial enabled (for RD-03D radar)"
+    echo -e "  ${GREEN}✓${NC} GPIO shutdown overlay configured"
+    echo -e "  ${GREEN}✓${NC} Hardware settings configured (settings.json)"
+    echo -e "  ${GREEN}✓${NC} API credentials configured (.env)"
     echo ""
-    
-    if [ "$GPIO_CHANGED" = true ]; then
-        print_warning "IMPORTANT: Log out and back in for GPIO permissions to take effect"
-        echo ""
-    fi
-    
     echo "  Project location: $PROJECT_DIR"
     echo ""
-    echo "  Next steps:"
+    echo -e "${YELLOW}════════════════════════════════════════════════════════════${NC}"
+    echo -e "${BOLD}${YELLOW}  NEXT STEPS${NC}"
+    echo -e "${YELLOW}════════════════════════════════════════════════════════════${NC}"
     echo ""
-    echo "    1. ${DIM}cd $PROJECT_DIR${NC}"
+    echo -e "  ${RED}1. REBOOT NOW (required for changes to take effect):${NC}"
+    echo -e "     ${DIM}sudo reboot${NC}"
     echo ""
-    echo "    2. Test hardware:"
-    echo "       ${DIM}uv run python tests/01_test_IOs.py${NC}"
+    echo -e "  2. After reboot, test hardware:"
+    echo -e "     ${DIM}cd ~/current_state${NC}"
+    echo -e "     ${DIM}uv run python tests/01_test_IOs.py${NC}"
     echo ""
-    echo "    3. Test full pipeline:"
-    echo "       ${DIM}uv run python main.py --fetch true --play false${NC}"
+    echo -e "  3. Install WiFi manager (optional, for headless setup):"
+    echo -e "     ${DIM}See README.md Step 5${NC}"
     echo ""
-    echo "    4. Install services:"
-    echo "       ${DIM}./services/01_install_and_start_services.sh${NC}"
+    echo -e "  4. Install services:"
+    echo -e "     ${DIM}./services/01_install_and_start_services.sh${NC}"
     echo ""
-    
+    echo -e "${CYAN}────────────────────────────────────────────────────────────${NC}"
+    print_info "After reboot, access web dashboard at: http://${HOSTNAME}.local"
     print_info "See README.md for detailed instructions"
     echo ""
     print_info "To re-run this setup later:"
-    echo "       ${DIM}cd $PROJECT_DIR && ./setup.sh${NC}"
+    echo -e "     ${DIM}cd $PROJECT_DIR && ./setup.sh${NC}"
+    echo ""
 }
 
 # Run main function

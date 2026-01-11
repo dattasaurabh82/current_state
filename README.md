@@ -155,7 +155,7 @@ Before running the setup script, create accounts and gather these credentials:
 | Service | Plan | Usage | Cost |
 |---------|------|-------|------|
 | **NewsAPI** | Free tier (100 requests/day) | 4 requests/day (one per language) | **Free** |
-| **Replicate** | Pay-per-use | ~1 generation/day | **~$0.30/month** |
+| **Replicate** | Pay-per-use | ~1 generation/day | **~$3/month** |
 
 **Replicate cost details:**
 - MusicGen runs on Nvidia A100 (80GB) @ $0.00140/sec — typical generation takes ~50-60 seconds = ~$0.07-0.08
@@ -173,10 +173,14 @@ Before running the setup script, create accounts and gather these credentials:
 
 > Once you have the HW ready, here's what needs to be done ...
 
-1. Basic setup of PI
-2. Installation of project dependencies (Interactive and understanding of requirements and configurations)
-3. Testing key individual steps before deploying various parts of the project
-4. Deployment
+1. Basic Pi setup (update packages)
+2. Understand configuration options
+3. Run setup script (handles most installation and configuration automatically)
+4. Reboot
+5. Test hardware
+6. Install WiFi manager (optional)
+7. Test full pipeline
+8. Deploy services
 
 ---
 
@@ -326,10 +330,15 @@ cd ~/current_state
 | **GPIO Permissions** | Adds user to `gpio` group |
 | **Clone Repository** | Clones project to `~/current_state` (or pulls latest if exists) |
 | **Python Dependencies** | Runs `uv sync` to install all Python packages |
-| **API Credentials** | Interactive prompts for NewsAPI key and Replicate token, creates `.env` |
+| **Hostname** | Sets hostname to `aimusicplayer` (access via `aimusicplayer.local`) |
+| **I2C Disable** | Disables I2C to free GPIO3 for power button |
+| **Serial Enable** | Enables serial hardware for RD-03D radar, disables serial console |
+| **GPIO Shutdown** | Adds `dtoverlay=gpio-shutdown` to config.txt for power button |
+| **Hardware Settings** | Interactive prompts for radar model, playback duration, LED brightness → creates `settings.json` |
+| **API Credentials** | Interactive prompts for NewsAPI key and Replicate token → creates `.env` |
 
-> [!NOTE]
-> After setup completes, **log out and back in** for GPIO permissions to take effect.
+> [!IMPORTANT]
+> After setup completes, **REBOOT is required** for hostname, I2C, serial, and GPIO shutdown changes to take effect.
 
 ---
 
