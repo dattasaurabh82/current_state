@@ -8,33 +8,71 @@
 
 ![alt text](assets/current_state_header_img.001.png)
 
-*How does it look like?*
+*What does it look like?*
 
 ![Web Dashboard Preview](assets/web-monitor-preview-2.png) 
 
 *Monitor Web Dashboard*
 
-The main functionality of the system is to system fetch news headlines from multiple regions, analyzes their emotional tone using an LLM, selects musical archetypes, and generates unique ambient music — all running autonomously on a Raspberry Pi and using open-source local LLM models hosted on [Replicate](https://replicate.com/). 
+The main functionality of the system is to fetch news headlines from multiple regions, analyze their emotional tone using an LLM, select musical archetypes, and generate unique ambient music — all running autonomously on a Raspberry Pi using open-source LLM models hosted on [Replicate](https://replicate.com/). 
 With onboard hardware buttons, all functionalities can be triggered and controlled. For example,  disabling radar trigger or shutting down or turning ON the PI or even resetting WiFi for the PI, can all be carried out via the custom PI HAT I designed! (More on that later ...) 
 
 ---
 
 ## Table of Contents
 
+- [What it does (Summary)?](#what-it-does-summary)
+- [Other features](#other-features)
+- [What can you do?](#what-can-you-do)
 - [How It Works](#how-it-works)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration Reference](#configuration-reference)
-- [WiFi Manager](#wifi-manager)
-- [Hardware Testing](#hardware-testing)
-- [Services Installation](#services-installation)
+  - [Hardware](#1-hardware)
+  - [API Accounts](#2-api-accounts)
+- [Summary of steps to take](#summary-of-steps-need-to-take-action)
+  - [Step 1: Mandatory Update](#step-1-installation-and-basic-setup-mandatory-update)
+  - [Step 2: Set Pi's Date/Time](#step-2-installation-and-basic-setup-set-fix-pis-datetime)
+  - [Step 3: Configuration Reference](#step-3-installation-and-basic-setup-understand-the-configuration-reference)
+  - [Step 4: Run Setup Script](#step-4-run-setup-script)
+  - [Step 5: Hardware Testing](#step-5-hardware-testing)
+  - [Step 6: Installing WiFi Manager](#step-6-installing-wifi-manager)
+  - [Step 7: Test Full Pipeline](#step-7-test-full-pipeline)
+  - [Step 8: Services Installation](#step-8-services-installation)
 - [Web Dashboard](#web-dashboard)
-- [Hardware Setup](#hardware-setup)
 - [Project Structure](#project-structure)
 - [License](#license)
+- [Supporting Docs](#supporting-docs)
+- [Manual Setup (Archive)](#archive-manual-setup-instructions)
 - [TODO](#todo)
 
 ---
+
+## What it does (Summary)?
+
+- Every night at 3:00 AM, scrapes news and generates a 30-second ambient music piece based on world sentiment (and various other factors)
+- Then, if the device detects presence of a person (also notified via LED), it plays back that music in a loop for a predefined time (currently set to 5 mins) and then stops
+- While music is playing, the LED is ON. While paused, it turns OFF
+- It serves a web monitor where you can see:
+  - News Tab: News that were collected
+  - Pipeline Tab: view explaining how music was then generated including Music files too
+  - Logs Tab: of all process for live preview and debugging of any steps
+- If fails to connect to Wifi, it blinks and notifies you
+- If any step in the full pipeline (news scraping -> music generation) it shows in logs and if radar detection is disabled the LED also notifies you with blinks
+
+## Other features
+
+- Smart log management and lot of configuration settings
+- It also comes with smart installation and uninstallation scripts, detailed documentation and maintenance instructions
+- **Optional and not included in documentation**, but it can automatically upload music and crucial data for future analysis, to drop box as well as locally
+
+## What can you do?
+
+- With the press of a button you can turn the system on & off
+- With the press of a button you can headlessly setup it's wifi, over a browser
+- You can manually trigger the full pipeline: news scraping -> music generation
+- You can play/pause and stop the music with buttons
+- You can enable or disable radar detection
+- You can run tests to understand how the pipeline works
+- **Optional and not included in documentation**, but you can also manually backup with a single cmd or set it to do it automatically 
 
 ## How It Works
 
@@ -72,35 +110,36 @@ The **user-triggered interactions** happen via hardware:
 
 ## Prerequisites
 
-### Hardware
+### 1. Hardware
 
 | ASSEMBLY RENDER | PCB RENDER |
 | --- | --- |
 | ![alt text](assets/curr_state.gif) | ![alt text](assets/PCB_render.png) | 
 
-**Project HW Requirements**:
+#### Schematic 
 
-- Raspberry pi 3A+
-- [Custom HAT]()
-- [Custom 3D prints]()
-- Nuts & Bolts
+[![alt text](<assets/sch preview scrnshot.png>)](/Users/saurabhdatta/Documents/Projects/current_state/docs/pi-hat-schematic.pdf)
+
+>[!Important]
+> Click on the ☝🏻 image to see the [detailed schematic](docs/pi-hat-schematic.pdf)
+
+**Project HW Requirements** (_Highlights_):
+
+- Raspberry pi 3A+ (with 32GB or more micro SD card or storage)
 - IKEA FREKVANS Speaker: Find them in eBay
 - Short audio cable male-male 3.5 mm
-- FingerBot
   - Extra Custom PCB for Fingerbot (Extra & Optional)
 - [MeanWell RS-15-5 15W 5V 3A Power Supply Module](https://amzn.eu/d/2xTGYza): AC to 5V power supply (internal) for powering the PI from the daily chained power supply, coming from the speakers
-- [Rd-03D Serial mmWave RADAR](https://amzn.eu/d/4WUBDUL) 
-- [RCWL-0516 Switching mmWave RADAR](https://amzn.eu/d/39ujNUH)
-- ....
+- mmWave Radar: [Rd-03D Serial mmWave RADAR](https://amzn.eu/d/4WUBDUL) (_Recommended_) or [RCWL-0516 Switching mmWave RADAR](https://amzn.eu/d/39ujNUH) or both (🙃)
+- Custom PI-HAT
+- Custom 3D prints
 
-> [!NOTE]
-> Hardware details TBD — Custom HAT design documentation coming soon.
-
-**TODO**: _Add hardware list, circuit diagram, etc._
+>[!Note]
+> For the full assembled product details reach out to hi@dattasaurabh.com 
 
 ---
 
-### API Accounts
+### 2. API Accounts
 
 Before running the setup script, create accounts and gather these credentials:
 
@@ -132,6 +171,8 @@ Before running the setup script, create accounts and gather these credentials:
 ---
 
 ## Summary of steps need to take action
+
+> Once you have the HW ready, here's what needs to be done ...
 
 1. Basic setup of PI
 2. Installation of project dependencies (Interactive and understanding of requirements and configurations)
@@ -279,20 +320,48 @@ REPLICATE_API_TOKEN="your_replicate_token"
 
 ### Step 4: Run Setup Script
 
+The setup script automates the entire installation process.
+
+#### First Time Installation (via curl)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dattasaurabh82/current_state/main/setup.sh | bash
+```
+
+Or using wget:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/dattasaurabh82/current_state/main/setup.sh | bash
+```
+
+#### Re-running Setup (after clone)
+
+If you've already cloned the repository, you can re-run setup locally:
+
+```bash
+cd ~/current_state
+./setup.sh
+```
+
+#### What the Setup Script Does
+
+| Step | Description |
+|------|-------------|
+| **System Check** | Verifies Raspberry Pi and internet connectivity |
+| **System Dependencies** | Installs build tools, libraries (`build-essential`, `libssl-dev`, etc.) |
+| **Audio Dependencies** | Installs PortAudio (`libportaudio2`) |
+| **UV Package Manager** | Installs [UV](https://github.com/astral-sh/uv) for Python dependency management |
+| **GPIO Permissions** | Adds user to `gpio` group |
+| **Clone Repository** | Clones project to `~/current_state` (or pulls latest if exists) |
+| **Python Dependencies** | Runs `uv sync` to install all Python packages |
+| **API Credentials** | Interactive prompts for NewsAPI key and Replicate token, creates `.env` |
+
 > [!NOTE]
-> **TBD** — Automated setup script coming soon.
-> 
-> The script will:
-> - Install system dependencies (build tools, audio libs)
-> - Install UV package manager
-> - Clone the repository
-> - Create virtual environment
-> - Prompt for API credentials and create `.env`
-> - Configure GPIO permissions
+> After setup completes, **log out and back in** for GPIO permissions to take effect.
 
 ---
 
-### Step 4: Hardware Testing
+### Step 5: Hardware Testing
 
 Before installing services, test each component individually to verify wiring and configuration.
 
@@ -333,7 +402,7 @@ The radar sensor enables automatic, presence-triggered playback. This is useful 
 | `RD-03D` | Serial (UART) | Distance-based detection with configurable range |
 
 > [!Warning]
-> Ensure your radar model is set correctly according to you HW setup, in `settings.json` (as explained above
+> Ensure your radar model is set correctly according to your HW setup in `settings.json` (as explained above)
 
 
 Run the appropriate tests:
@@ -395,14 +464,14 @@ aplay keep_audio_ch_active.wav
 
 ---
 
-### Step 5: Installing WiFi Manager
+### Step 6: Installing WiFi Manager
 
 For headless WiFi configuration without monitor/keyboard, install and configure this project:[rpi-wifi-configurator](https://github.com/dattasaurabh82/rpi-wifi-configurator).
 
 > [!IMPORTANT]
 > Install/enable/setup WiFi Manager **after** hardware testing!
 
-#### Step 5.1: Installing WiFi Manager: How it will Work
+#### Step 6.1: Installing WiFi Manager: How it will Work
 
 0. If PI, could not connect to WiFi, you will see the Status LED Blink ... or you can also remove the front panel to long press the network reset button 
 1. **Long press** the WiFi reset button (>4 sec)
@@ -410,7 +479,7 @@ For headless WiFi configuration without monitor/keyboard, install and configure 
 
 | | | | |
 | --- | --- | --- | --- |
-| ![alt text](<assets/opening fornt panel to access inners.jpg>) | ![alt text](assets/net-reset-base-img-blink-fast.jpg) | ![alt text](assets/net-reset-base-img-rst-btn-longpress.jpg) | adff |
+| ![alt text](<assets/opening fornt panel to access inners.jpg>) | ![alt text](assets/net-reset-base-img-blink-fast.jpg) | ![alt text](assets/net-reset-base-img-rst-btn-longpress.jpg) |  |
 
 1. Connect your phone/laptop to that AP
 2. Navigate to `http://10.10.1.1:4000`
@@ -420,7 +489,7 @@ For headless WiFi configuration without monitor/keyboard, install and configure 
 > [!Note]
 > You can checkout this project ([rpi-wifi-configurator](https://github.com/dattasaurabh82/rpi-wifi-configurator)) more in details to understand how it works.
 
-#### Step 5.2: Installing WiFi Manager: The actual Installation Process
+#### Step 6.2: Installing WiFi Manager: The actual Installation Process
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dattasaurabh82/rpi-wifi-configurator/main/install.sh | bash
@@ -443,7 +512,7 @@ During setup, enter these GPIO settings for this project, as below:
 | **FAST BLINK** | Quick on/off | AP mode active (ready for configuration) |
 | **SOLID → OFF** | 2 sec solid | Connection successful |
 
-#### Step 5.3: Stopping for Hardware Tests
+#### Step 6.3: Stopping for Hardware Tests
 
 If you are running hardware tests, stop the WiFi manager service to free up `GPIO 24` and `GPIO 26`
 
@@ -459,12 +528,12 @@ sudo systemctl start rpi-btn-wifi-manager.service
 
 ---
 
-### Step 6: Test Full Pipeline
+### Step 7: Test Full Pipeline
 
-#### Step 6.1: Test Full Pipeline: Generate music without playback to verify API connectivity
+#### Step 7.1: Test Full Pipeline: Generate music without playback to verify API connectivity
 
 > [!Warning]
-> For this to work properly make sure you have the `.env` file with correct settings (keys). As said before, you will prompted to fill in the keys during installations. So there's some prep work but you can also always manually add them after you understand, from above, what is required in this `.env` file and why
+> For this to work properly make sure you have the `.env` file with correct settings (keys). As said before, you will be prompted to fill in the keys during installation. So there's some prep work but you can also always manually add them after you understand, from above, what is required in this `.env` file and why
 
 ```bash
 uv run python main.py --fetch true --play false
@@ -477,12 +546,12 @@ uv run python main.py --fetch true --play false
 - Output music saved to `music_generated/world_theme_YYYY-MM-DD_HH-MM-SS.wav`
 - Other metadata, to be used by web-monitor (more on that later), are saved in `generation_results/`
 
-#### Step 6.2 (Optional): Test Full Pipeline: Test/Understand each part of news -> music strategy
+#### Step 7.2 (Optional): Test Full Pipeline: Test/Understand each part of news -> music strategy
 
 > [!Note]
 > You can also test individual parts to understand how the music gen prompt is created from news by following the guide  from [docs/MUSIC_PROMPT_GENERATION_PIPELINE.md](docs/MUSIC_PROMPT_GENERATION_PIPELINE.md)
 
-#### Step 6.3: Test Full Pipeline: Test Hardware Player
+#### Step 7.3: Test Full Pipeline: Test Hardware Player
 
 Interactive test with keyboard controls:
 
@@ -510,7 +579,7 @@ For daemon mode (no keyboard, GPIO buttons only):
 uv run python run_player.py --daemon
 ```
 
-#### Step 6.4: Test Full Pipeline: Re-enable WiFi Manager
+#### Step 7.4: Test Full Pipeline: Re-enable WiFi Manager
 
 After testing, restart the WiFi manager if you installed it and disable it for hardware testing, let's say:
 
@@ -530,17 +599,17 @@ sudo systemctl status rpi-btn-wifi-manager.service
 
 ---
 
-### Step 7 Services Installation
+### Step 8: Services Installation
 
 Once hardware testing passes, install the background services.
 
-#### Step 7.1: Services Installation: Check Current Status
+#### Step 8.1: Services Installation: Check Current Status
 
 ```bash
 ./services/00_status.sh
 ```
 
-#### Step 7.2: Services Installation: Install All Services
+#### Step 8.2: Services Installation: Install All Services
 
 ```bash
 ./services/01_install_and_start_services.sh
@@ -555,7 +624,7 @@ Once hardware testing passes, install the background services.
 | `process-monitor-web.service` | Web dashboard on port 7070 |
 | nginx | Reverse proxy (access dashboard on port 80) |
 
-#### Step 7.2: Services Installation: Verify Installation
+#### Step 8.3: Services Installation: Verify Installation
 
 ```bash
 ./services/00_status.sh
@@ -576,13 +645,52 @@ nginx
   ● config installed
 ```
 
-#### Step 7.3 (Good to Know): Services Installation: Uninstall Services
+#### Step 8.4 (Good to Know): Services Installation: Uninstall Services
 
 ```bash
 ./services/04_stop_and_uninstall_services.sh
 ```
 
-**Useful Commands**
+**What this removes:**
+- User systemd services (stopped, disabled, files deleted)
+- nginx site configuration
+- Cron job for daily generation
+
+**What this does NOT remove:**
+- nginx itself (may be used by other sites)
+- Project files (your code is safe)
+- Generated music and logs
+
+#### Services Scripts Reference
+
+| Script | Purpose |
+|--------|----------|
+| `00_status.sh` | Check status of all services, nginx, and cron job |
+| `01_install_and_start_services.sh` | Install and start all services + cron job |
+| `04_stop_and_uninstall_services.sh` | Stop and remove all services + cron job |
+
+#### Full Project Removal
+
+To completely remove the project (services + files + dependencies):
+
+```bash
+./remove.sh
+```
+
+**What `remove.sh` offers (interactive):**
+
+| Option | What it removes |
+|--------|------------------|
+| Services | Calls `04_stop_and_uninstall_services.sh` |
+| Virtual environment | `.venv/` directory |
+| Generated files | `music_generated/`, `logs/`, `generation_results/`, cache files |
+| Project directory | Entire `current_state/` folder |
+| UV | UV binary and cache (optional) |
+
+> [!WARNING]
+> `remove.sh` is interactive and asks for confirmation before each removal step.
+
+#### Useful Commands
 
 ```bash
 # Check individual service
@@ -643,7 +751,7 @@ A TUI-style web interface for monitoring the pipeline from any device on your ne
 ├── run_player.py                # Hardware player daemon
 ├── run_full_cycle_btn.py        # GPIO17 button handler
 ├── keep_audio_ch_active.wav     # Speaker keep-alive tone
-├── settings.json                # Hardware & feature config
+├── settings.json                # Hardware & feature config (create from template)
 ├── news_config.json             # News regions config
 ├── .env                         # API credentials (create from template)
 │
@@ -676,63 +784,22 @@ A TUI-style web interface for monitoring the pipeline from any device on your ne
 
 ---
 
-## Hardware Setup
-
-### Shutdown & Wake Button (GPIO3)
-
-
-Enable hardware shutdown/wake using a dedicated button on GPIO3.
-
-#### Step 1: Disable I2C
-
-> [!WARNING]
-> GPIO3 is shared with I2C SCL. You must disable I2C to use it for shutdown.
-
-```bash
-sudo raspi-config
-```
-
-| Step | View |
-|------|------|
-| Select *Interface Options* | ![Step 1](assets/disableI2c_step1.png) |
-| Select *I2C* | ![Step 2](assets/disableI2c_step2.png) |
-| Select *No* to disable | ![Step 3](assets/disableI2c_step3.png) |
-| *Finish* and reboot | ![Step 4](assets/disableI2c_step4.png) |
-
-#### Step 2: Enable gpio-shutdown Overlay
-
-```bash
-sudo nano /boot/firmware/config.txt
-```
-
-Add after the overlays comment section:
-
-```ini
-dtoverlay=gpio-shutdown
-```
-
-Reboot and test:
-- Press GPIO3 button → Pi shuts down
-- Press again → Pi wakes up
-
----
-
 ## License
 
 [Unlicense](LICENSE)
 
 ---
 
-## Additional Docs:
+## Supporting Docs:
 
 1. [MUSIC_PROMPT_GENERATION_PIPELINE.md](docs/MUSIC_PROMPT_GENERATION_PIPELINE.md)
 2. [Tests](tests)
 3. [Web View Monitor](web/README.md)
-4. [Hardware Dev](_HW)
+4. [Hardware Schematic](_HW)
 
 ---
 
-## Manual Setup Instructions
+## [ARCHIVE] Manual Setup Instructions
 
 <details>
 <summary><strong>Click to expand</strong> — Reference for setup.sh development</summary>
@@ -813,18 +880,52 @@ systemctl --user enable --now full-cycle-btn.service
 sudo loginctl enable-linger $USER
 ```
 
+
+### Shutdown & Wake Button (GPIO3)
+
+Enable hardware shutdown/wake using a dedicated button on GPIO3.
+
+#### Step 1: Disable I2C
+
+> [!WARNING]
+> GPIO3 is shared with I2C SCL. You must disable I2C to use it for shutdown.
+
+```bash
+sudo raspi-config
+```
+
+| Step | View |
+|------|------|
+| Select *Interface Options* | ![Step 1](assets/disableI2c_step1.png) |
+| Select *I2C* | ![Step 2](assets/disableI2c_step2.png) |
+| Select *No* to disable | ![Step 3](assets/disableI2c_step3.png) |
+| *Finish* and reboot | ![Step 4](assets/disableI2c_step4.png) |
+
+#### Step 2: Enable gpio-shutdown Overlay
+
+```bash
+sudo nano /boot/firmware/config.txt
+```
+
+Add after the overlays comment section:
+
+```ini
+dtoverlay=gpio-shutdown
+```
+
+Reboot and test:
+- Press GPIO3 button → Pi shuts down
+- Press again → Pi wakes up
+
 </details>
 
 ---
 
 ## TODO
 
-- WIP: Main README Docu ... 🟠
-  - Add drop box details in readme ...
-- Canvas to show in tablet landscape mode ...
-- Serial Radar detection algo improve (beam and enter and exit based)
-- WIP Setup scripts: Main dep install scripts 🟠
-- Other region of news
+- Add Dropbox backup details in readme (optional feature)
+- Serial Radar detection algo improvement (beam and enter/exit based)
+- Add more news regions
 
 - Hardware Update Steps: 
   - Speaker Switch switcher 
