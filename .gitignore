@@ -28,3 +28,4 @@ settings.json
 news_data_*.json
 
 music_generated/*
+hardware/*
