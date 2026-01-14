@@ -938,13 +938,9 @@ Reboot and test:
 - Add Dropbox backup details in readme (optional feature)
 - Serial Radar detection algo improvement (beam and enter/exit based)
 
-- Hardware Update Steps: 
-  - Speaker Switch switcher 
-  - Update circuit 
-    - Also add an extra (3D) side Fan for PI
-  - Place new order for SLA prints 
-  - Print PLA locally 
-  - Assemble new one ... 
+- 3rd attempt hardware update steps: 
+  - 🟠 Speaker Switch switcher 
+  - 🟠 Assemble new one ... 
 
 **Future**:
 - Add more news regions
