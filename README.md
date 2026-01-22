@@ -4,7 +4,22 @@
 [![Platform: Raspberry Pi](https://img.shields.io/badge/platform-Raspberry%20Pi-c51a4a.svg)](https://www.raspberrypi.org/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
+<p align="left">
+  If you find this project useful, consider supporting its development <br><br>
+  <a href="https://github.com/sponsors/dattasaurabh82">
+    <img src="https://img.shields.io/badge/Sponsor-❤-ea4aaa?style=for-the-badge&logo=github" alt="Sponsor on GitHub">
+  </a>
+  <a href="https://buymeacoffee.com/dattasaurabh82">
+    <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee">
+  </a>
+</p>
+
+---
+<br>
+
 > **An AI-powered ambient music generator that transforms daily world news into mood-based soundscapes. Designed to sit on top of IKEA FREKVANS SPEAKERS, this will trigger playback of AI generated soundscape/music when a person enters a room or a motion is detected. So a suitable place for this are contemplation rooms like bathrooms 🙃**
+
+<br>
 
 ![alt text](assets/current_state_header_img.001.png)
 
