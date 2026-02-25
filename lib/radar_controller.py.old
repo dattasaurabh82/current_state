@@ -5,48 +5,8 @@ Radar controller for motion detection.
 Supports RCWL-0516 (GPIO-based) and RD-03D (serial-based).
 """
 
-# =============================================================================
-# RD-03D DETECTION TUNING
-# =============================================================================
-# The RD-03D reports distance to static objects (walls, furniture). Its Kalman
-# filter causes the reported distance to oscillate in a slow wave pattern
-# (e.g. 6m → 2m → 6m over ~10s). When this wave dips below max_range,
-# it creates a false motion trigger.
-#
-# To reject these false triggers, we require:
-#   1. CONSECUTIVE_READINGS_REQUIRED valid in-range readings in a row
-#   2. Those readings must be STABLE (std dev <= MAX_DISTANCE_STD_DEV)
-#
-# A false wave sweep produces rapidly changing distances (high std dev).
-# A real person produces clustered, stable distances (low std dev).
-#
-# HOW TO TUNE:
-#   - If you get false triggers in an empty room:
-#       → Increase CONSECUTIVE_READINGS_REQUIRED (try 7 or 8)
-#       → Decrease MAX_DISTANCE_STD_DEV (try 0.3)
-#   - If real people are not detected:
-#       → Decrease CONSECUTIVE_READINGS_REQUIRED (try 3 or 4)
-#       → Increase MAX_DISTANCE_STD_DEV (try 0.5 or 0.6)
-#   - Detection latency = CONSECUTIVE_READINGS_REQUIRED × poll interval (100ms)
-#       → Current default: 5 × 100ms = 500ms added latency
-#
-# HOW TO DEBUG:
-#   cd ~/current_state/tests
-#   uv run 04_test_radar_diagnostics.py           # raw data view
-#   uv run 04_test_radar_diagnostics.py --filter   # filter comparison
-#
-# WHAT TO OBSERVE:
-#   - Raw mode: check if empty room produces in-range (✓) readings
-#   - Filter mode: OLD should false-trigger, STABLE should not
-#   - Walk in front: STABLE should trigger within ~0.5s
-# =============================================================================
-RD03D_CONSECUTIVE_READINGS_REQUIRED = 5     # readings in a row before trigger
-RD03D_MAX_DISTANCE_STD_DEV = 0.4            # max allowed std dev (meters)
-
 import sys
 import time
-import math
-from collections import deque
 from loguru import logger
 from lib.settings import load_settings
 
@@ -90,8 +50,6 @@ class RadarController:
         self._last_valid_time = 0
         self._last_distance = 0
         self._target_present = False
-        self._consecutive_valid = 0
-        self._recent_dists = deque(maxlen=RD03D_CONSECUTIVE_READINGS_REQUIRED)
         
         # Validate radar model
         if self.radar_model not in VALID_MODELS:
@@ -201,24 +159,14 @@ class RadarController:
         self._last_gpio_state = current_state
         return motion_started, motion_stopped
     
-    @staticmethod
-    def _std_dev(values) -> float:
-        """Standard deviation of a list of numbers."""
-        if len(values) < 2:
-            return 0.0
-        mean = sum(values) / len(values)
-        variance = sum((v - mean) ** 2 for v in values) / len(values)
-        return math.sqrt(variance)
-
     def _check_rd03d(self) -> tuple[bool, bool]:
         """
         Check RD-03D motion state via serial.
         Returns: (motion_started, motion_stopped)
         
-        Uses a stability filter to reject false triggers from the Kalman
-        filter's oscillating distance estimates on static objects.
-        Requires N consecutive in-range readings with low distance variance
-        before confirming a target is present.
+        Note: RD-03D is a Doppler radar - it detects MOVEMENT, not static presence.
+        If someone stands still, readings become invalid/zero, which triggers timeout.
+        This is expected behavior: no movement = motion stopped.
         """
         if not self._rd:
             return False, False
@@ -228,22 +176,12 @@ class RadarController:
             # OutputDump returns: (x, y, dist, angle, mode, raw_dist)
             dist = data[2]
             
-            # Track consecutive in-range readings
-            in_range = (0 < dist <= self._max_range)
-            if in_range:
-                self._consecutive_valid += 1
-                self._recent_dists.append(dist)
-            else:
-                self._consecutive_valid = 0
-                self._recent_dists.clear()
+            # Is there valid movement within range?
+            valid_movement = (0 < dist <= self._max_range)
             
-            # Only confirm presence after enough consecutive stable readings
-            if (self._consecutive_valid >= RD03D_CONSECUTIVE_READINGS_REQUIRED
-                    and len(self._recent_dists) >= RD03D_CONSECUTIVE_READINGS_REQUIRED):
-                sd = self._std_dev(list(self._recent_dists))
-                if sd <= RD03D_MAX_DISTANCE_STD_DEV:
-                    self._last_valid_time = time.time()
-                    self._last_distance = dist
+            if valid_movement:
+                self._last_valid_time = time.time()
+                self._last_distance = dist
             
             # Determine current state based on timeout
             time_since_valid = time.time() - self._last_valid_time

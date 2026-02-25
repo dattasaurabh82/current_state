@@ -437,6 +437,49 @@ uv run python tests/03_test_serial_radar_as_event.py
 - Console shows "Motion detected" / "Motion stopped"
 - Radar LED (GPIO 23) lights up during detection
 
+#### Tuning RD-03D Radar Detection
+
+The RD-03D radar can produce **false triggers in empty rooms**. This happens because its Kalman filter causes the reported distance to oscillate in a slow wave pattern (e.g. 6m → 2m → 6m over ~10 seconds). When the wave dips below `radarMaxRangeMeters`, the old logic counted it as motion.
+
+The detection algorithm now uses a **stability filter** that requires multiple consecutive in-range readings with stable (clustered) distances before triggering. This eliminates false triggers from the oscillating wave while still detecting real people within ~500ms.
+
+**Tunable constants** are at the top of `lib/radar_controller.py`:
+
+| Constant | Default | What it does |
+|----------|---------|-------------|
+| `RD03D_CONSECUTIVE_READINGS_REQUIRED` | 5 | How many in-range readings in a row before triggering. Higher = fewer false triggers but slower detection. |
+| `RD03D_MAX_DISTANCE_STD_DEV` | 0.4 | Max allowed standard deviation (meters) across those readings. Lower = stricter, rejects more noise. |
+
+**If you get false triggers in an empty room:**
+- Increase `RD03D_CONSECUTIVE_READINGS_REQUIRED` (try 7 or 8)
+- Decrease `RD03D_MAX_DISTANCE_STD_DEV` (try 0.3)
+- Decrease `radarMaxRangeMeters` in `settings.json` (try 2.0)
+
+**If real people are not detected:**
+- Decrease `RD03D_CONSECUTIVE_READINGS_REQUIRED` (try 3 or 4)
+- Increase `RD03D_MAX_DISTANCE_STD_DEV` (try 0.5 or 0.6)
+
+**How to debug:**
+
+```bash
+cd ~/current_state/tests
+
+# Raw data view — see every field the radar reports
+uv run 04_test_radar_diagnostics.py
+
+# Filter comparison — runs OLD vs STABLE logic side by side
+uv run 04_test_radar_diagnostics.py --filter
+```
+
+In raw mode, observe:
+- Empty room: lots of `·` (out of range), occasional `✓` that dips in and out = normal wave noise
+- Person present: sustained blocks of `✓` with stable distances = real detection
+
+In filter mode, observe:
+- `OLD` triggers in empty room = the bug
+- `STABLE` does not trigger in empty room = fix working
+- `STABLE` triggers when you walk in = detection still works
+
 > [!Important]
 > Later when the **Radar Enable Switch** (GPIO 6) is ON:
 > 
@@ -951,7 +994,7 @@ Reboot and test:
 ## TODO
 
 - Add Dropbox backup details in readme (optional feature)
-- Serial Radar detection algo improvement (beam and enter/exit based)
+- ~~Serial Radar detection algo improvement~~ ✅ Stability filter (consecutive + std dev)
 
 - 3rd attempt hardware update steps: 
   - 🟠 Speaker Switch switcher 
